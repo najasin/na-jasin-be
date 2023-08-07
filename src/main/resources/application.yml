@@ -1,0 +1,8 @@
+spring:
+  profiles:
+    default: prod
+  application:
+    title: Na-Jasin
+    version: 1.0.0
+  banner:
+    location: classpath:/app-banner.dat
