@@ -1,9 +1,7 @@
 spring:
   config:
     activate:
-      on-profile: prod
-  #    import:
-  #      classpath:/application-aws.yml
+      on-profile: local
 
   datasource:
     url: ${DB_HOST}
