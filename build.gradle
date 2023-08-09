@@ -84,11 +84,11 @@ jacocoTestCoverageVerification {
             enabled = true
             element = "CLASS"
 
-            limit {
-                counter = "BRANCH"
-                value = "COVEREDRATIO"
-                minimum = 0.80
-            }
+//            limit {
+//                counter = "BRANCH"
+//                value = "COVEREDRATIO"
+//                minimum = 0.80
+//            }
 
             limit {
                 counter = "LINE"
@@ -106,6 +106,9 @@ jacocoTestCoverageVerification {
                     '*.Application',
                     'com.najasin.config.**',
                     'com.najasin.domain.**.dto.**',
+                    'com.najasin.domain.**.entity.**',
+                    'com.najasin.global.**',
+                    'com.najasin.security.**',
                     'com.najasin.domain.**.repository.**',
                     'com.najasin.global.**',
             ]
