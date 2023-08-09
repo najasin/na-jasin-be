@@ -38,17 +38,15 @@ public class UserService {
 
 	public String generateUUID() {
 		String uuid = UUID.randomUUID().toString();
-		checkDuplicatedUUID(uuid);
+
+		while (checkDuplicatedUUID(uuid)) {
+			uuid = UUID.randomUUID().toString();
+		}
+
 		return uuid;
 	}
 
-	public void checkDuplicatedUUID(String uuid) {
-		userRepository.findById(uuid).ifPresent(member -> {
-			try {
-				throw new SQLIntegrityConstraintViolationException();
-			} catch (SQLIntegrityConstraintViolationException e) {
-				throw new DataIntegrityViolationException(e.getMessage());
-			}
-		});
+	public boolean checkDuplicatedUUID(String uuid) {
+		return userRepository.findById(uuid).isPresent();
 	}
 }

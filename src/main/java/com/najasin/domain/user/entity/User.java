@@ -46,7 +46,6 @@ public class User {
 	@Embedded
 	private AuditEntity auditEntity;
 
-	@Builder
 	public User(String id, Oauth2Entity oauth2Entity) {
 		this.id = id;
 		this.oauth2Entity = oauth2Entity;
