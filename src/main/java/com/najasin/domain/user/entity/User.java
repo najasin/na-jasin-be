@@ -3,23 +3,16 @@ package com.najasin.domain.user.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.najasin.domain.body.entity.Body;
+import com.najasin.domain.expression.entity.Expression;
+import com.najasin.domain.face.entity.Face;
+import jakarta.persistence.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import com.najasin.domain.user.entity.enums.Role;
 import com.najasin.global.audit.AuditEntity;
 
-import jakarta.persistence.CollectionTable;
-import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -40,6 +33,18 @@ public class User {
 	@Column(name = "role")
 	private List<Role> role;
 
+	@ManyToOne
+	@JoinColumn(name = "face_id", referencedColumnName = "face_id")
+	private Face face;
+
+	@ManyToOne
+	@JoinColumn(name = "body_id", referencedColumnName = "body_id")
+	private Body body;
+
+	@ManyToOne
+	@JoinColumn(name = "expression_id", referencedColumnName = "expression_id")
+	private Expression expression;
+
 	@Embedded
 	private Oauth2Entity oauth2Entity;
 
@@ -55,8 +60,8 @@ public class User {
 
 	public List<SimpleGrantedAuthority> getRole() {
 		return role.stream()
-			.map(Role::name)
-			.map(SimpleGrantedAuthority::new)
-			.toList();
+				.map(Role::name)
+				.map(SimpleGrantedAuthority::new)
+				.toList();
 	}
 }
