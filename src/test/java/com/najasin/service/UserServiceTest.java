@@ -21,7 +21,7 @@ import com.najasin.domain.user.entity.User;
 import com.najasin.domain.user.entity.enums.Provider;
 import com.najasin.domain.user.repository.UserRepository;
 import com.najasin.domain.user.service.UserService;
-import com.najasin.security.oauth.dto.request.OAuth2Request;
+import com.najasin.security.model.OAuth2Request;
 
 import jakarta.persistence.EntityNotFoundException;
 
