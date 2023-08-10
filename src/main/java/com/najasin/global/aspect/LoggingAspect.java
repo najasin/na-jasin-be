@@ -20,7 +20,7 @@ public class LoggingAspect {
 
 	private final Logger log = LoggerFactory.getLogger("API CALL LOGGER");
 
-	@Pointcut("execution(* com.najasin.domain..*Controller.*(..)) || execution(* com.najasin.security.oauth2.handler.*.*(..))")
+	@Pointcut("execution(* com.najasin.domain..*Controller.*(..)) || execution(* com.najasin.security.oauth.common.handler.*.*(..))")
 	public void cut() {
 	}
 
