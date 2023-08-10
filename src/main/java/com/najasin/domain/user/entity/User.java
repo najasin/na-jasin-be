@@ -4,8 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.najasin.domain.body.entity.Body;
+import com.najasin.domain.characterset.entity.CharacterSet;
 import com.najasin.domain.expression.entity.Expression;
 import com.najasin.domain.face.entity.Face;
+import com.najasin.domain.keyword.entity.Keyword;
+import com.najasin.domain.user.entity.enums.UserType;
+import com.najasin.domain.userKeyword.entity.UserKeyword;
 import jakarta.persistence.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -33,17 +37,28 @@ public class User {
 	@Column(name = "role")
 	private List<Role> role;
 
-	@ManyToOne
+	@Enumerated(EnumType.STRING)
+	@Column(name = "last_type")
+	private UserType lastType;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "character_set", referencedColumnName = "set_id")
+	private CharacterSet set;
+
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "face_id", referencedColumnName = "face_id")
 	private Face face;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "body_id", referencedColumnName = "body_id")
 	private Body body;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "expression_id", referencedColumnName = "expression_id")
 	private Expression expression;
+
+	@OneToMany(mappedBy = "user")
+	private List<UserKeyword> userKeywords;
 
 	@Embedded
 	private Oauth2Entity oauth2Entity;
