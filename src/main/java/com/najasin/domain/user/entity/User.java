@@ -37,9 +37,6 @@ public class User {
 	@Column(name = "role")
 	private List<Role> role;
 
-	@Enumerated(EnumType.STRING)
-	@Column(name = "last_type")
-	private UserType lastType;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "character_set", referencedColumnName = "set_id")

@@ -16,6 +16,10 @@ public class Expression {
     @Column(name = "expression_name")
     private String name;
 
-    @Column(name = "expression_url")
-    private String url;
+    @Column(name = "expression_show_url")
+    private String show_url;
+
+    @Column(name = "expression_layout_url")
+    private String layout_url;
+
 }

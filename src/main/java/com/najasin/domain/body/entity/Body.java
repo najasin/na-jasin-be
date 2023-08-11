@@ -16,6 +16,9 @@ public class Body {
     @Column(name = "body_name")
     private String name;
 
-    @Column(name = "body_url")
-    private String url;
+    @Column(name = "body_show_url")
+    private String show_url;
+
+    @Column(name = "body_layout_url")
+    private String layout_url;
 }
