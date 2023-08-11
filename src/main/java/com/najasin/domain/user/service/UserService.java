@@ -1,16 +1,14 @@
 package com.najasin.domain.user.service;
 
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.UUID;
 
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.najasin.domain.user.entity.Oauth2Entity;
 import com.najasin.domain.user.entity.User;
 import com.najasin.domain.user.repository.UserRepository;
-import com.najasin.security.oauth.dto.request.OAuth2Request;
+import com.najasin.security.model.OAuth2Request;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
