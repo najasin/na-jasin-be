@@ -3,8 +3,10 @@ package com.najasin.domain.user.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.najasin.domain.answer.entity.Answer;
 import com.najasin.domain.body.entity.Body;
 import com.najasin.domain.characterset.entity.CharacterSet;
+import com.najasin.domain.comment.entity.Comment;
 import com.najasin.domain.expression.entity.Expression;
 import com.najasin.domain.face.entity.Face;
 import com.najasin.domain.keyword.entity.Keyword;
@@ -56,6 +58,12 @@ public class User {
 
 	@OneToMany(mappedBy = "user")
 	private List<UserKeyword> userKeywords;
+
+	@OneToMany(mappedBy = "user")
+	private List<Answer> answers;
+
+	@OneToMany(mappedBy = "user")
+	private List<Comment> comments;
 
 	@Embedded
 	private Oauth2Entity oauth2Entity;

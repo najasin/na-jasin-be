@@ -36,6 +36,8 @@ public class UserService {
 		return userRepository.findById(id).orElseThrow(EntityNotFoundException::new);
 	}
 
+
+
 	public String generateUUID() {
 		String uuid = UUID.randomUUID().toString();
 
@@ -45,6 +47,7 @@ public class UserService {
 
 		return uuid;
 	}
+
 
 	public boolean checkDuplicatedUUID(String uuid) {
 		return userRepository.findById(uuid).isPresent();
