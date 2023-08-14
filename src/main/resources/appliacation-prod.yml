@@ -10,6 +10,11 @@ spring:
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
 
+  data:
+    redis:
+      port: 6379
+      host: ${ELASTIC_CACHE_HOST}
+
   jpa:
     open-in-view: false
     hibernate:
