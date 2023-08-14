@@ -1,34 +1,26 @@
 spring:
   config:
     activate:
-      on-profile: local
+      on-profile: prod
 
   datasource:
-    url: jdbc:mysql://localhost:3306/na-jasin
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
+    url: ${RDS_HOST}
+    username: ${RDS_USER}
+    password: ${RDS_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
     open-in-view: false
     hibernate:
-      ddl-auto: create-drop
-    show-sql: true
-    generate-ddl: true
+      ddl-auto: none
 
-  servlet:
-    multipart:
-      enabled: true
-      file-size-threshold: 1MB
-      max-file-size: 100MB
-      max-request-size: 100MB
   security:
     oauth2:
       client:
         registration:
           google:
             client-id: ${GOOGLE_CLIENT_ID}
-            client-secret: ${GOOGLE_CLIENT_Secret}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
             scope: openid,profile,email
 
           kakao:
