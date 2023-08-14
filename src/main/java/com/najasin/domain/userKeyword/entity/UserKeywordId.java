@@ -11,7 +11,7 @@ import java.io.Serializable;
 @Embeddable
 @Getter
 @Setter
-public class UserKeywordID implements Serializable {
+public class UserKeywordId implements Serializable {
     private User user;
     private Keyword keyword;
 }

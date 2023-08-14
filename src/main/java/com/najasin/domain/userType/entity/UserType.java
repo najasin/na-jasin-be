@@ -10,9 +10,9 @@ import lombok.NoArgsConstructor;
 public class UserType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "usertype_id")
+    @Column(name = "user_type_id")
     private Long id;
 
-    @Column(name = "usertype_name")
+    @Column(name = "user_type_name")
     private String name;
 }

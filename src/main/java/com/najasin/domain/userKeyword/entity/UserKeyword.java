@@ -3,13 +3,14 @@ package com.najasin.domain.userKeyword.entity;
 import com.najasin.domain.keyword.entity.Keyword;
 import com.najasin.domain.user.entity.User;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @Entity(name = "user_keyword")
-@NoArgsConstructor
-@IdClass(UserKeywordID.class)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@IdClass(UserKeywordId.class)
 public class UserKeyword {
     @Id
     @ManyToOne

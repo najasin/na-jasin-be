@@ -2,12 +2,13 @@ package com.najasin.domain.question.entity;
 
 import com.najasin.domain.userType.entity.UserType;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Question {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,6 +23,6 @@ public class Question {
     private QuestionType questionType;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "usertype_id", referencedColumnName = "usertype_id")
+    @JoinColumn(name = "user_type_id", referencedColumnName = "user_type_id")
     private UserType userType;
 }

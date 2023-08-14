@@ -1,12 +1,13 @@
 package com.najasin.domain.characterset.entity;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @Entity(name = "characterSet")
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CharacterSet {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
