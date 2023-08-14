@@ -55,6 +55,5 @@ cloud:
         false
 
 client:
-  host: localhost
-  url: http://localhost:3000
+  url: ${CLIENT_URL}
   endpoint: success
