@@ -39,11 +39,7 @@ public class UserService {
 	private final ExpressionRepository expressionRepository;
 	private final UserKeywordService userKeywordService;
 	private final RedisBlackListUtil redisBlackListUtil;
-	private final CharacterSetRepository characterSetRepository;
-	private final FaceRepository faceRepository;
-	private final BodyRepository bodyRepository;
-	private final ExpressionRepository expressionRepository;
-	private final UserKeywordService userKeywordService;
+
 
 	@Transactional
 	public User saveIfNewUser(OAuth2Request request) {
