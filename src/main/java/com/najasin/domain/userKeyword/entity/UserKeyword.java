@@ -25,5 +25,17 @@ public class UserKeyword {
     private Keyword keyword;
 
     @Column
-    private int percent;
+    private int originPercent;
+
+    @Column
+    private int othersPercent;
+
+    @Column
+    private int othersCount;
+
+    public UserKeyword(User user, Keyword keyword, int originPercent) {
+        this.user = user;
+        this.keyword = keyword;
+        this.originPercent = originPercent;
+    }
 }
