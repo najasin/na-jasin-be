@@ -10,8 +10,9 @@ import com.najasin.domain.comment.entity.Comment;
 import com.najasin.domain.expression.entity.Expression;
 import com.najasin.domain.face.entity.Face;
 import com.najasin.domain.keyword.entity.Keyword;
-import com.najasin.domain.user.entity.enums.UserType;
 import com.najasin.domain.userKeyword.entity.UserKeyword;
+import com.najasin.domain.userType.entity.UserType;
+import com.najasin.domain.userUserType.entity.UserUserType;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -66,6 +67,13 @@ public class User {
 
 	@OneToMany(mappedBy = "user")
 	private List<Comment> comments;
+
+	@OneToMany(mappedBy = "user")
+	private List<UserUserType> userUserTypes;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "last_user_type", referencedColumnName = "user_type_id")
+	private UserType lastUserType;
 
 	@Embedded
 	private Oauth2Entity oauth2Entity;

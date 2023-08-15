@@ -55,7 +55,6 @@ public class UserService {
 	}
 
 
-
 	@Transactional
 	public User update(String id, CharacterDTO characterDTO, List<KeywordDTO> keywordDTOs) {
 		User user = this.findById(id);
@@ -76,7 +75,7 @@ public class UserService {
 		} else{
 			characterSet = characterSetRepository.findById(characterDTO.getCharacterSetID()).orElseThrow(EntityNotFoundException::new);
 		}
-		User newUser = new User(id, new ArrayList<>(List.of(Role.ROLE_MEMBER)), characterSet, face, body, expression, userKeywords, user.getAnswers(), user.getComments() , user.getOauth2Entity(), user.getAuditEntity());
+		User newUser = new User(id, new ArrayList<>(List.of(Role.ROLE_MEMBER)), characterSet, face, body, expression, userKeywords, user.getAnswers(), user.getComments() ,user.getUserUserTypes(), user.getLastUserType(), user.getOauth2Entity(), user.getAuditEntity());
 		return userRepository.save(newUser);
 	}
 

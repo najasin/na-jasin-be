@@ -1,10 +1,13 @@
 package com.najasin.domain.userType.entity;
 
+import com.najasin.domain.userUserType.entity.UserUserType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Getter
 @Entity
@@ -18,4 +21,7 @@ public class UserType {
 
     @Column(name = "user_type_name")
     private String name;
+
+    @OneToMany(mappedBy = "userType")
+    private List<UserUserType> userUserTypes;
 }

@@ -20,6 +20,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 import static junit.framework.TestCase.assertEquals;
@@ -61,7 +62,7 @@ public class AnswerServiceTest {
                 .build();
         mockUser = new User(mockUserId, mockOauth2Entity);
         mockQuestionId = 123456789L;
-        mockQuestion = new Question(mockQuestionId, "테스트 질문", QuestionType.FOR_USER, new UserType(1L, "JFF"));
+        mockQuestion = new Question(mockQuestionId, "테스트 질문", QuestionType.FOR_USER, new UserType(1L, "JFF", new ArrayList<>()));
         mockAns = "테스트 응답";
         mockAnswer = new Answer(mockUser, mockQuestion, mockAns);
     }
