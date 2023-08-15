@@ -10,6 +10,7 @@ import com.najasin.domain.userKeyword.repository.UserKeywordRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,17 +23,25 @@ public class UserKeywordService {
     private final KeywordRepository keywordRepository;
     private final UserRepository userRepository;
 
+    @Transactional
     public UserKeyword save(String userId, Long keywordId, int percent) {
         User user = userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
         Keyword keyword = keywordRepository.findById(keywordId).orElseThrow(EntityNotFoundException::new);
-
-        List<UserKeyword> temp = keyword.getUserKeywords();
         UserKeyword newUK = new UserKeyword(user, keyword, percent);
-        temp.add(newUK);
+        return userKeywordRepository.save(newUK);
+    }
 
-        Keyword newKeyword = new Keyword(keywordId, keyword.getName(), temp);
-        keywordRepository.save(newKeyword);
-
+    @Transactional
+    public UserKeyword updateByOthers(String userId, Long keywordId, int percent) {
+        User user = userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
+        Keyword keyword = keywordRepository.findById(keywordId).orElseThrow(EntityNotFoundException::new);
+        UserKeyword prevUK = null;
+        for(UserKeyword userKeyword: user.getUserKeywords()) {
+            if (userKeyword.getKeyword().getId() == keywordId) {
+                prevUK = userKeyword;
+            }
+        }
+        UserKeyword newUK = new UserKeyword(user, keyword, prevUK.getOriginPercent(), prevUK.getOthersPercent() + percent, prevUK.getOthersCount() + 1);
         return userKeywordRepository.save(newUK);
     }
 }

@@ -18,6 +18,7 @@ import com.najasin.domain.expression.entity.Expression;
 import com.najasin.domain.expression.repository.ExpressionRepository;
 import com.najasin.domain.face.entity.Face;
 import com.najasin.domain.face.repository.FaceRepository;
+import com.najasin.domain.keyword.entity.Keyword;
 import com.najasin.domain.userKeyword.entity.UserKeyword;
 import com.najasin.domain.userKeyword.service.UserKeywordService;
 import org.junit.jupiter.api.AfterEach;
@@ -66,7 +67,15 @@ public class UserServiceTest {
 	private Body mockBody;
 	private Expression mockExpression;
 	private CharacterSet mockCS;
+	private Long mockKeywordId;
+	private Keyword mockKeyword;
 
+	private UserKeyword prevUserKeyword;
+	private UserKeyword mockUK;
+	private int mockPercent;
+
+	private CharacterDTO characterDTO = new CharacterDTO();
+	private List<KeywordDTO> keywordDTOs = new ArrayList<>();
 
 	@BeforeEach
 	public void setup() {
@@ -84,10 +93,15 @@ public class UserServiceTest {
 				.name("test-provider-nickname")
 				.email("test@kakao.com")
 				.build();
+		mockKeywordId = 123456789L;
+		mockKeyword = new Keyword(mockKeywordId, "키워드");
+		mockPercent = 50;
+		mockUK = new UserKeyword(mockUser, mockKeyword, mockPercent);
 		mockFace = new Face(123456789L, "mockFace", "show_url", "layout_url");
 		mockBody = new Body(123456789L, "mockBody", "show_url", "layout_url");
 		mockExpression = new Expression(123456789L, "mockBody", "show_url", "layout_url");
 		mockCS = new CharacterSet(123456789L, "mockBody", "show_url");
+		keywordDTOs.add(new KeywordDTO(123456789L, 30));
 	}
 
 	@AfterEach
@@ -159,10 +173,9 @@ public class UserServiceTest {
 		given(expressionRepository.findById(any())).willReturn(Optional.of(mockExpression));
 		given(userRepository.save(any())).willReturn(mockUser);
 
-		CharacterDTO characterDTO = new CharacterDTO();
-		List<KeywordDTO> keywordDTOs = new ArrayList<>();
+
 		//when
-		User user = userService.update("id", characterDTO, keywordDTOs);
+		User user = userService.updateByOneself("id", characterDTO, keywordDTOs);
 		//then
 
 	}
@@ -175,19 +188,34 @@ public class UserServiceTest {
 		given(characterSetRepository.findById(any())).willReturn(Optional.of(mockCS));
 		given(userRepository.save(any())).willReturn(mockUser);
 
-		CharacterDTO characterDTO = new CharacterDTO();
 		characterDTO.setCharacterSetID(123456789L);
-		List<KeywordDTO> keywordDTOs = new ArrayList<>();
 		//when
-		User user = userService.update("id", characterDTO, keywordDTOs);
+		User user = userService.updateByOneself("id", characterDTO, keywordDTOs);
 		//then
 
+	}
+
+	@Test
+	@DisplayName("다른 사람이 키워드 퍼센트에 기여한다")
+	void updateKeywordByOthers() {
+		//given
+		given(userRepository.findById(mockId))
+				.willReturn(Optional.of(mockUser));
+		given(userKeywordService.updateByOthers(any(), anyLong(), anyInt()))
+				.willReturn(mockUK);
+		given(userRepository.save(any()))
+				.willReturn(mockUser);
+		//when
+		User user = userService.updateKeywordByOthers(mockId, keywordDTOs);
+		//then
+		assertEquals(user, mockUser);
 	}
 
 
 	@Test
 	@DisplayName("만약 유저가 존재하는 경우 기존 데이터를 리턴한다.")
 	void saveIfNewUserFail() {
+
 		// given
 		given(userRepository.findUserByOauth2EntityProviderId(anyString()))
 				.willReturn(Optional.of(mockUser));

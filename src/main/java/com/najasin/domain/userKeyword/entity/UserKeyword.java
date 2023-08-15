@@ -37,5 +37,7 @@ public class UserKeyword {
         this.user = user;
         this.keyword = keyword;
         this.originPercent = originPercent;
+        this.othersPercent = 0;
+        this.othersCount = 0;
     }
 }
