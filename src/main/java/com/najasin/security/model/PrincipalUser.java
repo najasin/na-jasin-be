@@ -23,6 +23,10 @@ public class PrincipalUser implements UserDetails, OidcUser, OAuth2User {
 		this.authorities = authorities;
 	}
 
+	public User getUser() {
+		return user;
+	}
+
 	@Override
 	public String getName() {
 		return user.getId();
