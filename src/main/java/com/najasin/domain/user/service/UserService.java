@@ -8,6 +8,7 @@ import com.najasin.domain.body.entity.Body;
 import com.najasin.domain.body.repository.BodyRepository;
 import com.najasin.domain.characterset.entity.CharacterSet;
 import com.najasin.domain.characterset.repository.CharacterSetRepository;
+import com.najasin.domain.comment.service.CommentService;
 import com.najasin.domain.dto.CharacterDTO;
 import com.najasin.domain.dto.KeywordDTO;
 import com.najasin.domain.expression.entity.Expression;
@@ -37,6 +38,7 @@ public class UserService {
 	private final BodyRepository bodyRepository;
 	private final ExpressionRepository expressionRepository;
 	private final UserKeywordService userKeywordService;
+	private final CommentService commentService;
 
 	@Transactional
 	public User saveIfNewUser(OAuth2Request request) {
