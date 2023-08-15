@@ -17,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class JwtProvider {
 	private static final Long ACCESS_TOKEN_VALIDATION_SECOND = 60L * 60 * 24 * 1000; // 24hours
-	private static final Long REFRESH_TOKEN_VALIDATION_SECOND = 60L * 60 * 24 * 14 * 1000; // 14days
+	private static final Long REFRESH_TOKEN_VALIDATION_SECOND = 60L * 60 * 24 * 1000 * 7; // 7days
 	private static final String BEARER_TYPE = "bearer";
 
 	private final Key key;
