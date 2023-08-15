@@ -62,7 +62,7 @@ public class AnswerServiceTest {
                 .build();
         mockUser = new User(mockUserId, mockOauth2Entity);
         mockQuestionId = 123456789L;
-        mockQuestion = new Question(mockQuestionId, "테스트 질문", QuestionType.FOR_USER, new UserType(1L, "JFF", new ArrayList<>()));
+        mockQuestion = new Question(mockQuestionId, "테스트 질문", QuestionType.FOR_USER, new ArrayList<>(), new UserType(1L, "JFF", new ArrayList<>()));
         mockAns = "테스트 응답";
         mockAnswer = new Answer(mockUser, mockQuestion, mockAns);
     }

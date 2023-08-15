@@ -1,10 +1,7 @@
 package com.najasin.service;
 
-import com.najasin.domain.answer.entity.Answer;
 import com.najasin.domain.keyword.entity.Keyword;
 import com.najasin.domain.keyword.repository.KeywordRepository;
-import com.najasin.domain.question.entity.Question;
-import com.najasin.domain.question.entity.QuestionType;
 import com.najasin.domain.user.entity.Oauth2Entity;
 import com.najasin.domain.user.entity.User;
 import com.najasin.domain.user.entity.enums.Provider;
@@ -13,7 +10,6 @@ import com.najasin.domain.user.repository.UserRepository;
 import com.najasin.domain.userKeyword.entity.UserKeyword;
 import com.najasin.domain.userKeyword.repository.UserKeywordRepository;
 import com.najasin.domain.userKeyword.service.UserKeywordService;
-import com.najasin.domain.userType.entity.UserType;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

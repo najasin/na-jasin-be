@@ -24,6 +24,8 @@ public class CommentService {
         User user = userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
         Question question = questionRepository.findById(questionId).orElseThrow(EntityNotFoundException::new);
         Comment newComment = new Comment(user, question, comment, nickname);
+        user.getComments().add(newComment);
+        question.getComments().add(newComment);
         return commentRepository.save(newComment);
     }
 
@@ -31,8 +33,11 @@ public class CommentService {
     public boolean delete(String userId, Long questionId) {
         User user = userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
         Question question = questionRepository.findById(questionId).orElseThrow(EntityNotFoundException::new);
+        Comment comment = commentRepository.findById(new CommentId(user, question)).orElseThrow(EntityNotFoundException::new);
         try {
-            commentRepository.deleteById(new CommentId(user, question));
+            user.getComments().remove(comment);
+            question.getComments().remove(comment);
+            commentRepository.delete(comment);
         } catch (Exception e) {
             return false;
         }
