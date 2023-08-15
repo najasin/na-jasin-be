@@ -105,6 +105,7 @@ jacocoTestCoverageVerification {
             excludes = [
                     '*.Application',
                     'com.najasin.config.**',
+                    'com.najasin.domain.dto.**',
                     'com.najasin.domain.**.dto.**',
                     'com.najasin.domain.**.entity.**',
                     'com.najasin.global.**',

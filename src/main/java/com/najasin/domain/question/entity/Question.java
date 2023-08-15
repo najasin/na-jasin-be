@@ -3,11 +3,13 @@ package com.najasin.domain.question.entity;
 import com.najasin.domain.userType.entity.UserType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Question {
     @Id
