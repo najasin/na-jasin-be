@@ -9,6 +9,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.najasin.security.jwt.exception.JwtBlackListException;
+import com.najasin.security.jwt.exception.JwtExpirationException;
+import com.najasin.security.jwt.exception.JwtNotSupportException;
+import com.najasin.security.jwt.exception.JwtWrongException;
+import com.najasin.security.jwt.exception.JwtWrongSignatureException;
 import com.najasin.security.jwt.util.JwtValidator;
 
 import jakarta.servlet.FilterChain;
@@ -31,7 +36,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         token.ifPresent(
                 t -> {
-                    Authentication authentication = jwtValidator.getAuthentication(t);
+                    Authentication authentication = null;
+                    try {
+                        authentication = jwtValidator.getAuthentication(t);
+                    } catch (JwtWrongSignatureException | JwtExpirationException | JwtNotSupportException |
+                             JwtWrongException | JwtBlackListException e) {
+                        throw new RuntimeException(e);
+                    }
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 });
         filterChain.doFilter(request, response);
