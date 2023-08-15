@@ -54,6 +54,8 @@ public class UserService {
 		return userRepository.findById(id).orElseThrow(EntityNotFoundException::new);
 	}
 
+
+
 	@Transactional
 	public User update(String id, CharacterDTO characterDTO, List<KeywordDTO> keywordDTOs) {
 		User user = this.findById(id);
