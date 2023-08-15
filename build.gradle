@@ -124,11 +124,11 @@ sourceSets {
 }
 
 tasks.withType(JavaCompile).configureEach {
-    options.generatedSourceOutputDirectory = file(generated)
+    options.getGeneratedSourceOutputDirectory().set(file(generated))
 }
 
-clean.doLast {
-    file(generated).deleteDir()
+clean {
+    delete file(generated)
 }
 
 repositories {
