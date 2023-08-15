@@ -21,6 +21,7 @@ import com.najasin.domain.user.entity.User;
 import com.najasin.domain.user.entity.enums.Provider;
 import com.najasin.domain.user.repository.UserRepository;
 import com.najasin.domain.user.service.UserService;
+import com.najasin.global.util.RedisBlackListUtil;
 import com.najasin.security.model.OAuth2Request;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -33,6 +34,9 @@ public class UserServiceTest {
 
 	@Mock
 	private UserRepository userRepository;
+
+	@Mock
+	private RedisBlackListUtil redisBlackListUtil;
 
 	private String mockId;
 	private Oauth2Entity mockOauth2Entity;
@@ -89,6 +93,18 @@ public class UserServiceTest {
 
 		//then
 		assertEquals(mockUser, findUser);
+	}
+
+	@Test
+	@DisplayName("로그아웃을 수행한다.")
+	void logout() {
+		// given
+		String accessToken = "";
+		String refreshToken = "";
+		doNothing().when(redisBlackListUtil).setBlackList(anyString(), anyString(), anyInt());
+
+		// then
+		assertDoesNotThrow(() -> userService.logout(accessToken, refreshToken));
 	}
 
 	@Test
