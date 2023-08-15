@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.najasin.domain.user.entity.Oauth2Entity;
 import com.najasin.domain.user.entity.User;
 import com.najasin.domain.user.repository.UserRepository;
+import com.najasin.global.util.RedisBlackListUtil;
 import com.najasin.security.model.OAuth2Request;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -32,6 +33,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserService {
 	private final UserRepository userRepository;
+	private final RedisBlackListUtil redisBlackListUtil;
 	private final CharacterSetRepository characterSetRepository;
 	private final FaceRepository faceRepository;
 	private final BodyRepository bodyRepository;
@@ -54,6 +56,10 @@ public class UserService {
 		return userRepository.findById(id).orElseThrow(EntityNotFoundException::new);
 	}
 
+	public void logout(String accessToken, String refreshToken) {
+		redisBlackListUtil.setBlackList(accessToken, "accessToken", 7);
+		redisBlackListUtil.setBlackList(refreshToken, "refreshToken", 7);
+	}
 
 	@Transactional
 	public User update(String id, CharacterDTO characterDTO, List<KeywordDTO> keywordDTOs) {
