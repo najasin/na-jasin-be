@@ -13,20 +13,18 @@ import com.najasin.domain.keyword.entity.Keyword;
 import com.najasin.domain.user.entity.enums.UserType;
 import com.najasin.domain.userKeyword.entity.UserKeyword;
 import jakarta.persistence.*;
+import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import com.najasin.domain.user.entity.enums.Role;
 import com.najasin.global.audit.AuditEntity;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-
 @Getter
 @Entity(name = "users")
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 public class User {
 	@Id
@@ -77,6 +75,8 @@ public class User {
 		this.role = new ArrayList<>(List.of(Role.ROLE_MEMBER));
 		this.auditEntity = new AuditEntity();
 	}
+
+
 
 	public List<SimpleGrantedAuthority> getRole() {
 		return role.stream()

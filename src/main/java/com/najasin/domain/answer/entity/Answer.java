@@ -4,12 +4,14 @@ import com.najasin.domain.question.entity.Question;
 import com.najasin.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @IdClass(AnswerId.class)
 public class Answer {
     @Id
