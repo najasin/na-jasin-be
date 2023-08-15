@@ -108,6 +108,7 @@ jacocoTestCoverageVerification {
                     'com.najasin.domain.dto.**',
                     'com.najasin.domain.**.dto.**',
                     'com.najasin.domain.**.entity.**',
+                    'com.najasin.domain.**.controller.**',
                     'com.najasin.global.**',
                     'com.najasin.security.**',
                     'com.najasin.domain.**.repository.**',
@@ -159,6 +160,7 @@ dependencies {
 
     // ORM
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
     // QueryDsl
     implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'

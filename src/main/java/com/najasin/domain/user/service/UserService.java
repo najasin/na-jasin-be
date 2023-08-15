@@ -8,6 +8,19 @@ import com.najasin.domain.body.entity.Body;
 import com.najasin.domain.body.repository.BodyRepository;
 import com.najasin.domain.characterset.entity.CharacterSet;
 import com.najasin.domain.characterset.repository.CharacterSetRepository;
+import com.najasin.domain.dto.CharacterDTO;
+import com.najasin.domain.dto.KeywordDTO;
+import com.najasin.domain.expression.entity.Expression;
+import com.najasin.domain.expression.repository.ExpressionRepository;
+import com.najasin.domain.face.entity.Face;
+import com.najasin.domain.face.repository.FaceRepository;
+import com.najasin.domain.user.entity.enums.Role;
+import com.najasin.domain.userKeyword.entity.UserKeyword;
+import com.najasin.domain.userKeyword.service.UserKeywordService;
+import com.najasin.domain.body.entity.Body;
+import com.najasin.domain.body.repository.BodyRepository;
+import com.najasin.domain.characterset.entity.CharacterSet;
+import com.najasin.domain.characterset.repository.CharacterSetRepository;
 import com.najasin.domain.comment.service.CommentService;
 import com.najasin.domain.dto.CharacterDTO;
 import com.najasin.domain.dto.KeywordDTO;
@@ -24,6 +37,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.najasin.domain.user.entity.Oauth2Entity;
 import com.najasin.domain.user.entity.User;
 import com.najasin.domain.user.repository.UserRepository;
+import com.najasin.global.util.RedisBlackListUtil;
 import com.najasin.security.model.OAuth2Request;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -39,6 +53,12 @@ public class UserService {
 	private final ExpressionRepository expressionRepository;
 	private final UserKeywordService userKeywordService;
 	private final CommentService commentService;
+	private final RedisBlackListUtil redisBlackListUtil;
+	private final CharacterSetRepository characterSetRepository;
+	private final FaceRepository faceRepository;
+	private final BodyRepository bodyRepository;
+	private final ExpressionRepository expressionRepository;
+	private final UserKeywordService userKeywordService;
 
 	@Transactional
 	public User saveIfNewUser(OAuth2Request request) {
@@ -56,6 +76,10 @@ public class UserService {
 		return userRepository.findById(id).orElseThrow(EntityNotFoundException::new);
 	}
 
+	public void logout(String accessToken, String refreshToken) {
+		redisBlackListUtil.setBlackList(accessToken, "accessToken", 7);
+		redisBlackListUtil.setBlackList(refreshToken, "refreshToken", 7);
+	}
 
 	@Transactional
 	public User updateByOneself(String id, CharacterDTO characterDTO, List<KeywordDTO> keywordDTOs) {

@@ -21,6 +21,18 @@ import com.najasin.domain.face.repository.FaceRepository;
 import com.najasin.domain.keyword.entity.Keyword;
 import com.najasin.domain.userKeyword.entity.UserKeyword;
 import com.najasin.domain.userKeyword.service.UserKeywordService;
+import com.najasin.domain.body.entity.Body;
+import com.najasin.domain.body.repository.BodyRepository;
+import com.najasin.domain.characterset.entity.CharacterSet;
+import com.najasin.domain.characterset.repository.CharacterSetRepository;
+import com.najasin.domain.dto.CharacterDTO;
+import com.najasin.domain.dto.KeywordDTO;
+import com.najasin.domain.expression.entity.Expression;
+import com.najasin.domain.expression.repository.ExpressionRepository;
+import com.najasin.domain.face.entity.Face;
+import com.najasin.domain.face.repository.FaceRepository;
+import com.najasin.domain.userKeyword.entity.UserKeyword;
+import com.najasin.domain.userKeyword.service.UserKeywordService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -36,6 +48,7 @@ import com.najasin.domain.user.entity.User;
 import com.najasin.domain.user.entity.enums.Provider;
 import com.najasin.domain.user.repository.UserRepository;
 import com.najasin.domain.user.service.UserService;
+import com.najasin.global.util.RedisBlackListUtil;
 import com.najasin.security.model.OAuth2Request;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -58,6 +71,9 @@ public class UserServiceTest {
 	private ExpressionRepository expressionRepository;
 	@Mock
 	private UserKeywordService userKeywordService;
+
+	@Mock
+	private RedisBlackListUtil redisBlackListUtil;
 
 	private String mockId;
 	private Oauth2Entity mockOauth2Entity;
@@ -134,6 +150,18 @@ public class UserServiceTest {
 
 		//then
 		assertEquals(mockUser, findUser);
+	}
+
+	@Test
+	@DisplayName("로그아웃을 수행한다.")
+	void logout() {
+		// given
+		String accessToken = "";
+		String refreshToken = "";
+		doNothing().when(redisBlackListUtil).setBlackList(anyString(), anyString(), anyInt());
+
+		// then
+		assertDoesNotThrow(() -> userService.logout(accessToken, refreshToken));
 	}
 
 	@Test
