@@ -1,7 +1,22 @@
 package com.najasin.domain.user.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
+import com.najasin.domain.body.entity.Body;
+import com.najasin.domain.body.repository.BodyRepository;
+import com.najasin.domain.characterset.entity.CharacterSet;
+import com.najasin.domain.characterset.repository.CharacterSetRepository;
+import com.najasin.domain.dto.CharacterDTO;
+import com.najasin.domain.dto.KeywordDTO;
+import com.najasin.domain.expression.entity.Expression;
+import com.najasin.domain.expression.repository.ExpressionRepository;
+import com.najasin.domain.face.entity.Face;
+import com.najasin.domain.face.repository.FaceRepository;
+import com.najasin.domain.user.entity.enums.Role;
+import com.najasin.domain.userKeyword.entity.UserKeyword;
+import com.najasin.domain.userKeyword.service.UserKeywordService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,11 +34,16 @@ import lombok.RequiredArgsConstructor;
 public class UserService {
 	private final UserRepository userRepository;
 	private final RedisBlackListUtil redisBlackListUtil;
+	private final CharacterSetRepository characterSetRepository;
+	private final FaceRepository faceRepository;
+	private final BodyRepository bodyRepository;
+	private final ExpressionRepository expressionRepository;
+	private final UserKeywordService userKeywordService;
 
 	@Transactional
 	public User saveIfNewUser(OAuth2Request request) {
 		return userRepository.findUserByOauth2EntityProviderId(request.providerId()).orElseGet(
-			() -> save(request.toOauth2Entity()));
+				() -> save(request.toOauth2Entity()));
 	}
 
 	@Transactional
@@ -39,6 +59,30 @@ public class UserService {
 	public void logout(String accessToken, String refreshToken) {
 		redisBlackListUtil.setBlackList(accessToken, "accessToken", 7);
 		redisBlackListUtil.setBlackList(refreshToken, "refreshToken", 7);
+	}
+
+	@Transactional
+	public User update(String id, CharacterDTO characterDTO, List<KeywordDTO> keywordDTOs) {
+		User user = this.findById(id);
+		Face face = null;
+		Body body = null;
+		Expression expression = null;
+		CharacterSet characterSet = null;
+		List<UserKeyword> userKeywords = new ArrayList<>();
+		for (KeywordDTO dto : keywordDTOs) {
+			int percent = dto.getPercent();
+			long keywordId = dto.getKeywordID();
+			userKeywords.add(userKeywordService.save(id, keywordId, percent));
+		}
+		if (characterDTO.getCharacterSetID() == null) {
+			face = faceRepository.findById(characterDTO.getFaceID()).orElseThrow(EntityNotFoundException::new);
+			body = bodyRepository.findById(characterDTO.getBodyID()).orElseThrow(EntityNotFoundException::new);
+			expression = expressionRepository.findById(characterDTO.getBodyID()).orElseThrow(EntityNotFoundException::new);
+		} else{
+			characterSet = characterSetRepository.findById(characterDTO.getCharacterSetID()).orElseThrow(EntityNotFoundException::new);
+		}
+		User newUser = new User(id, new ArrayList<>(List.of(Role.ROLE_MEMBER)), characterSet, face, body, expression, userKeywords, user.getAnswers(), user.getComments() ,user.getUserUserTypes(), user.getLastUserType(), user.getOauth2Entity(), user.getAuditEntity());
+		return userRepository.save(newUser);
 	}
 
 	public String generateUUID() {

@@ -4,8 +4,22 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
+import com.najasin.domain.body.entity.Body;
+import com.najasin.domain.body.repository.BodyRepository;
+import com.najasin.domain.characterset.entity.CharacterSet;
+import com.najasin.domain.characterset.repository.CharacterSetRepository;
+import com.najasin.domain.dto.CharacterDTO;
+import com.najasin.domain.dto.KeywordDTO;
+import com.najasin.domain.expression.entity.Expression;
+import com.najasin.domain.expression.repository.ExpressionRepository;
+import com.najasin.domain.face.entity.Face;
+import com.najasin.domain.face.repository.FaceRepository;
+import com.najasin.domain.userKeyword.entity.UserKeyword;
+import com.najasin.domain.userKeyword.service.UserKeywordService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -34,6 +48,16 @@ public class UserServiceTest {
 
 	@Mock
 	private UserRepository userRepository;
+	@Mock
+	private CharacterSetRepository characterSetRepository;
+	@Mock
+	private FaceRepository faceRepository;
+	@Mock
+	private BodyRepository bodyRepository;
+	@Mock
+	private ExpressionRepository expressionRepository;
+	@Mock
+	private UserKeywordService userKeywordService;
 
 	@Mock
 	private RedisBlackListUtil redisBlackListUtil;
@@ -42,23 +66,32 @@ public class UserServiceTest {
 	private Oauth2Entity mockOauth2Entity;
 	private User mockUser;
 	private OAuth2Request request;
+	private Face mockFace;
+	private Body mockBody;
+	private Expression mockExpression;
+	private CharacterSet mockCS;
+
 
 	@BeforeEach
 	public void setup() {
 		mockId = "test-uuid";
 		mockOauth2Entity = Oauth2Entity.builder()
-			.provider(Provider.KAKAO)
-			.providerId("test-provider-id")
-			.providerUsername("test-provider-nickname")
-			.email("test@kakao.com")
-			.build();
+				.provider(Provider.KAKAO)
+				.providerId("test-provider-id")
+				.providerUsername("test-provider-nickname")
+				.email("test@kakao.com")
+				.build();
 		mockUser = new User(mockId, mockOauth2Entity);
 		request = OAuth2Request.builder()
-			.provider(Provider.KAKAO)
-			.providerId("test-provider-id")
-			.name("test-provider-nickname")
-			.email("test@kakao.com")
-			.build();
+				.provider(Provider.KAKAO)
+				.providerId("test-provider-id")
+				.name("test-provider-nickname")
+				.email("test@kakao.com")
+				.build();
+		mockFace = new Face(123456789L, "mockFace", "show_url", "layout_url");
+		mockBody = new Body(123456789L, "mockBody", "show_url", "layout_url");
+		mockExpression = new Expression(123456789L, "mockBody", "show_url", "layout_url");
+		mockCS = new CharacterSet(123456789L, "mockBody", "show_url");
 	}
 
 	@AfterEach
@@ -71,11 +104,9 @@ public class UserServiceTest {
 	void save() {
 		// given
 		given(userRepository.save(any()))
-			.willReturn(mockUser);
-
+				.willReturn(mockUser);
 		// when
 		User saveUser = userService.save(mockOauth2Entity);
-
 		// then
 		assertEquals(saveUser, mockUser);
 	}
@@ -86,7 +117,7 @@ public class UserServiceTest {
 		// given
 		ReflectionTestUtils.setField(mockUser, "id", mockId);
 		given(userRepository.findById(anyString()))
-			.willReturn(Optional.of(mockUser));
+				.willReturn(Optional.of(mockUser));
 
 		// when
 		User findUser = userService.findById(mockId);
@@ -112,7 +143,7 @@ public class UserServiceTest {
 	void findByIdFail() {
 		// given
 		given(userRepository.findById(anyString()))
-			.willReturn(Optional.empty());
+				.willReturn(Optional.empty());
 
 		//then
 		assertThrows(EntityNotFoundException.class, () -> userService.findById(mockId));
@@ -123,9 +154,9 @@ public class UserServiceTest {
 	void saveIfNewUserSuccess() {
 		// given
 		given(userRepository.findUserByOauth2EntityProviderId(anyString()))
-			.willReturn(Optional.empty());
+				.willReturn(Optional.empty());
 		given(userRepository.save(any()))
-			.willReturn(mockUser);
+				.willReturn(mockUser);
 
 		// when
 		User saveUser = userService.saveIfNewUser(request);
@@ -135,11 +166,47 @@ public class UserServiceTest {
 	}
 
 	@Test
+	@DisplayName("유저가 내적나사 정보를 등록한다(프로필이 캐릭터셋 아닐 때)")
+	void updateV1(){
+		//given
+		given(userRepository.findById(any())).willReturn(Optional.of(mockUser));
+		given(faceRepository.findById(any())).willReturn(Optional.of(mockFace));
+		given(bodyRepository.findById(any())).willReturn(Optional.of(mockBody));
+		given(expressionRepository.findById(any())).willReturn(Optional.of(mockExpression));
+		given(userRepository.save(any())).willReturn(mockUser);
+
+		CharacterDTO characterDTO = new CharacterDTO();
+		List<KeywordDTO> keywordDTOs = new ArrayList<>();
+		//when
+		User user = userService.update("id", characterDTO, keywordDTOs);
+		//then
+
+	}
+
+	@Test
+	@DisplayName("유저가 내적나사 정보를 등록한다(프로필이 캐릭터셋일 때)")
+	void updateV2(){
+		//given
+		given(userRepository.findById(any())).willReturn(Optional.of(mockUser));
+		given(characterSetRepository.findById(any())).willReturn(Optional.of(mockCS));
+		given(userRepository.save(any())).willReturn(mockUser);
+
+		CharacterDTO characterDTO = new CharacterDTO();
+		characterDTO.setCharacterSetID(123456789L);
+		List<KeywordDTO> keywordDTOs = new ArrayList<>();
+		//when
+		User user = userService.update("id", characterDTO, keywordDTOs);
+		//then
+
+	}
+
+
+	@Test
 	@DisplayName("만약 유저가 존재하는 경우 기존 데이터를 리턴한다.")
 	void saveIfNewUserFail() {
 		// given
 		given(userRepository.findUserByOauth2EntityProviderId(anyString()))
-			.willReturn(Optional.of(mockUser));
+				.willReturn(Optional.of(mockUser));
 
 		// when
 		User existUser = userService.saveIfNewUser(request);
@@ -153,7 +220,7 @@ public class UserServiceTest {
 	void generateUUID() {
 		// given
 		given(userRepository.findById(anyString()))
-			.willReturn(Optional.empty());
+				.willReturn(Optional.empty());
 
 		// when
 		String uuid = userService.generateUUID();

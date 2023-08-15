@@ -2,12 +2,14 @@ package com.najasin.domain.face.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class Face {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

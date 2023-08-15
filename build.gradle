@@ -105,6 +105,7 @@ jacocoTestCoverageVerification {
             excludes = [
                     '*.Application',
                     'com.najasin.config.**',
+                    'com.najasin.domain.dto.**',
                     'com.najasin.domain.**.dto.**',
                     'com.najasin.domain.**.entity.**',
                     'com.najasin.domain.**.controller.**',
@@ -125,11 +126,11 @@ sourceSets {
 }
 
 tasks.withType(JavaCompile).configureEach {
-    options.generatedSourceOutputDirectory = file(generated)
+    options.getGeneratedSourceOutputDirectory().set(file(generated))
 }
 
-clean.doLast {
-    file(generated).deleteDir()
+clean {
+    delete file(generated)
 }
 
 repositories {
