@@ -9,13 +9,14 @@ import java.util.Map;
 
 @Getter
 @Setter
-public class MyPage {
+public class Page {
     private List<String> userTypes;
     private String nickname;
     private String baseImage;
     private CharacterItems characterItems;
     private List<QAPair> myManualQAPair;
     private List<QAPair> othersManualQAPair;
+    private List<String> questions;
     private Map<String, Integer> originKeywordPercents;
     private Map<String, Long> otherKeywordPercents;
 
