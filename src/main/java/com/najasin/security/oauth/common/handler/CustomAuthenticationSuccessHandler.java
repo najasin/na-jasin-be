@@ -37,7 +37,6 @@ public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 		Authentication authentication) throws IOException {
-		StringBuilder sb = new StringBuilder();
 		PrincipalUser principalUser = (PrincipalUser)authentication.getPrincipal();
 		User user = principalUser.getUser();
 
