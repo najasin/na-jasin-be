@@ -214,6 +214,7 @@ public class UserServiceTest {
 		characterDTO.setCharacterSetID(123456789L);
 		//when
 		User user = userService.updateCharacter(mockId, characterDTO);
+
 		//then
 		//테스트 수정 필요
 	}
