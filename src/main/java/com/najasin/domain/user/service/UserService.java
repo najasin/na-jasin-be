@@ -33,12 +33,13 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserService {
 	private final UserRepository userRepository;
-	private final RedisBlackListUtil redisBlackListUtil;
 	private final CharacterSetRepository characterSetRepository;
 	private final FaceRepository faceRepository;
 	private final BodyRepository bodyRepository;
 	private final ExpressionRepository expressionRepository;
 	private final UserKeywordService userKeywordService;
+	private final RedisBlackListUtil redisBlackListUtil;
+
 
 	@Transactional
 	public User saveIfNewUser(OAuth2Request request) {
@@ -62,7 +63,7 @@ public class UserService {
 	}
 
 	@Transactional
-	public User update(String id, CharacterDTO characterDTO, List<KeywordDTO> keywordDTOs) {
+	public User updateByOneself(String id, CharacterDTO characterDTO, List<KeywordDTO> keywordDTOs) {
 		User user = this.findById(id);
 		Face face = null;
 		Body body = null;
@@ -82,6 +83,19 @@ public class UserService {
 			characterSet = characterSetRepository.findById(characterDTO.getCharacterSetID()).orElseThrow(EntityNotFoundException::new);
 		}
 		User newUser = new User(id, new ArrayList<>(List.of(Role.ROLE_MEMBER)), characterSet, face, body, expression, userKeywords, user.getAnswers(), user.getComments() ,user.getUserUserTypes(), user.getLastUserType(), user.getOauth2Entity(), user.getAuditEntity());
+		return userRepository.save(newUser);
+	}
+
+	@Transactional
+	public User updateKeywordByOthers(String id, List<KeywordDTO> keywordDTOs) {
+		User user = this.findById(id);
+		List<UserKeyword> userKeywords = new ArrayList<>();
+		for (KeywordDTO dto : keywordDTOs) {
+			int percent = dto.getPercent();
+			long keywordId = dto.getKeywordID();
+			userKeywords.add(userKeywordService.updateByOthers(id, keywordId, percent));
+		}
+		User newUser = new User(id, new ArrayList<>(List.of(Role.ROLE_MEMBER)), user.getSet(), user.getFace(), user.getBody(), user.getExpression(), userKeywords, user.getAnswers(), user.getComments() ,user.getUserUserTypes(), user.getLastUserType(), user.getOauth2Entity(), user.getAuditEntity());
 		return userRepository.save(newUser);
 	}
 
