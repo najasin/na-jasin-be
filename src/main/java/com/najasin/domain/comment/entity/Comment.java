@@ -10,7 +10,6 @@ import lombok.*;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@Builder
 @IdClass(CommentId.class)
 public class Comment {
     @Id
@@ -32,6 +31,7 @@ public class Comment {
     @Embedded
     private AuditEntity auditEntity;
 
+    @Builder
     public Comment(User user, Question question, String comment, String nickname) {
         this.user = user;
         this.question = question;

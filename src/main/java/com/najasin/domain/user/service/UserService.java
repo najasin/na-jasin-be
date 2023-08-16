@@ -113,7 +113,6 @@ public class UserService {
 		return userRepository.save(newUser);
 	}
 
-
 	@Transactional
 	public User updateKeywordByOthers(String id, List<KeywordDTO> keywordDTOs) {
 		User user = this.findById(id);
@@ -126,7 +125,6 @@ public class UserService {
 		User newUser = new User(id, new ArrayList<>(List.of(Role.ROLE_MEMBER)), user.getSet(), user.getFace(), user.getBody(), user.getExpression(), userKeywords, user.getAnswers(), user.getComments() ,user.getUserUserTypes(), user.getLastUserType(), user.getOauth2Entity(), user.getAuditEntity());
 		return userRepository.save(newUser);
 	}
-
 
 	public String generateUUID() {
 		String uuid = UUID.randomUUID().toString();
