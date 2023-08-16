@@ -4,6 +4,10 @@ import com.najasin.domain.question.entity.Question;
 import com.najasin.domain.user.entity.User;
 import com.najasin.global.audit.AuditEntity;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.*;
 
 @Getter
@@ -31,12 +35,4 @@ public class Comment {
 
     @Embedded
     private AuditEntity auditEntity;
-
-    public Comment(User user, Question question, String comment, String nickname) {
-        this.user = user;
-        this.question = question;
-        this.comment = comment;
-        this.nickname = nickname;
-        this.auditEntity = new AuditEntity();
-    }
 }
