@@ -92,6 +92,9 @@ jobs:
             --s3-location s3://$S3_BUCKET_NAME/$GITHUB_SHA.zip \
             --source .
 
+      - name: test
+        run: ls
+
       - name: Deploy to AWS EC2 from S3
         run: |
           aws deploy create-deployment \
