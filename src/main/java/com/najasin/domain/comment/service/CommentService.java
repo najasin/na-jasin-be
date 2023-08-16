@@ -23,7 +23,12 @@ public class CommentService {
     public Comment save(String userId, Long questionId, String nickname, String comment) {
         User user = userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
         Question question = questionRepository.findById(questionId).orElseThrow(EntityNotFoundException::new);
-        Comment newComment = new Comment(user, question, comment, nickname);
+        Comment newComment = Comment.builder()
+                .user(user)
+                .question(question)
+                .comment(comment)
+                .nickname(nickname)
+                .build();
         user.getComments().add(newComment);
         question.getComments().add(newComment);
         return commentRepository.save(newComment);
@@ -34,13 +39,9 @@ public class CommentService {
         User user = userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
         Question question = questionRepository.findById(questionId).orElseThrow(EntityNotFoundException::new);
         Comment comment = commentRepository.findById(new CommentId(user, question)).orElseThrow(EntityNotFoundException::new);
-        try {
-            user.getComments().remove(comment);
-            question.getComments().remove(comment);
-            commentRepository.delete(comment);
-        } catch (Exception e) {
-            return false;
-        }
+        user.getComments().remove(comment);
+        question.getComments().remove(comment);
+        commentRepository.delete(comment);
         return true;
     }
 }

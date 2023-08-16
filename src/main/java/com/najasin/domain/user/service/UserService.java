@@ -78,6 +78,8 @@ public class UserService {
 	}
 
 
+
+
 	@Transactional
 	public User updateKeyword(String id, List<KeywordDTO> keywordDTOs) {
 		User user = this.findById(id);
@@ -87,6 +89,20 @@ public class UserService {
 			long keywordId = dto.getKeywordID();
 			userKeywords.add(userKeywordService.save(id, keywordId, percent));
 		}
+		User newUser = new User(id, new ArrayList<>(List.of(Role.ROLE_MEMBER)), user.getSet(), user.getFace(), user.getBody(), user.getExpression(), userKeywords, user.getAnswers(), user.getComments() ,user.getUserUserTypes(), user.getLastUserType(), user.getOauth2Entity(), user.getAuditEntity());
+		return userRepository.save(newUser);
+	}
+
+
+
+
+	@Transactional
+	public User updateCharacter(String id, CharacterDTO characterDTO){
+		User user = this.findById(id);
+		Face face = null;
+		Body body = null;
+		Expression expression = null;
+		CharacterSet characterSet = null;
 		User newUser = new User(id, new ArrayList<>(List.of(Role.ROLE_MEMBER)), user.getSet(), user.getFace(), user.getBody(), user.getExpression(), userKeywords, user.getAnswers(), user.getComments() ,user.getUserUserTypes(), user.getLastUserType(), user.getOauth2Entity(), user.getAuditEntity());
 		return userRepository.save(newUser);
 	}

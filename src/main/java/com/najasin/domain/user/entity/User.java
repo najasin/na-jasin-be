@@ -22,7 +22,6 @@ import com.najasin.domain.user.entity.enums.Role;
 import com.najasin.global.audit.AuditEntity;
 
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
