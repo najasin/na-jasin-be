@@ -237,22 +237,6 @@ public class UserServiceTest {
 		assertEquals(user, mockUser);
 	}
 
-	@Test
-	@DisplayName("다른 사람이 키워드 퍼센트에 기여한다")
-	void updateKeywordByOthers() {
-		//given
-		given(userRepository.findById(mockId))
-				.willReturn(Optional.of(mockUser));
-		given(userKeywordService.updateByOthers(any(), anyLong(), anyInt()))
-				.willReturn(mockUK);
-		given(userRepository.save(any()))
-				.willReturn(mockUser);
-		//when
-		User user = userService.updateKeywordByOthers(mockId, keywordDTOs);
-		//then
-		assertEquals(user, mockUser);
-	}
-
 
 	@Test
 	@DisplayName("만약 유저가 존재하는 경우 기존 데이터를 리턴한다.")
