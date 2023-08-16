@@ -41,7 +41,7 @@ public class UserController {
 	private final QuestionService questionService;
 	private final UserTypeRepository userTypeRepository;
 
-	@PostMapping("logout")
+	@PostMapping("/logout")
 	public ResponseEntity<ApiResponse<?>> logout(@AccessToken String accessToken, @RefreshToken String refreshToken) {
 		userService.logout(accessToken, refreshToken);
 
