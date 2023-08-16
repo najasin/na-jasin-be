@@ -36,6 +36,7 @@ public class User {
 	@Column(name = "user_id")
 	private String id;
 
+
 	@ElementCollection(fetch = FetchType.EAGER)
 	@Enumerated(EnumType.STRING)
 	@CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
@@ -47,28 +48,28 @@ public class User {
 	@JoinColumn(name = "character_set", referencedColumnName = "set_id")
 	private CharacterSet set;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "face_id", referencedColumnName = "face_id")
 	private Face face;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "body_id", referencedColumnName = "body_id")
 	private Body body;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "expression_id", referencedColumnName = "expression_id")
 	private Expression expression;
 
-	@OneToMany(mappedBy = "user")
+	@OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
 	private List<UserKeyword> userKeywords;
 
-	@OneToMany(mappedBy = "user")
+	@OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
 	private List<Answer> answers;
 
-	@OneToMany(mappedBy = "user")
+	@OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
 	private List<Comment> comments;
 
-	@OneToMany(mappedBy = "user")
+	@OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
 	private List<UserUserType> userUserTypes;
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -86,6 +87,10 @@ public class User {
 		this.oauth2Entity = oauth2Entity;
 		this.role = new ArrayList<>(List.of(Role.ROLE_MEMBER));
 		this.auditEntity = new AuditEntity();
+	}
+
+	public void updateAnswer(List<Answer> answers) {
+		this.answers = answers;
 	}
 
 	public List<SimpleGrantedAuthority> getRole() {

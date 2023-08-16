@@ -33,4 +33,5 @@ public class Question {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_type_id", referencedColumnName = "user_type_id")
     private UserType userType;
+
 }

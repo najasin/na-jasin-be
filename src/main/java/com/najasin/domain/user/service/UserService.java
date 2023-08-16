@@ -78,7 +78,6 @@ public class UserService {
 	}
 
 
-
 	@Transactional
 	public User updateKeyword(String id, List<KeywordDTO> keywordDTOs) {
 		User user = this.findById(id);
@@ -92,7 +91,12 @@ public class UserService {
 		return userRepository.save(newUser);
 	}
 
-
+	@Transactional
+	public User deleteAnswers(String id) {
+		User user = userRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+		user.updateAnswer(new ArrayList<>());
+		return userRepository.save(user);
+	}
 
 
 	@Transactional
