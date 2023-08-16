@@ -69,7 +69,12 @@ public class UserKeywordServiceTest {
         prevUserKeyword = new UserKeyword(mockUser, mockKeyword, 50, 30, 5);
         List<UserKeyword> list = new ArrayList<>();
         list.add(prevUserKeyword);
-        mockUser = new User(mockUserId, new ArrayList<>(List.of(Role.ROLE_MEMBER)), null, null, null, null, list, null, null ,null, null, mockOauth2Entity, null);
+        mockUser = User.builder()
+                .id(mockUserId)
+                .role( new ArrayList<>(List.of(Role.ROLE_MEMBER)))
+                .userKeywords(list)
+                .oauth2Entity(mockOauth2Entity)
+                .build();
     }
 
     @AfterEach

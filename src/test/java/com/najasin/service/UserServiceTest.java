@@ -191,49 +191,11 @@ public class UserServiceTest {
 		assertEquals(mockUser, saveUser);
 	}
 
-	@Test
-	@DisplayName("유저가 키워드 정보를 갱신한다")
-	void updateKeyword(){
-		//given
-		given(userRepository.findById(any())).willReturn(Optional.of(mockUser));
-		given(userRepository.save(any())).willReturn(mockUser);
-		//when
-		User user = userService.updateKeyword(mockId, keywordDTOs);
-		//then
-		//테스트 수정 필요
-	}
 
-	@Test
-	@DisplayName("유저가 캐릭터 정보를 갱신한다")
-	void updateCharacter(){
-		//given
-		given(userRepository.findById(any())).willReturn(Optional.of(mockUser));
-		given(characterSetRepository.findById(any())).willReturn(Optional.of(mockCS));
-		given(userRepository.save(any())).willReturn(mockUser);
 
-		characterDTO.setCharacterSetID(123456789L);
-		//when
-		User user = userService.updateCharacter(mockId, characterDTO);
 
-		//then
-		//테스트 수정 필요
-	}
 
-	@Test
-	@DisplayName("다른 사람이 키워드 퍼센트에 기여한다")
-	void updateKeywordByOthers() {
-		//given
-		given(userRepository.findById(mockId))
-				.willReturn(Optional.of(mockUser));
-		given(userKeywordService.updateByOthers(any(), anyLong(), anyInt()))
-				.willReturn(mockUK);
-		given(userRepository.save(any()))
-				.willReturn(mockUser);
-		//when
-		User user = userService.updateKeywordByOthers(mockId, keywordDTOs);
-		//then
-		assertEquals(user, mockUser);
-	}
+
 
 
 	@Test

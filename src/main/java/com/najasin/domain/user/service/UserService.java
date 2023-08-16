@@ -79,72 +79,11 @@ public class UserService {
 
 
 
-
-	@Transactional
-	public User updateKeyword(String id, List<KeywordDTO> keywordDTOs) {
-		User user = this.findById(id);
-		List<UserKeyword> userKeywords = new ArrayList<>();
-		for (KeywordDTO dto : keywordDTOs) {
-			int percent = dto.getPercent();
-			long keywordId = dto.getKeywordID();
-			userKeywords.add(userKeywordService.save(id, keywordId, percent));
-		}
-		User newUser = new User(id, new ArrayList<>(List.of(Role.ROLE_MEMBER)), user.getSet(), user.getFace(), user.getBody(), user.getExpression(), userKeywords, user.getAnswers(), user.getComments() ,user.getUserUserTypes(), user.getLastUserType(), user.getOauth2Entity(), user.getAuditEntity());
-		return userRepository.save(newUser);
-	}
-
-
-
-
-	@Transactional
-	public User updateCharacter(String id, CharacterDTO characterDTO){
-		User user = this.findById(id);
-		Face face = null;
-		Body body = null;
-		Expression expression = null;
-		CharacterSet characterSet = null;
-		User newUser = new User(id, new ArrayList<>(List.of(Role.ROLE_MEMBER)), user.getSet(), user.getFace(), user.getBody(), user.getExpression(), userKeywords, user.getAnswers(), user.getComments() ,user.getUserUserTypes(), user.getLastUserType(), user.getOauth2Entity(), user.getAuditEntity());
-		return userRepository.save(newUser);
-	}
-
 	@Transactional
 	public User deleteAnswers(String id) {
 		User user = userRepository.findById(id).orElseThrow(EntityNotFoundException::new);
 		user.updateAnswer(new ArrayList<>());
 		return userRepository.save(user);
-	}
-
-
-	@Transactional
-	public User updateCharacter(String id, CharacterDTO characterDTO){
-		User user = this.findById(id);
-		Face face = null;
-		Body body = null;
-		Expression expression = null;
-		CharacterSet characterSet = null;
-		if (characterDTO.getCharacterSetID() == null) {
-			face = faceRepository.findById(characterDTO.getFaceID()).orElseThrow(EntityNotFoundException::new);
-			body = bodyRepository.findById(characterDTO.getBodyID()).orElseThrow(EntityNotFoundException::new);
-			expression = expressionRepository.findById(characterDTO.getBodyID()).orElseThrow(EntityNotFoundException::new);
-		} else{
-			characterSet = characterSetRepository.findById(characterDTO.getCharacterSetID()).orElseThrow(EntityNotFoundException::new);
-		}
-		User newUser = new User(id, new ArrayList<>(List.of(Role.ROLE_MEMBER)), characterSet, face, body, expression, user.getUserKeywords(), user.getAnswers(), user.getComments() ,user.getUserUserTypes(), user.getLastUserType(), user.getOauth2Entity(), user.getAuditEntity());
-		return userRepository.save(newUser);
-	}
-
-
-	@Transactional
-	public User updateKeywordByOthers(String id, List<KeywordDTO> keywordDTOs) {
-		User user = this.findById(id);
-		List<UserKeyword> userKeywords = new ArrayList<>();
-		for (KeywordDTO dto : keywordDTOs) {
-			int percent = dto.getPercent();
-			long keywordId = dto.getKeywordID();
-			userKeywords.add(userKeywordService.updateByOthers(id, keywordId, percent));
-		}
-		User newUser = new User(id, new ArrayList<>(List.of(Role.ROLE_MEMBER)), user.getSet(), user.getFace(), user.getBody(), user.getExpression(), userKeywords, user.getAnswers(), user.getComments() ,user.getUserUserTypes(), user.getLastUserType(), user.getOauth2Entity(), user.getAuditEntity());
-		return userRepository.save(newUser);
 	}
 
 

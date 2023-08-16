@@ -13,6 +13,8 @@ import com.najasin.domain.userKeyword.entity.UserKeyword;
 import com.najasin.domain.userType.entity.UserType;
 import com.najasin.domain.userType.repository.UserTypeRepository;
 import com.najasin.domain.userUserType.entity.UserUserType;
+import com.najasin.domain.userUserType.entity.UserUserTypeId;
+import com.najasin.domain.userUserType.repository.UserUserTypeRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,6 +42,7 @@ public class UserController {
 	private final AnswerService answerService;
 	private final QuestionService questionService;
 	private final UserTypeRepository userTypeRepository;
+	private final UserUserTypeRepository userUserTypeRepository;
 
 	@PostMapping("/logout")
 	public ResponseEntity<ApiResponse<?>> logout(@AccessToken String accessToken, @RefreshToken String refreshToken) {
@@ -51,15 +54,16 @@ public class UserController {
 		);
 	}
 
-	@PutMapping("/{userTypeId}/answers")
+	@PutMapping("/{userTypeName}/answers")
 	public ResponseEntity<ApiResponse<?>> putAnswers(
-			@PathVariable String userTypeId,
+			@PathVariable String userTypeName,
 			@RequestBody PutAnswer putAnswer
 //			@AuthenticationPrincipal UserDetails userDetails
 	) {
 //		String userId = userDetails.getUsername();
 		String userId = "1";
-		answerService.deleteAnswers(userId);
+		UserType userType = userTypeRepository.findUserTypeByName(userTypeName);
+		answerService.deleteAnswers(userId, userType);
 		for (AnswerDTO dto : putAnswer.getAnswers()) {
 			answerService.save(userId, dto.getId(), dto.getAnswer());
 		}
@@ -69,12 +73,12 @@ public class UserController {
 		);
 	}
 
-	@GetMapping("/{userTypeId}/others-manual")
-	public ResponseEntity<ApiResponse<?>> getOthersPage(@PathVariable String userTypeId, @RequestParam String userId) {
+	@GetMapping("/{userTypeName}/others-manual")
+	public ResponseEntity<ApiResponse<?>> getOthersPage(@PathVariable String userTypeName, @RequestParam String userId) {
 		Page page = new Page();
 		User user = userService.findById(userId);
-
-		UserType userType = userTypeRepository.findById(Long.parseLong(userTypeId)).orElseThrow(EntityNotFoundException::new);
+		UserType userType = userTypeRepository.findUserTypeByName(userTypeName);
+		UserUserType userUserType = userUserTypeRepository.findById(new UserUserTypeId(user, userType)).orElseThrow(EntityNotFoundException::new);
 
 		List<String> questions = new ArrayList<>();
 		for (Question question : questionService.getQuestionByQuestionTypeAndUserType(QuestionType.FOR_OTHERS, userType)) {
@@ -82,12 +86,17 @@ public class UserController {
 		}
 		page.setQuestions(questions);
 
-		page.setNickname("임시 닉네임");
+		page.setNickname(user.getNickname());
 		page.setBaseImage("임시 베이스 이미지 url");
-		Page.CharacterItem face = new Page.CharacterItem(user.getFace().getId(), user.getFace().getLayout_url(), user.getFace().getShow_url());
-		Page.CharacterItem body = new Page.CharacterItem(user.getBody().getId(), user.getBody().getLayout_url(), user.getBody().getShow_url());
-		Page.CharacterItem expression = new Page.CharacterItem(user.getExpression().getId(), user.getExpression().getLayout_url(), user.getExpression().getShow_url());
-		page.setCharacterItems(new Page.CharacterItems(face, body, expression));
+		Page.CharacterItem face = null; Page.CharacterItem body = null; Page.CharacterItem expression= null; Page.CharacterItem characterSet = null;
+		if (userUserType.getSet() != null) {
+			characterSet = new Page.CharacterItem(userUserType.getSet().getId(), userUserType.getSet().getUrl(), userUserType.getSet().getUrl());
+		} else{
+			face = new Page.CharacterItem(userUserType.getFace().getId(), userUserType.getFace().getLayout_url(), userUserType.getFace().getShow_url());
+			body = new Page.CharacterItem(userUserType.getBody().getId(), userUserType.getBody().getLayout_url(), userUserType.getBody().getShow_url());
+			expression = new Page.CharacterItem(userUserType.getExpression().getId(), userUserType.getExpression().getLayout_url(), userUserType.getExpression().getShow_url());
+		}
+		page.setCharacterItems(new Page.CharacterItems(face, body, expression, characterSet));
 
 		List<Page.QAPair> myQaPairs = new ArrayList<>();
 		for (Answer answer : user.getAnswers()) {
@@ -115,24 +124,31 @@ public class UserController {
 		);
 	}
 
-	@GetMapping("/{userType}/mypage")
-	public ResponseEntity<ApiResponse<?>> getMyPage(@PathVariable String userType, @RequestParam String userId) {
+	@GetMapping("/{userTypeName}/mypage")
+	public ResponseEntity<ApiResponse<?>> getMyPage(@PathVariable String userTypeName, @RequestParam String userId) {
 
 		Page page = new Page();
 		User user = userService.findById(userId);
+		UserType userType = userTypeRepository.findUserTypeByName(userTypeName);
+		UserUserType userUserType = userUserTypeRepository.findById(new UserUserTypeId(user, userType)).orElseThrow(EntityNotFoundException::new);
 
 		List<String> userTypes = new ArrayList<>();
-		for (UserUserType userUserType : user.getUserUserTypes()) {
-			userTypes.add(userUserType.getUserType().getName());
+		for (UserUserType uut : user.getUserUserTypes()) {
+			userTypes.add(uut.getUserType().getName());
 		}
 		page.setUserTypes(userTypes);
 
-		page.setNickname("임시 닉네임");
+		page.setNickname(user.getNickname());
 		page.setBaseImage("임시 베이스 이미지 url");
-		Page.CharacterItem face = new Page.CharacterItem(user.getFace().getId(), user.getFace().getLayout_url(), user.getFace().getShow_url());
-		Page.CharacterItem body = new Page.CharacterItem(user.getBody().getId(), user.getBody().getLayout_url(), user.getBody().getShow_url());
-		Page.CharacterItem expression = new Page.CharacterItem(user.getExpression().getId(), user.getExpression().getLayout_url(), user.getExpression().getShow_url());
-		page.setCharacterItems(new Page.CharacterItems(face, body, expression));
+		Page.CharacterItem face = null; Page.CharacterItem body = null; Page.CharacterItem expression= null; Page.CharacterItem characterSet = null;
+		if (userUserType.getSet() != null) {
+			characterSet = new Page.CharacterItem(userUserType.getSet().getId(), userUserType.getSet().getUrl(), userUserType.getSet().getUrl());
+		} else{
+			face = new Page.CharacterItem(userUserType.getFace().getId(), userUserType.getFace().getLayout_url(), userUserType.getFace().getShow_url());
+			body = new Page.CharacterItem(userUserType.getBody().getId(), userUserType.getBody().getLayout_url(), userUserType.getBody().getShow_url());
+			expression = new Page.CharacterItem(userUserType.getExpression().getId(), userUserType.getExpression().getLayout_url(), userUserType.getExpression().getShow_url());
+		}
+		page.setCharacterItems(new Page.CharacterItems(face, body, expression, characterSet));
 
 		List<Page.QAPair> myQaPairs = new ArrayList<>();
 		List<Page.QAPair> othersQaPairs = new ArrayList<>();

@@ -27,6 +27,7 @@ public class Page {
         private CharacterItem face;
         private CharacterItem body;
         private CharacterItem expression;
+        private CharacterItem characterSet;
     }
     @Getter
     @Setter

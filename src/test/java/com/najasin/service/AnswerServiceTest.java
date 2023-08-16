@@ -18,14 +18,19 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import static org.mockito.Mockito.*;
+
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static junit.framework.TestCase.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.times;
 
 @ExtendWith(MockitoExtension.class)
 public class AnswerServiceTest {
@@ -85,5 +90,37 @@ public class AnswerServiceTest {
                 .willReturn(Optional.of(mockQuestion));
         Answer saveAnswer = answerService.save(mockUserId, mockQuestionId, mockAns);
         assertEquals(saveAnswer, mockAnswer);
+    }
+
+
+    @Test
+    @DisplayName("해당 유저의 응답 정보를 지운다")
+    public void deleteAnswers() {
+        // Given
+        UserType userTypeToDelete = new UserType(1L, "JFF", null);
+        UserType userTypeToKeep = new UserType(2L, "DF", null);
+
+        List<Answer> answersToDelete = new ArrayList<>();
+
+        for (int i = 1; i <= 5; i++) {
+            UserType questionUserType = i % 2 == 0 ? userTypeToDelete : userTypeToKeep;
+            Question question = new Question(null, null, null, null, questionUserType);
+            Answer answer = new Answer(mockUser, question, null);
+            if (questionUserType != userTypeToDelete) {
+                answersToDelete.add(answer);
+            }
+        }
+
+        given(userRepository.findById(anyString())).willReturn(Optional.of(mockUser));
+        given(answerRepository.findByUser_Id(anyString())).willReturn(answersToDelete);
+
+        // When
+        answerService.deleteAnswers(mockUserId, userTypeToDelete);
+
+        // Then
+        List<Answer> remainingAnswers = answersToDelete.stream()
+                .filter(answer -> answer.getQuestion().getUserType() != userTypeToDelete)
+                .collect(Collectors.toList());
+        assertEquals(remainingAnswers.size(), mockUser.getAnswers().size());
     }
 }

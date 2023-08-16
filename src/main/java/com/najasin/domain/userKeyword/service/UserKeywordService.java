@@ -28,6 +28,7 @@ public class UserKeywordService {
         User user = userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
         Keyword keyword = keywordRepository.findById(keywordId).orElseThrow(EntityNotFoundException::new);
         UserKeyword newUK = new UserKeyword(user, keyword, percent);
+        user.updateKeyword(newUK);
         return userKeywordRepository.save(newUK);
     }
 
@@ -42,6 +43,7 @@ public class UserKeywordService {
             }
         }
         UserKeyword newUK = new UserKeyword(user, keyword, prevUK.getOriginPercent(), prevUK.getOthersPercent() + percent, prevUK.getOthersCount() + 1);
+        user.updateKeyword(newUK);
         return userKeywordRepository.save(newUK);
     }
 }

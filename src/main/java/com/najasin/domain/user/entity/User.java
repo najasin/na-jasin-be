@@ -29,12 +29,15 @@ import lombok.NoArgsConstructor;
 @Entity(name = "users")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Builder
 @EntityListeners(AuditingEntityListener.class)
 public class User {
 	@Id
 	@Column(name = "user_id")
 	private String id;
 
+	@Column(name = "nickname")
+	private String nickname;
 
 	@ElementCollection(fetch = FetchType.EAGER)
 	@Enumerated(EnumType.STRING)
@@ -42,22 +45,6 @@ public class User {
 	@Column(name = "role")
 	private List<Role> role;
 
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "character_set", referencedColumnName = "set_id")
-	private CharacterSet set;
-
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "face_id", referencedColumnName = "face_id")
-	private Face face;
-
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "body_id", referencedColumnName = "body_id")
-	private Body body;
-
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "expression_id", referencedColumnName = "expression_id")
-	private Expression expression;
 
 	@OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
 	private List<UserKeyword> userKeywords;
@@ -90,6 +77,16 @@ public class User {
 
 	public void updateAnswer(List<Answer> answers) {
 		this.answers = answers;
+	}
+
+	public void updateNickname(String nickname) {
+		this.nickname = nickname;
+	}
+
+
+
+	public void updateKeyword(UserKeyword userKeyword) {
+		this.userKeywords.add(userKeyword);
 	}
 
 	public List<SimpleGrantedAuthority> getRole() {
