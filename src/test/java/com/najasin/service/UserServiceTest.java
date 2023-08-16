@@ -192,25 +192,20 @@ public class UserServiceTest {
 	}
 
 	@Test
-	@DisplayName("유저가 내적나사 정보를 등록한다(프로필이 캐릭터셋 아닐 때)")
-	void updateV1(){
+	@DisplayName("유저가 키워드 정보를 갱신한다")
+	void updateKeyword(){
 		//given
 		given(userRepository.findById(any())).willReturn(Optional.of(mockUser));
-		given(faceRepository.findById(any())).willReturn(Optional.of(mockFace));
-		given(bodyRepository.findById(any())).willReturn(Optional.of(mockBody));
-		given(expressionRepository.findById(any())).willReturn(Optional.of(mockExpression));
 		given(userRepository.save(any())).willReturn(mockUser);
-
-
 		//when
-		User user = userService.updateByOneself("id", characterDTO, keywordDTOs);
+		User user = userService.updateKeyword(mockId, keywordDTOs);
 		//then
-
+		//테스트 수정 필요
 	}
 
 	@Test
-	@DisplayName("유저가 내적나사 정보를 등록한다(프로필이 캐릭터셋일 때)")
-	void updateV2(){
+	@DisplayName("유저가 캐릭터 정보를 갱신한다")
+	void updateCharacter(){
 		//given
 		given(userRepository.findById(any())).willReturn(Optional.of(mockUser));
 		given(characterSetRepository.findById(any())).willReturn(Optional.of(mockCS));
@@ -218,9 +213,10 @@ public class UserServiceTest {
 
 		characterDTO.setCharacterSetID(123456789L);
 		//when
-		User user = userService.updateByOneself("id", characterDTO, keywordDTOs);
-		//then
+		User user = userService.updateCharacter(mockId, characterDTO);
 
+		//then
+		//테스트 수정 필요
 	}
 
 	@Test
@@ -260,7 +256,7 @@ public class UserServiceTest {
 	void generateUUID() {
 		// given
 		given(userRepository.findById(anyString()))
-				.willReturn(Optional.empty());
+			.willReturn(Optional.empty());
 
 		// when
 		String uuid = userService.generateUUID();

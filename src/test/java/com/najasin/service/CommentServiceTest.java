@@ -67,8 +67,12 @@ public class CommentServiceTest {
         mockQuestion = new Question(mockQuestionId, "질문", QuestionType.FOR_OTHERS, new ArrayList<>(), new UserType(1L, "JFF", null));
         mockCommentContent = "테스트 코멘트";
         mockCommentNickname = "테스트 닉네임";
-        mockComment = new Comment(mockUser, mockQuestion, mockCommentNickname, mockCommentContent);
-
+        mockComment = Comment.builder()
+                .user(mockUser)
+                .question(mockQuestion)
+                .comment(mockCommentContent)
+                .nickname(mockCommentNickname)
+                .build();
     }
 
     @AfterEach
