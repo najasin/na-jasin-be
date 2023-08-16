@@ -1,43 +1,34 @@
 spring:
-  config:
-    activate:
-      on-profile: prod
-
   datasource:
-    url: ${RDS_HOST}
-    username: ${RDS_USER}
-    password: ${RDS_PASSWORD}
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:h2:mem:test;MODE=MySQL;DB_CLOSE_DELAY=-1
+    username: test
+    password:
+    driver-class-name: org.h2.Driver
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate.ddl-auto: create-drop
 
   data:
     redis:
       port: 6379
-      host: ${ELASTIC_CACHE_HOST}
-
-  jpa:
-    open-in-view: false
-    hibernate:
-      ddl-auto: none
-
-  servlet:
-    multipart:
-      enabled: true
-      file-size-threshold: 1MB
-      max-file-size: 100MB
-      max-request-size: 100MB
+      host: 127.0.0.1
 
   security:
     oauth2:
       client:
         registration:
           google:
-            client-id: ${GOOGLE_CLIENT_ID}
-            client-secret: ${GOOGLE_CLIENT_SECRET}
+            client-id: test
+            client-secret: test
             scope: openid,profile,email
 
           kakao:
-            client-id: ${KAKAO_CLIENT_ID}
-            client-secret: ${KAKAO_CLIENT_SECRET}
+            client-id: test
+            client-secret: test
             redirect-uri: "{baseUrl}/{action}/oauth2/code/{registrationId}"
             authorization-grant-type: authorization_code
             client-authentication-method: client_secret_post
@@ -52,20 +43,19 @@ spring:
             user-info-uri: https://kapi.kakao.com/v2/user/me
             user-name-attribute: id
 
-jwt:
-  access-header: Authorization
-  refresh-header: Refresh
-  secret: ${JWT_SECRET}
-
 cloud:
   aws:
     region:
-      static:
-        ap-northeast-2
+      static: ap-northeast-2
     stack:
-      auto:
-        false
+      auto: false
+
+jwt:
+  access-header: Authorization
+  refresh-header: Refresh
+  secret: testestestestestestestestestestestestestestestestestestestestestestestestestestestestestestestestestest
 
 client:
-  url: ${CLIENT_URL}
+  host: localhost
+  url: http://localhost:3000
   endpoint: success

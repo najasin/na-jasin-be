@@ -1,19 +1,25 @@
 spring:
   config:
     activate:
-      on-profile: prod
-  #    import:
-  #      classpath:/application-aws.yml
+      on-profile: local
 
   datasource:
-    url: ${DB_HOST}
+    url: jdbc:mysql://localhost:3306/na-jasin
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  data:
+    redis:
+      port: 6379
+      host: 127.0.0.1
 
   jpa:
     open-in-view: false
     hibernate:
-      ddl-auto: none
+      ddl-auto: create-drop
+    show-sql: true
+    generate-ddl: true
 
   servlet:
     multipart:
@@ -21,6 +27,31 @@ spring:
       file-size-threshold: 1MB
       max-file-size: 100MB
       max-request-size: 100MB
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_Secret}
+            scope: openid,profile,email
+
+          kakao:
+            client-id: ${KAKAO_CLIENT_ID}
+            client-secret: ${KAKAO_CLIENT_SECRET}
+            redirect-uri: "{baseUrl}/{action}/oauth2/code/{registrationId}"
+            authorization-grant-type: authorization_code
+            client-authentication-method: client_secret_post
+            client-name: Kakao
+            scope: openid,profile_nickname,account_email
+
+        provider:
+          kakao:
+            issuer-uri: https://kauth.kakao.com
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user-name-attribute: id
 
 jwt:
   access-header: Authorization
@@ -35,3 +66,8 @@ cloud:
     stack:
       auto:
         false
+
+client:
+  host: localhost
+  url: http://localhost:3000
+  endpoint: success
