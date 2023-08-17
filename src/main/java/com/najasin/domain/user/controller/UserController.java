@@ -4,6 +4,8 @@ import com.najasin.domain.answer.entity.Answer;
 import com.najasin.domain.answer.service.AnswerService;
 import com.najasin.domain.answer.dto.AnswerDTO;
 import com.najasin.domain.character.dto.CharacterInfoDTO;
+import com.najasin.domain.comment.repository.CommentRepository;
+import com.najasin.domain.comment.service.CommentService;
 import com.najasin.domain.question.entity.QuestionType;
 import com.najasin.domain.question.service.QuestionService;
 import com.najasin.domain.user.dto.CharacterItems;
@@ -45,7 +47,7 @@ public class UserController {
 	private final UserService userService;
 	private final AnswerService answerService;
 	private final QuestionService questionService;
-	private final UserTypeRepository userTypeRepository;
+	private final CommentService commentService;
 	private final UserUserTypeService userUserTypeService;
 	private final UserKeywordService userKeywordService;
 
@@ -128,6 +130,21 @@ public class UserController {
 		);
 	}
 
+	@PostMapping("/{userTypeName}/others-manual")
+	public ResponseEntity<ApiResponse<?>> postOthersManual(
+			@PathVariable String userTypeName,
+			@RequestParam String userId,
+			@RequestBody PageUpdateRequestDTO dto
+			//		@AuthenticationPrincipal UserDetails userDetails
+	){
+		for (PageUpdateRequestDTO.AnswerDTO answerDTO : dto.getAnswers()) {
+			commentService.save(userId, answerDTO.getId(), dto.getNickname(), answerDTO.getAnswer());
+		}
+		return new ResponseEntity<>(
+				ApiResponse.createSuccess(UserResponse.SUCCESS_UPDATE.getMessage()),
+				HttpStatus.OK
+		);
+	}
 
 	@GetMapping("/{userTypeName}/my-manual")
 	public ResponseEntity<ApiResponse<?>> getMyManual(
@@ -167,6 +184,7 @@ public class UserController {
 		CharacterInfoDTO characterInfoDTO = userUserTypeService.getCharacter(userId, userTypeName);
 		page.setCharacterItems(new Page.CharacterItems(characterInfoDTO.getFace(), characterInfoDTO.getBody(), characterInfoDTO.getExpression(), characterInfoDTO.getCharacterSet()));
 		page.setMyManualQAPair(userUserTypeService.getQAByUserIdAndUserTypeAndQuestionType(userId, userTypeName, QuestionType.FOR_USER));
+
 		page.setOriginKeywordPercents(userKeywordService.getOriginKeywordPercents(userId));
 		page.setOtherKeywordPercents(userKeywordService.getOtherKeywordPercents(userId));
 		return new ResponseEntity<>(
@@ -202,7 +220,5 @@ public class UserController {
 				ApiResponse.createSuccessWithData(UserResponse.SUCCESS_GET_PAGE.getMessage(), page),
 				HttpStatus.OK
 		);
-
-
 	}
 }

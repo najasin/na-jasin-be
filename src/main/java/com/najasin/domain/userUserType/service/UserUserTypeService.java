@@ -5,16 +5,15 @@ import com.najasin.domain.character.body.entity.Body;
 import com.najasin.domain.character.body.repository.BodyRepository;
 import com.najasin.domain.character.characterset.entity.CharacterSet;
 import com.najasin.domain.character.characterset.repository.CharacterSetRepository;
-import com.najasin.domain.character.dto.CharacterDTO;
 import com.najasin.domain.character.dto.CharacterInfoDTO;
 import com.najasin.domain.character.expression.entity.Expression;
 import com.najasin.domain.character.expression.repository.ExpressionRepository;
 import com.najasin.domain.character.face.entity.Face;
 import com.najasin.domain.character.face.repository.FaceRepository;
+import com.najasin.domain.comment.entity.Comment;
 import com.najasin.domain.question.entity.QuestionType;
 import com.najasin.domain.user.dto.CharacterItems;
 import com.najasin.domain.user.dto.Page;
-import com.najasin.domain.user.dto.PageUpdateRequestDTO;
 import com.najasin.domain.user.entity.User;
 import com.najasin.domain.user.repository.UserRepository;
 import com.najasin.domain.userType.entity.UserType;
@@ -29,18 +28,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.List;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import com.najasin.domain.user.entity.User;
-import com.najasin.domain.userType.entity.UserType;
 import com.najasin.domain.userType.service.UserTypeService;
-import com.najasin.domain.userUserType.entity.UserUserType;
-import com.najasin.domain.userUserType.repository.UserUserTypeRepository;
 
-import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -52,13 +41,14 @@ public class UserUserTypeService {
     private final BodyRepository bodyRepository;
     private final ExpressionRepository expressionRepository;
     private final CharacterSetRepository characterSetRepository;
+    private final UserTypeService userTypeService;
 
 
 
     @Transactional
     public UserUserType getUserUserTypeById(String userId, String userTypeName) {
         User user = userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
-        UserType userType = userTypeRepository.findUserTypeByName(userTypeName);
+        UserType userType = userTypeRepository.findByName(userTypeName).orElseThrow(EntityNotFoundException::new);
         return userUserTypeRepository.findById(new UserUserTypeId(user, userType)).orElseThrow(EntityNotFoundException::new);
     }
 
@@ -66,9 +56,15 @@ public class UserUserTypeService {
     public List<Page.QAPair> getQAByUserIdAndUserTypeAndQuestionType(String userId, String userTypeName, QuestionType questionType) {
         UserUserType userUserType = this.getUserUserTypeById(userId, userTypeName);
         List<Page.QAPair> myQaParis = new ArrayList<>();
-        for (Answer answer : userUserType.getUser().getAnswers()) {
-            if (answer.getQuestion().getQuestionType() == questionType) {
+        if (questionType == QuestionType.FOR_USER) {
+            for (Answer answer : userUserType.getUser().getAnswers()) {
                 Page.QAPair qaPair = new Page.QAPair(answer.getQuestion().getId(), answer.getQuestion().getQuestion(), answer.getAnswer());
+                myQaParis.add(qaPair);
+            }
+        }
+        else if (questionType == QuestionType.FOR_OTHERS){
+            for (Comment comment : userUserType.getUser().getComments()) {
+                Page.QAPair qaPair = new Page.QAPair(comment.getQuestion().getId(), comment.getQuestion().getQuestion(), comment.getComment());
                 myQaParis.add(qaPair);
             }
         }
@@ -110,27 +106,25 @@ public class UserUserTypeService {
         Page.CharacterItem expressionItem = (expression!=null)? new Page.CharacterItem(expression.getId(), expression.getShow_url(), expression.getLayout_url()):null;
         return new CharacterInfoDTO(faceItem, bodyItem, expressionItem, null);
     }
-	private final UserTypeService userTypeService;
-	private final UserUserTypeRepository userUserTypeRepository;
 
-	@Transactional
-	public String updateUserType(User user, String userTypeName) {
-		UserType userType = userTypeService.findByName(userTypeName);
+    @Transactional
+    public String updateUserType(User user, String userTypeName) {
+        UserType userType = userTypeService.findByName(userTypeName);
 
-		if (!checkAlreadyExist(user.getUserUserTypes(), userType)) {
-			save(user, userType);
-		}
+        if (!checkAlreadyExist(user.getUserUserTypes(), userType)) {
+            save(user, userType);
+        }
 
-		user.updateLastUserType(userType);
-		return userTypeName;
-	}
+        user.updateLastUserType(userType);
+        return userTypeName;
+    }
 
-	@Transactional
-	public UserUserType save(User user, UserType userType) {
-		return userUserTypeRepository.save(new UserUserType(user, userType));
-	}
+    @Transactional
+    public UserUserType save(User user, UserType userType) {
+        return userUserTypeRepository.save(new UserUserType(user, userType));
+    }
 
-	private boolean checkAlreadyExist(List<UserUserType> userUserTypes, UserType userType) {
-		return userUserTypes.stream().map(UserUserType::getUserType).toList().contains(userType);
-	}
+    private boolean checkAlreadyExist(List<UserUserType> userUserTypes, UserType userType) {
+        return userUserTypes.stream().map(UserUserType::getUserType).toList().contains(userType);
+    }
 }

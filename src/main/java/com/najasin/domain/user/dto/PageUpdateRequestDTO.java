@@ -14,6 +14,7 @@ public class PageUpdateRequestDTO {
     private CharacterItems characterItems;
     private List<AnswerDTO> answers;
     private Map<String, Integer> keywordPercents;
+    private Map<String, Integer> otherKeywordPercents;
 
 
     @Getter

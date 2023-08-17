@@ -44,6 +44,11 @@ public class UserUserType {
     @JoinColumn(name = "expression_id", referencedColumnName = "expression_id")
     private Expression expression;
 
+    public UserUserType(User user, UserType userType) {
+        this.user = user;
+        this.userType = userType;
+    }
+
     public void updateCharacter(Face face, Body body, Expression expression, CharacterSet characterSet) {
         this.face = face;
         this.body = body;

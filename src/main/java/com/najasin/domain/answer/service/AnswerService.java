@@ -36,7 +36,7 @@ public class AnswerService {
     @Transactional
     public void deleteAnswers(String userId, String userTypeName) {
         User user = userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
-        UserType userType = userTypeRepository.findUserTypeByName(userTypeName);
+        UserType userType = userTypeRepository.findByName(userTypeName).orElseThrow(EntityNotFoundException::new);
         List<Answer> answersToDelete = answerRepository.findByUser_Id(userId);
         List<Answer> answersLeft = new ArrayList<>();
         for (Answer answer : answersToDelete) {

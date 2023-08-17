@@ -5,6 +5,7 @@ import com.najasin.domain.question.entity.QuestionType;
 import com.najasin.domain.question.repository.QuestionRepository;
 import com.najasin.domain.userType.entity.UserType;
 import com.najasin.domain.userType.repository.UserTypeRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,7 +21,7 @@ public class QuestionService {
     @Transactional
     public List<String> getQuestionByQuestionTypeAndUserType(QuestionType questionType, String userTypeName) {
         List<String> ret = new ArrayList<>();
-        UserType userType = userTypeRepository.findUserTypeByName(userTypeName);
+        UserType userType = userTypeRepository.findByName(userTypeName).orElseThrow(EntityNotFoundException::new);
         for (Question question : questionRepository.getQuestionsByQuestionTypeAndUserType(questionType, userType)) {
             ret.add(question.getQuestion());
         }
