@@ -13,6 +13,7 @@ import com.najasin.domain.character.face.entity.Face;
 import com.najasin.domain.character.face.repository.FaceRepository;
 import com.najasin.domain.question.entity.QuestionType;
 import com.najasin.domain.user.dto.Page;
+import com.najasin.domain.user.dto.PageUpdateRequestDTO;
 import com.najasin.domain.user.entity.User;
 import com.najasin.domain.user.repository.UserRepository;
 import com.najasin.domain.userType.entity.UserType;
@@ -77,7 +78,24 @@ public class UserUserTypeService {
         return myQaParis;
     }
 
-
+    @Transactional
+    public UserUserType updateCharacter(String userId, String userTypeName , PageUpdateRequestDTO.CharacterItems dto) {
+        User user = userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
+        UserUserType userUserType = this.getUserUserTypeById(userId, userTypeName);
+        if (dto.getSet()== null) {
+            Face face = null; Body body = null; Expression expression = null;
+            if (dto.getFace()!=null) face = faceRepository.findById(dto.getFace().getId()).orElse(null);
+            if (dto.getBody()!=null) body = bodyRepository.findById(dto.getBody().getId()).orElse(null);
+            if (dto.getExpression()!=null) expression = expressionRepository.findById(dto.getExpression().getId()).orElse(null);
+            userUserType.updateCharacter(face, body, expression, null);
+        }
+        else{
+            CharacterSet characterSet = characterSetRepository.findById(dto.getSet().getId()).orElseThrow(EntityNotFoundException::new);
+            userUserType.updateCharacter(null, null, null, characterSet);
+        }
+        user.updateUserUserType(userUserType);
+        return userUserType;
+    }
 
     @Transactional
     public CharacterInfoDTO getCharacter(String userId, String userTypeName) {
@@ -90,9 +108,9 @@ public class UserUserTypeService {
             Page.CharacterItem characterItem = new Page.CharacterItem(characterSet.getId(), characterSet.getUrl(), characterSet.getUrl());
             return new CharacterInfoDTO(null, null, null, characterItem);
         }
-        Page.CharacterItem faceItem = new Page.CharacterItem(face.getId(), face.getShow_url(), face.getLayout_url());
-        Page.CharacterItem bodyItem = new Page.CharacterItem(body.getId(), body.getShow_url(), body.getLayout_url());
-        Page.CharacterItem expressionItem = new Page.CharacterItem(expression.getId(), expression.getShow_url(), expression.getLayout_url());
+        Page.CharacterItem faceItem = (face!=null)? new Page.CharacterItem(face.getId(), face.getShow_url(), face.getLayout_url()):null;
+        Page.CharacterItem bodyItem = (body!=null)? new Page.CharacterItem(body.getId(), body.getShow_url(), body.getLayout_url()):null;
+        Page.CharacterItem expressionItem = (expression!=null)? new Page.CharacterItem(expression.getId(), expression.getShow_url(), expression.getLayout_url()):null;
         return new CharacterInfoDTO(faceItem, bodyItem, expressionItem, null);
     }
 }

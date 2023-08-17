@@ -115,7 +115,7 @@ public class AnswerServiceTest {
         given(answerRepository.findByUser_Id(anyString())).willReturn(answersToDelete);
 
         // When
-        answerService.deleteAnswers(mockUserId, userTypeToDelete);
+        answerService.deleteAnswers(mockUserId, "JFF");
 
         // Then
         List<Answer> remainingAnswers = answersToDelete.stream()

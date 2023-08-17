@@ -69,4 +69,17 @@ public class UserKeywordService {
         user.updateKeyword(newUK);
         return userKeywordRepository.save(newUK);
     }
+
+    @Transactional
+    public void updateByUser(String userId, Map<String, Integer> dto) {
+        User user = userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
+        userKeywordRepository.deleteAll(user.getUserKeywords());
+        user.deleteKeywords();
+        for (String keywordName : dto.keySet()) {
+            Keyword keyword = keywordRepository.findKeywordByName(keywordName);
+            UserKeyword userKeyword = new UserKeyword(user, keyword, dto.get(keywordName));
+            user.updateKeyword(userKeyword);
+            userKeywordRepository.save(userKeyword);
+        }
+    }
 }

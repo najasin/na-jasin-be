@@ -7,6 +7,7 @@ import com.najasin.domain.character.dto.CharacterInfoDTO;
 import com.najasin.domain.question.entity.QuestionType;
 import com.najasin.domain.question.service.QuestionService;
 import com.najasin.domain.user.dto.Page;
+import com.najasin.domain.user.dto.PageUpdateRequestDTO;
 import com.najasin.domain.user.dto.PutAnswer;
 import com.najasin.domain.user.entity.User;
 import com.najasin.domain.userKeyword.entity.UserKeyword;
@@ -65,8 +66,7 @@ public class UserController {
 	) {
 //		String userId = userDetails.getUsername();
 		String userId = "1";
-		UserType userType = userTypeRepository.findUserTypeByName(userTypeName);
-		answerService.deleteAnswers(userId, userType);
+		answerService.deleteAnswers(userId, userTypeName);
 		for (AnswerDTO dto : putAnswer.getAnswers()) {
 			answerService.save(userId, dto.getId(), dto.getAnswer());
 		}
@@ -75,6 +75,7 @@ public class UserController {
 				HttpStatus.OK
 		);
 	}
+
 
 	@PutMapping("/{userTypeName}/nickname")
 	public ResponseEntity<ApiResponse<?>> putNickname(
@@ -90,11 +91,32 @@ public class UserController {
 		);
 	}
 
+	@PostMapping("/{userTypeName}/my-manual")
+	public ResponseEntity<ApiResponse<?>> postMyManual(
+			@PathVariable String userTypeName,
+			@RequestBody PageUpdateRequestDTO dto
+			//		@AuthenticationPrincipal UserDetails userDetails
+	) {
+		String userId = "1";
+		User user = userService.findById(userId);
+		user.updateNickname(dto.getNickname());
+		userUserTypeService.updateCharacter(userId, userTypeName, dto.getCharacterItems());
+		answerService.deleteAnswers(userId, userTypeName);
+		answerService.updateAnswers(userId, dto.getAnswers());
+		userKeywordService.updateByUser(userId, dto.getKeywordPercents());
+		return new ResponseEntity<>(
+				ApiResponse.createSuccess(UserResponse.SUCCESS_UPDATE.getMessage()),
+				HttpStatus.OK
+		);
+	}
+
+
 	@GetMapping("/{userTypeName}/my-manual")
 	public ResponseEntity<ApiResponse<?>> getMyManual(
 			@PathVariable String userTypeName
 			//		@AuthenticationPrincipal UserDetails userDetails
 	) {
+
 		Page page = new Page();
 		String userId = "1";
 		User user = userService.findById(userId);
@@ -162,7 +184,6 @@ public class UserController {
 				ApiResponse.createSuccessWithData(UserResponse.SUCCESS_GET_PAGE.getMessage(), page),
 				HttpStatus.OK
 		);
-
 
 
 	}

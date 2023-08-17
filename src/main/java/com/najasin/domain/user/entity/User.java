@@ -78,7 +78,18 @@ public class User {
 		this.nickname = nickname;
 	}
 
+	public void updateUserUserType(UserUserType userUserType) {
+		for (UserUserType uut : this.userUserTypes) {
+			if (uut.getUserType() == userUserType.getUserType()) {
+				this.userUserTypes.remove(uut);
+				break;
+			}
+		}
+		this.userUserTypes.add(userUserType);
+	}
 
+	public void deleteKeywords(){
+		this.userKeywords = new ArrayList<>();}
 
 	public void updateKeyword(UserKeyword userKeyword) {
 		this.userKeywords.add(userKeyword);
