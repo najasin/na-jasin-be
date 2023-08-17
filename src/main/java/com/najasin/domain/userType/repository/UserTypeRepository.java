@@ -1,8 +1,11 @@
 package com.najasin.domain.userType.repository;
 
-import com.najasin.domain.userType.entity.UserType;
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import com.najasin.domain.userType.entity.UserType;
+
 public interface UserTypeRepository extends JpaRepository<UserType, Long> {
-    UserType findUserTypeByName(String name);
+	Optional<UserType> findByName(String name);
 }
