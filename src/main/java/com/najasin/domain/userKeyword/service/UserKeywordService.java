@@ -12,9 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +29,31 @@ public class UserKeywordService {
         user.updateKeyword(newUK);
         return userKeywordRepository.save(newUK);
     }
+
+    @Transactional
+    public Map<String, Integer> getOriginKeywordPercents(String userId) {
+        User user = userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
+        Map<String, Integer> originKeywordPercents = new HashMap<>();
+        for (UserKeyword UK : user.getUserKeywords()) {
+            String keyword = UK.getKeyword().getName();
+            Integer originPercent = UK.getOriginPercent();
+            originKeywordPercents.put(keyword, originPercent);
+        }
+        return originKeywordPercents;
+    }
+
+    @Transactional
+    public Map<String, Long> getOtherKeywordPercents(String userId) {
+        User user = userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
+        Map<String, Long> otherKeywordPercents = new HashMap<>();
+        for (UserKeyword UK : user.getUserKeywords()) {
+            String keyword = UK.getKeyword().getName();
+            Long otherPercent = Long.valueOf(UK.getOriginPercent() + UK.getOthersPercent()) / (UK.getOthersCount() + 1);
+            otherKeywordPercents.put(keyword, otherPercent);
+        }
+        return otherKeywordPercents;
+    }
+
 
     @Transactional
     public UserKeyword updateByOthers(String userId, Long keywordId, int percent) {

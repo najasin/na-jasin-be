@@ -17,6 +17,7 @@ public class Page {
     private List<QAPair> myManualQAPair;
     private List<QAPair> othersManualQAPair;
     private List<String> questions;
+    private List<String> exampleKeywords;
     private Map<String, Integer> originKeywordPercents;
     private Map<String, Long> otherKeywordPercents;
 

@@ -1,36 +1,14 @@
 package com.najasin.domain.user.service;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
-import com.najasin.domain.body.entity.Body;
-import com.najasin.domain.body.repository.BodyRepository;
-import com.najasin.domain.characterset.entity.CharacterSet;
-import com.najasin.domain.characterset.repository.CharacterSetRepository;
-import com.najasin.domain.dto.CharacterDTO;
-import com.najasin.domain.dto.KeywordDTO;
-import com.najasin.domain.expression.entity.Expression;
-import com.najasin.domain.expression.repository.ExpressionRepository;
-import com.najasin.domain.face.entity.Face;
-import com.najasin.domain.face.repository.FaceRepository;
-import com.najasin.domain.user.entity.enums.Role;
-import com.najasin.domain.userKeyword.entity.UserKeyword;
+import com.najasin.domain.character.body.repository.BodyRepository;
+import com.najasin.domain.character.characterset.repository.CharacterSetRepository;
+import com.najasin.domain.character.expression.repository.ExpressionRepository;
+import com.najasin.domain.character.face.repository.FaceRepository;
 import com.najasin.domain.userKeyword.service.UserKeywordService;
-import com.najasin.domain.body.entity.Body;
-import com.najasin.domain.body.repository.BodyRepository;
-import com.najasin.domain.characterset.entity.CharacterSet;
-import com.najasin.domain.characterset.repository.CharacterSetRepository;
 import com.najasin.domain.comment.service.CommentService;
-import com.najasin.domain.dto.CharacterDTO;
-import com.najasin.domain.dto.KeywordDTO;
-import com.najasin.domain.expression.entity.Expression;
-import com.najasin.domain.expression.repository.ExpressionRepository;
-import com.najasin.domain.face.entity.Face;
-import com.najasin.domain.face.repository.FaceRepository;
-import com.najasin.domain.user.entity.enums.Role;
-import com.najasin.domain.userKeyword.entity.UserKeyword;
-import com.najasin.domain.userKeyword.service.UserKeywordService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -77,7 +55,12 @@ public class UserService {
 		redisBlackListUtil.setBlackList(refreshToken, "refreshToken", 7);
 	}
 
-
+	@Transactional
+	public User updateNickname(String id, String nickname) {
+		User user = this.findById(id);
+		user.updateNickname(nickname);
+		return user;
+	}
 
 	@Transactional
 	public User deleteAnswers(String id) {

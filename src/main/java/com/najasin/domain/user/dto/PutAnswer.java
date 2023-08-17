@@ -1,6 +1,6 @@
 package com.najasin.domain.user.dto;
 
-import com.najasin.domain.dto.AnswerDTO;
+import com.najasin.domain.answer.dto.AnswerDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;

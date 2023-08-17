@@ -1,9 +1,9 @@
 package com.najasin.domain.userUserType.entity;
 
-import com.najasin.domain.body.entity.Body;
-import com.najasin.domain.characterset.entity.CharacterSet;
-import com.najasin.domain.expression.entity.Expression;
-import com.najasin.domain.face.entity.Face;
+import com.najasin.domain.character.body.entity.Body;
+import com.najasin.domain.character.characterset.entity.CharacterSet;
+import com.najasin.domain.character.expression.entity.Expression;
+import com.najasin.domain.character.face.entity.Face;
 import com.najasin.domain.user.entity.User;
 import com.najasin.domain.userType.entity.UserType;
 import jakarta.persistence.*;

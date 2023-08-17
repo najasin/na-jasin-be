@@ -1,4 +1,4 @@
-package com.najasin.domain.dto;
+package com.najasin.domain.answer.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

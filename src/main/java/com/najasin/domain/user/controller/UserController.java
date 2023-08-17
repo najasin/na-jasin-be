@@ -2,19 +2,21 @@ package com.najasin.domain.user.controller;
 
 import com.najasin.domain.answer.entity.Answer;
 import com.najasin.domain.answer.service.AnswerService;
-import com.najasin.domain.dto.AnswerDTO;
-import com.najasin.domain.question.entity.Question;
+import com.najasin.domain.answer.dto.AnswerDTO;
+import com.najasin.domain.character.dto.CharacterInfoDTO;
 import com.najasin.domain.question.entity.QuestionType;
 import com.najasin.domain.question.service.QuestionService;
 import com.najasin.domain.user.dto.Page;
 import com.najasin.domain.user.dto.PutAnswer;
 import com.najasin.domain.user.entity.User;
 import com.najasin.domain.userKeyword.entity.UserKeyword;
+import com.najasin.domain.userKeyword.service.UserKeywordService;
 import com.najasin.domain.userType.entity.UserType;
 import com.najasin.domain.userType.repository.UserTypeRepository;
 import com.najasin.domain.userUserType.entity.UserUserType;
 import com.najasin.domain.userUserType.entity.UserUserTypeId;
 import com.najasin.domain.userUserType.repository.UserUserTypeRepository;
+import com.najasin.domain.userUserType.service.UserUserTypeService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,7 +44,8 @@ public class UserController {
 	private final AnswerService answerService;
 	private final QuestionService questionService;
 	private final UserTypeRepository userTypeRepository;
-	private final UserUserTypeRepository userUserTypeRepository;
+	private final UserUserTypeService userUserTypeService;
+	private final UserKeywordService userKeywordService;
 
 	@PostMapping("/logout")
 	public ResponseEntity<ApiResponse<?>> logout(@AccessToken String accessToken, @RefreshToken String refreshToken) {
@@ -73,51 +76,59 @@ public class UserController {
 		);
 	}
 
+	@PutMapping("/{userTypeName}/nickname")
+	public ResponseEntity<ApiResponse<?>> putNickname(
+			@PathVariable String userTypeName,
+			@RequestBody String nickname
+			//			@AuthenticationPrincipal UserDetails userDetails
+	) {
+		String userId = "1";
+		userService.updateNickname(userId, nickname);
+		return new ResponseEntity<>(
+				ApiResponse.createSuccess(UserResponse.SUCCESS_UPDATE.getMessage()),
+				HttpStatus.OK
+		);
+	}
+
+	@GetMapping("/{userTypeName}/my-manual")
+	public ResponseEntity<ApiResponse<?>> getMyManual(
+			@PathVariable String userTypeName
+			//		@AuthenticationPrincipal UserDetails userDetails
+	) {
+		Page page = new Page();
+		String userId = "1";
+		User user = userService.findById(userId);
+
+		List<String> userTypes = new ArrayList<>();
+		for (UserUserType uut : user.getUserUserTypes()) {
+			userTypes.add(uut.getUserType().getName());
+		}
+		page.setUserTypes(userTypes);
+		page.setNickname(user.getNickname());
+		page.setBaseImage("임시 이미지 url");
+		CharacterInfoDTO characterInfoDTO = userUserTypeService.getCharacter(userId, userTypeName);
+		page.setCharacterItems(new Page.CharacterItems(characterInfoDTO.getFace(), characterInfoDTO.getBody(), characterInfoDTO.getExpression(), characterInfoDTO.getCharacterSet()));
+		page.setQuestions(questionService.getQuestionByQuestionTypeAndUserType(QuestionType.FOR_USER, userTypeName));
+		return new ResponseEntity<>(
+				ApiResponse.createSuccessWithData(UserResponse.SUCCESS_GET_PAGE.getMessage(), page),
+				HttpStatus.OK
+		);
+	}
+
 	@GetMapping("/{userTypeName}/others-manual")
 	public ResponseEntity<ApiResponse<?>> getOthersPage(@PathVariable String userTypeName, @RequestParam String userId) {
+
 		Page page = new Page();
 		User user = userService.findById(userId);
-		UserType userType = userTypeRepository.findUserTypeByName(userTypeName);
-		UserUserType userUserType = userUserTypeRepository.findById(new UserUserTypeId(user, userType)).orElseThrow(EntityNotFoundException::new);
 
-		List<String> questions = new ArrayList<>();
-		for (Question question : questionService.getQuestionByQuestionTypeAndUserType(QuestionType.FOR_OTHERS, userType)) {
-			questions.add(question.getQuestion());
-		}
-		page.setQuestions(questions);
-
+		page.setQuestions(questionService.getQuestionByQuestionTypeAndUserType(QuestionType.FOR_OTHERS, userTypeName));
 		page.setNickname(user.getNickname());
 		page.setBaseImage("임시 베이스 이미지 url");
-		Page.CharacterItem face = null; Page.CharacterItem body = null; Page.CharacterItem expression= null; Page.CharacterItem characterSet = null;
-		if (userUserType.getSet() != null) {
-			characterSet = new Page.CharacterItem(userUserType.getSet().getId(), userUserType.getSet().getUrl(), userUserType.getSet().getUrl());
-		} else{
-			face = new Page.CharacterItem(userUserType.getFace().getId(), userUserType.getFace().getLayout_url(), userUserType.getFace().getShow_url());
-			body = new Page.CharacterItem(userUserType.getBody().getId(), userUserType.getBody().getLayout_url(), userUserType.getBody().getShow_url());
-			expression = new Page.CharacterItem(userUserType.getExpression().getId(), userUserType.getExpression().getLayout_url(), userUserType.getExpression().getShow_url());
-		}
-		page.setCharacterItems(new Page.CharacterItems(face, body, expression, characterSet));
-
-		List<Page.QAPair> myQaPairs = new ArrayList<>();
-		for (Answer answer : user.getAnswers()) {
-			Page.QAPair qaPair = new Page.QAPair(answer.getQuestion().getId(), answer.getQuestion().getQuestion(), answer.getAnswer());
-			if (answer.getQuestion().getQuestionType() == QuestionType.FOR_USER) {
-				myQaPairs.add(qaPair);
-			}
-		}
-		page.setMyManualQAPair(myQaPairs);
-
-		Map<String, Integer> originKeywordPercents = new HashMap<>();
-		Map<String, Long> otherKeywordPercents = new HashMap<>();
-		for (UserKeyword UK : user.getUserKeywords()) {
-			String keyword = UK.getKeyword().getName();
-			Integer originPercent = UK.getOriginPercent();
-			Long otherPercent = Long.valueOf(UK.getOriginPercent() + UK.getOthersPercent()) / (UK.getOthersCount() + 1);
-			originKeywordPercents.put(keyword, originPercent);
-			otherKeywordPercents.put(keyword, otherPercent);
-		}
-		page.setOriginKeywordPercents(originKeywordPercents);
-		page.setOtherKeywordPercents(otherKeywordPercents);
+		CharacterInfoDTO characterInfoDTO = userUserTypeService.getCharacter(userId, userTypeName);
+		page.setCharacterItems(new Page.CharacterItems(characterInfoDTO.getFace(), characterInfoDTO.getBody(), characterInfoDTO.getExpression(), characterInfoDTO.getCharacterSet()));
+		page.setMyManualQAPair(userUserTypeService.getQAByUserIdAndUserTypeAndQuestionType(userId, userTypeName, QuestionType.FOR_USER));
+		page.setOriginKeywordPercents(userKeywordService.getOriginKeywordPercents(userId));
+		page.setOtherKeywordPercents(userKeywordService.getOtherKeywordPercents(userId));
 		return new ResponseEntity<>(
 				ApiResponse.createSuccessWithData(UserResponse.SUCCESS_GET_PAGE.getMessage(), page),
 				HttpStatus.OK
@@ -129,8 +140,6 @@ public class UserController {
 
 		Page page = new Page();
 		User user = userService.findById(userId);
-		UserType userType = userTypeRepository.findUserTypeByName(userTypeName);
-		UserUserType userUserType = userUserTypeRepository.findById(new UserUserTypeId(user, userType)).orElseThrow(EntityNotFoundException::new);
 
 		List<String> userTypes = new ArrayList<>();
 		for (UserUserType uut : user.getUserUserTypes()) {
@@ -140,45 +149,21 @@ public class UserController {
 
 		page.setNickname(user.getNickname());
 		page.setBaseImage("임시 베이스 이미지 url");
-		Page.CharacterItem face = null; Page.CharacterItem body = null; Page.CharacterItem expression= null; Page.CharacterItem characterSet = null;
-		if (userUserType.getSet() != null) {
-			characterSet = new Page.CharacterItem(userUserType.getSet().getId(), userUserType.getSet().getUrl(), userUserType.getSet().getUrl());
-		} else{
-			face = new Page.CharacterItem(userUserType.getFace().getId(), userUserType.getFace().getLayout_url(), userUserType.getFace().getShow_url());
-			body = new Page.CharacterItem(userUserType.getBody().getId(), userUserType.getBody().getLayout_url(), userUserType.getBody().getShow_url());
-			expression = new Page.CharacterItem(userUserType.getExpression().getId(), userUserType.getExpression().getLayout_url(), userUserType.getExpression().getShow_url());
-		}
-		page.setCharacterItems(new Page.CharacterItems(face, body, expression, characterSet));
+		CharacterInfoDTO characterInfoDTO = userUserTypeService.getCharacter(userId, userTypeName);
+		page.setCharacterItems(new Page.CharacterItems(characterInfoDTO.getFace(), characterInfoDTO.getBody(), characterInfoDTO.getExpression(), characterInfoDTO.getCharacterSet()));
 
-		List<Page.QAPair> myQaPairs = new ArrayList<>();
-		List<Page.QAPair> othersQaPairs = new ArrayList<>();
-		for (Answer answer : user.getAnswers()) {
-			Page.QAPair qaPair = new Page.QAPair(answer.getQuestion().getId(), answer.getQuestion().getQuestion(), answer.getAnswer());
-			if (answer.getQuestion().getQuestionType() == QuestionType.FOR_USER) {
-				myQaPairs.add(qaPair);
-			} else {
-				othersQaPairs.add(qaPair);
-			}
-		}
-		page.setMyManualQAPair(myQaPairs);
-		page.setOthersManualQAPair(othersQaPairs);
+		page.setMyManualQAPair(userUserTypeService.getQAByUserIdAndUserTypeAndQuestionType(userId, userTypeName, QuestionType.FOR_USER));
+		page.setOthersManualQAPair(userUserTypeService.getQAByUserIdAndUserTypeAndQuestionType(userId, userTypeName, QuestionType.FOR_OTHERS));
 
-		Map<String, Integer> originKeywordPercents = new HashMap<>();
-		Map<String, Long> otherKeywordPercents = new HashMap<>();
-		for (UserKeyword UK : user.getUserKeywords()) {
-			String keyword = UK.getKeyword().getName();
-			Integer originPercent = UK.getOriginPercent();
-			Long otherPercent = Long.valueOf(UK.getOriginPercent() + UK.getOthersPercent()) / (UK.getOthersCount() + 1);
-			originKeywordPercents.put(keyword, originPercent);
-			otherKeywordPercents.put(keyword, otherPercent);
-		}
-		page.setOriginKeywordPercents(originKeywordPercents);
-		page.setOtherKeywordPercents(otherKeywordPercents);
+		page.setOriginKeywordPercents(userKeywordService.getOriginKeywordPercents(userId));
+		page.setOtherKeywordPercents(userKeywordService.getOtherKeywordPercents(userId));
 
 		return new ResponseEntity<>(
 				ApiResponse.createSuccessWithData(UserResponse.SUCCESS_GET_PAGE.getMessage(), page),
 				HttpStatus.OK
 		);
+
+
 
 	}
 }

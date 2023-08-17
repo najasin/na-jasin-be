@@ -1,14 +1,18 @@
 package com.najasin.domain.userUserType.service;
 
-import com.najasin.domain.body.entity.Body;
-import com.najasin.domain.body.repository.BodyRepository;
-import com.najasin.domain.characterset.entity.CharacterSet;
-import com.najasin.domain.characterset.repository.CharacterSetRepository;
-import com.najasin.domain.dto.CharacterDTO;
-import com.najasin.domain.expression.entity.Expression;
-import com.najasin.domain.expression.repository.ExpressionRepository;
-import com.najasin.domain.face.entity.Face;
-import com.najasin.domain.face.repository.FaceRepository;
+import com.najasin.domain.answer.entity.Answer;
+import com.najasin.domain.character.body.entity.Body;
+import com.najasin.domain.character.body.repository.BodyRepository;
+import com.najasin.domain.character.characterset.entity.CharacterSet;
+import com.najasin.domain.character.characterset.repository.CharacterSetRepository;
+import com.najasin.domain.character.dto.CharacterDTO;
+import com.najasin.domain.character.dto.CharacterInfoDTO;
+import com.najasin.domain.character.expression.entity.Expression;
+import com.najasin.domain.character.expression.repository.ExpressionRepository;
+import com.najasin.domain.character.face.entity.Face;
+import com.najasin.domain.character.face.repository.FaceRepository;
+import com.najasin.domain.question.entity.QuestionType;
+import com.najasin.domain.user.dto.Page;
 import com.najasin.domain.user.entity.User;
 import com.najasin.domain.user.repository.UserRepository;
 import com.najasin.domain.userType.entity.UserType;
@@ -20,6 +24,9 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -50,4 +57,42 @@ public class UserUserTypeService {
         return userUserType;
     }
 
+    @Transactional
+    public UserUserType getUserUserTypeById(String userId, String userTypeName) {
+        User user = userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
+        UserType userType = userTypeRepository.findUserTypeByName(userTypeName);
+        return userUserTypeRepository.findById(new UserUserTypeId(user, userType)).orElseThrow(EntityNotFoundException::new);
+    }
+
+    @Transactional
+    public List<Page.QAPair> getQAByUserIdAndUserTypeAndQuestionType(String userId, String userTypeName, QuestionType questionType) {
+        UserUserType userUserType = this.getUserUserTypeById(userId, userTypeName);
+        List<Page.QAPair> myQaParis = new ArrayList<>();
+        for (Answer answer : userUserType.getUser().getAnswers()) {
+            if (answer.getQuestion().getQuestionType() == questionType) {
+                Page.QAPair qaPair = new Page.QAPair(answer.getQuestion().getId(), answer.getQuestion().getQuestion(), answer.getAnswer());
+                myQaParis.add(qaPair);
+            }
+        }
+        return myQaParis;
+    }
+
+
+
+    @Transactional
+    public CharacterInfoDTO getCharacter(String userId, String userTypeName) {
+        UserUserType userUserType = this.getUserUserTypeById(userId, userTypeName);
+        Face face = userUserType.getFace();
+        Body body = userUserType.getBody();
+        Expression expression = userUserType.getExpression();
+        CharacterSet characterSet = userUserType.getSet();
+        if (characterSet != null) {
+            Page.CharacterItem characterItem = new Page.CharacterItem(characterSet.getId(), characterSet.getUrl(), characterSet.getUrl());
+            return new CharacterInfoDTO(null, null, null, characterItem);
+        }
+        Page.CharacterItem faceItem = new Page.CharacterItem(face.getId(), face.getShow_url(), face.getLayout_url());
+        Page.CharacterItem bodyItem = new Page.CharacterItem(body.getId(), body.getShow_url(), body.getLayout_url());
+        Page.CharacterItem expressionItem = new Page.CharacterItem(expression.getId(), expression.getShow_url(), expression.getLayout_url());
+        return new CharacterInfoDTO(faceItem, bodyItem, expressionItem, null);
+    }
 }

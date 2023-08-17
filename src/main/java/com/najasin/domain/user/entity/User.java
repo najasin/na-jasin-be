@@ -4,12 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.najasin.domain.answer.entity.Answer;
-import com.najasin.domain.body.entity.Body;
-import com.najasin.domain.characterset.entity.CharacterSet;
 import com.najasin.domain.comment.entity.Comment;
-import com.najasin.domain.expression.entity.Expression;
-import com.najasin.domain.face.entity.Face;
-import com.najasin.domain.keyword.entity.Keyword;
 import com.najasin.domain.userKeyword.entity.UserKeyword;
 import com.najasin.domain.userType.entity.UserType;
 import com.najasin.domain.userUserType.entity.UserUserType;
