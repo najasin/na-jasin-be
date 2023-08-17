@@ -12,6 +12,7 @@ import com.najasin.domain.character.expression.repository.ExpressionRepository;
 import com.najasin.domain.character.face.entity.Face;
 import com.najasin.domain.character.face.repository.FaceRepository;
 import com.najasin.domain.question.entity.QuestionType;
+import com.najasin.domain.user.dto.CharacterItems;
 import com.najasin.domain.user.dto.Page;
 import com.najasin.domain.user.dto.PageUpdateRequestDTO;
 import com.najasin.domain.user.entity.User;
@@ -40,23 +41,7 @@ public class UserUserTypeService {
     private final ExpressionRepository expressionRepository;
     private final CharacterSetRepository characterSetRepository;
 
-    @Transactional
-    public UserUserType updateCharacter(String userId, String userTypeName, CharacterDTO characterDTO) {
-        User user = userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
-        UserType userType = userTypeRepository.findUserTypeByName(userTypeName);
-        UserUserType userUserType = userUserTypeRepository.findById(new UserUserTypeId(user, userType)).orElseThrow(EntityNotFoundException::new);
-        Face face = null; Body body = null; Expression expression = null; CharacterSet characterSet = null;
-        if (characterDTO.getCharacterSetID() == null) {
-            face = faceRepository.findById(characterDTO.getFaceID()).orElseThrow(EntityNotFoundException::new);
-            body = bodyRepository.findById(characterDTO.getBodyID()).orElseThrow(EntityNotFoundException::new);
-            expression = expressionRepository.findById(characterDTO.getExpressionID()).orElseThrow(EntityNotFoundException::new);
-        }
-        else{
-            characterSet = characterSetRepository.findById(characterDTO.getCharacterSetID()).orElseThrow(EntityNotFoundException::new);
-        }
-        userUserType.updateCharacter(face, body, expression, characterSet);
-        return userUserType;
-    }
+
 
     @Transactional
     public UserUserType getUserUserTypeById(String userId, String userTypeName) {
@@ -79,7 +64,7 @@ public class UserUserTypeService {
     }
 
     @Transactional
-    public UserUserType updateCharacter(String userId, String userTypeName , PageUpdateRequestDTO.CharacterItems dto) {
+    public UserUserType updateCharacter(String userId, String userTypeName , CharacterItems dto) {
         User user = userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
         UserUserType userUserType = this.getUserUserTypeById(userId, userTypeName);
         if (dto.getSet()== null) {

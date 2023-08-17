@@ -6,6 +6,7 @@ import com.najasin.domain.answer.dto.AnswerDTO;
 import com.najasin.domain.character.dto.CharacterInfoDTO;
 import com.najasin.domain.question.entity.QuestionType;
 import com.najasin.domain.question.service.QuestionService;
+import com.najasin.domain.user.dto.CharacterItems;
 import com.najasin.domain.user.dto.Page;
 import com.najasin.domain.user.dto.PageUpdateRequestDTO;
 import com.najasin.domain.user.dto.PutAnswer;
@@ -70,6 +71,23 @@ public class UserController {
 		for (AnswerDTO dto : putAnswer.getAnswers()) {
 			answerService.save(userId, dto.getId(), dto.getAnswer());
 		}
+		return new ResponseEntity<>(
+				ApiResponse.createSuccess(UserResponse.SUCCESS_UPDATE.getMessage()),
+				HttpStatus.OK
+		);
+	}
+
+	@PutMapping("/{userTypeName}/character")
+	public ResponseEntity<ApiResponse<?>> putCharacter(
+			@PathVariable String userTypeName,
+			@RequestBody CharacterItems dto
+			//@AuthenticationPrincipal UserDetails userDetails
+	) {
+		String userId = "1";
+		System.out.println(dto.getFace());
+		System.out.println(dto.getBody());
+		System.out.println(dto.getExpression());
+		userUserTypeService.updateCharacter(userId, userTypeName, dto);
 		return new ResponseEntity<>(
 				ApiResponse.createSuccess(UserResponse.SUCCESS_UPDATE.getMessage()),
 				HttpStatus.OK

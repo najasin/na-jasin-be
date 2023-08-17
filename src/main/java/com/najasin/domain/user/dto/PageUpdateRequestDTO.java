@@ -15,20 +15,6 @@ public class PageUpdateRequestDTO {
     private List<AnswerDTO> answers;
     private Map<String, Integer> keywordPercents;
 
-    @Getter
-    @Setter
-    public static class CharacterItems {
-        private CharacterItem face;
-        private CharacterItem body;
-        private CharacterItem expression;
-        private CharacterItem set;
-    }
-
-    @Getter
-    @Setter
-    public static class CharacterItem {
-        private Long id;
-    }
 
     @Getter
     @Setter
