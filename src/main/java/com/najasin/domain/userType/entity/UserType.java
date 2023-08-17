@@ -4,6 +4,7 @@ import com.najasin.domain.userUserType.entity.UserUserType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -24,4 +25,9 @@ public class UserType {
 
     @OneToMany(mappedBy = "userType")
     private List<UserUserType> userUserTypes;
+
+    @Builder
+    public UserType(String name) {
+        this.name = name;
+    }
 }

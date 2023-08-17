@@ -4,13 +4,18 @@ import com.najasin.domain.question.entity.Question;
 import com.najasin.domain.user.entity.User;
 import com.najasin.global.audit.AuditEntity;
 import jakarta.persistence.*;
+import lombok.*;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
 @IdClass(CommentId.class)
 public class Comment {
     @Id

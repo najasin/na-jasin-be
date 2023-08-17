@@ -22,7 +22,6 @@ import com.najasin.domain.user.entity.enums.Role;
 import com.najasin.global.audit.AuditEntity;
 
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -85,7 +84,16 @@ public class User {
 		this.id = id;
 		this.oauth2Entity = oauth2Entity;
 		this.role = new ArrayList<>(List.of(Role.ROLE_MEMBER));
+
 		this.auditEntity = new AuditEntity();
+		userKeywords = new ArrayList<>();
+		answers = new ArrayList<>();
+		comments = new ArrayList<>();
+		userUserTypes = new ArrayList<>();
+	}
+
+	public void updateLastUserType(UserType lastUserType) {
+		this.lastUserType = lastUserType;
 	}
 
 	public List<SimpleGrantedAuthority> getRole() {

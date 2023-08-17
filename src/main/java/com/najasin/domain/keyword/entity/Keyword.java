@@ -24,13 +24,7 @@ public class Keyword {
     @Column(name = "keyword_name")
     private String name;
 
-    @OneToMany(mappedBy = "keyword")
-    private List<UserKeyword> userKeywords;
 
-    public Keyword(Long id, String name) {
-        this.id = id;
-        this.name = name;
-        this.userKeywords = new ArrayList<>();
-    }
+    
 
 }
