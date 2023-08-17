@@ -3,6 +3,8 @@ package com.najasin.domain.user.controller;
 import com.najasin.domain.answer.entity.Answer;
 import com.najasin.domain.answer.service.AnswerService;
 import com.najasin.domain.answer.dto.AnswerDTO;
+import com.najasin.domain.character.CharacterService;
+import com.najasin.domain.character.dto.AllCharacterItems;
 import com.najasin.domain.character.dto.CharacterInfoDTO;
 import com.najasin.domain.comment.repository.CommentRepository;
 import com.najasin.domain.comment.service.CommentService;
@@ -50,6 +52,7 @@ public class UserController {
 	private final CommentService commentService;
 	private final UserUserTypeService userUserTypeService;
 	private final UserKeywordService userKeywordService;
+	private final CharacterService characterService;
 
 	@PostMapping("/logout")
 	public ResponseEntity<ApiResponse<?>> logout(@AccessToken String accessToken, @RefreshToken String refreshToken) {
@@ -136,7 +139,7 @@ public class UserController {
 			@RequestParam String userId,
 			@RequestBody PageUpdateRequestDTO dto
 			//		@AuthenticationPrincipal UserDetails userDetails
-	){
+	) {
 		for (PageUpdateRequestDTO.AnswerDTO answerDTO : dto.getAnswers()) {
 			commentService.save(userId, answerDTO.getId(), dto.getNickname(), answerDTO.getAnswer());
 		}
@@ -218,6 +221,17 @@ public class UserController {
 
 		return new ResponseEntity<>(
 				ApiResponse.createSuccessWithData(UserResponse.SUCCESS_GET_PAGE.getMessage(), page),
+				HttpStatus.OK
+		);
+	}
+
+	@GetMapping("/{userTypeName}/characterItems")
+	public ResponseEntity<ApiResponse<?>> getCharacterItems(
+			@PathVariable String userTypeName
+	){
+		AllCharacterItems allCharacterItems = characterService.getAllCharacterItems();
+		return new ResponseEntity<>(
+				ApiResponse.createSuccessWithData(UserResponse.SUCCESS_GET_PAGE.getMessage(), allCharacterItems),
 				HttpStatus.OK
 		);
 	}
