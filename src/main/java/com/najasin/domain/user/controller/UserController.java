@@ -20,6 +20,7 @@ import com.najasin.domain.userUserType.entity.UserUserType;
 import com.najasin.domain.userUserType.entity.UserUserTypeId;
 import com.najasin.domain.userUserType.repository.UserUserTypeRepository;
 import com.najasin.domain.userUserType.service.UserUserTypeService;
+import com.najasin.global.annotation.AuthorizeUser;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -64,10 +65,11 @@ public class UserController {
 	@PutMapping("/{userTypeName}/answers")
 	public ResponseEntity<ApiResponse<?>> putAnswers(
 			@PathVariable String userTypeName,
-			@RequestBody PutAnswer putAnswer
+			@RequestBody PutAnswer putAnswer,
+			@AuthorizeUser User user
 	) {
 //		String userId = userDetails.getUsername();
-		String userId = "1";
+		String userId = user.getId();
 		answerService.deleteAnswers(userId, userTypeName);
 		for (AnswerDTO dto : putAnswer.getAnswers()) {
 			answerService.save(userId, dto.getId(), dto.getAnswer());
@@ -81,10 +83,11 @@ public class UserController {
 	@PutMapping("/{userTypeName}/character")
 	public ResponseEntity<ApiResponse<?>> putCharacter(
 			@PathVariable String userTypeName,
-			@RequestBody CharacterItems dto
-			//@AuthenticationPrincipal UserDetails userDetails
+			@RequestBody CharacterItems dto,
+			@AuthorizeUser User user
+
 	) {
-		String userId = "1";
+		String userId = user.getId();
 		userUserTypeService.updateCharacter(userId, userTypeName, dto);
 		return new ResponseEntity<>(
 				ApiResponse.createSuccess(UserResponse.SUCCESS_UPDATE.getMessage()),
@@ -96,10 +99,11 @@ public class UserController {
 	@PutMapping("/{userTypeName}/nickname")
 	public ResponseEntity<ApiResponse<?>> putNickname(
 			@PathVariable String userTypeName,
-			@RequestBody String nickname
-			//			@AuthenticationPrincipal UserDetails userDetails
+			@RequestBody String nickname,
+			@AuthorizeUser User user
+
 	) {
-		String userId = "1";
+		String userId = user.getId();
 		userService.updateNickname(userId, nickname);
 		return new ResponseEntity<>(
 				ApiResponse.createSuccess(UserResponse.SUCCESS_UPDATE.getMessage()),
@@ -110,12 +114,11 @@ public class UserController {
 	@PostMapping("/{userTypeName}/my-manual")
 	public ResponseEntity<ApiResponse<?>> postMyManual(
 			@PathVariable String userTypeName,
-			@RequestBody PageUpdateRequestDTO dto
-			//		@AuthenticationPrincipal UserDetails userDetails
+			@RequestBody PageUpdateRequestDTO dto,
+			@AuthorizeUser User user
 	) {
-		String userId = "1";
-		User user = userService.findById(userId);
-		user.updateNickname(dto.getNickname());
+		String userId = user.getId();
+		userService.updateNickname(userId, dto.getNickname());
 		userUserTypeService.updateCharacter(userId, userTypeName, dto.getCharacterItems());
 		answerService.deleteAnswers(userId, userTypeName);
 		answerService.updateAnswers(userId, dto.getAnswers());
@@ -131,7 +134,6 @@ public class UserController {
 			@PathVariable String userTypeName,
 			@RequestParam String userId,
 			@RequestBody PageUpdateRequestDTO dto
-			//		@AuthenticationPrincipal UserDetails userDetails
 	) {
 		for (PageUpdateRequestDTO.AnswerDTO answerDTO : dto.getAnswers()) {
 			commentService.save(userId, answerDTO.getId(), dto.getNickname(), answerDTO.getAnswer());
@@ -147,16 +149,16 @@ public class UserController {
 
 	@GetMapping("/{userTypeName}/my-manual")
 	public ResponseEntity<ApiResponse<?>> getMyManual(
-			@PathVariable String userTypeName
-			//		@AuthenticationPrincipal UserDetails userDetails
+			@PathVariable String userTypeName,
+			@AuthorizeUser User user
+
 	) {
 
 		Page page = new Page();
-		String userId = "1";
-		User user = userService.findById(userId);
+		String userId = user.getId();
 
 		List<String> userTypes = new ArrayList<>();
-		for (UserUserType uut : user.getUserUserTypes()) {
+		for (UserUserType uut : userUserTypeService.getUserUserTypesByUserId(userId)) {
 			userTypes.add(uut.getUserType().getName());
 		}
 		page.setUserTypes(userTypes);
@@ -193,13 +195,16 @@ public class UserController {
 	}
 
 	@GetMapping("/{userTypeName}/mypage")
-	public ResponseEntity<ApiResponse<?>> getMyPage(@PathVariable String userTypeName, @RequestParam String userId) {
+	public ResponseEntity<ApiResponse<?>> getMyPage(
+			@PathVariable String userTypeName,
+			@AuthorizeUser User user
+	) {
 
+		String userId = user.getId();
 		Page page = new Page();
-		User user = userService.findById(userId);
 
 		List<String> userTypes = new ArrayList<>();
-		for (UserUserType uut : user.getUserUserTypes()) {
+		for (UserUserType uut : userUserTypeService.getUserUserTypesByUserId(userId)) {
 			userTypes.add(uut.getUserType().getName());
 		}
 		page.setUserTypes(userTypes);

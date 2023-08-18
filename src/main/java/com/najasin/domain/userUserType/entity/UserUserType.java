@@ -28,19 +28,19 @@ public class UserUserType {
     @JoinColumn(name = "user_type_id", referencedColumnName = "user_type_id", insertable = false, updatable = false)
     private UserType userType;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "character_set_id", referencedColumnName = "set_id")
     private CharacterSet set;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "face_id", referencedColumnName = "face_id")
     private Face face;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "body_id", referencedColumnName = "body_id")
     private Body body;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "expression_id", referencedColumnName = "expression_id")
     private Expression expression;
 

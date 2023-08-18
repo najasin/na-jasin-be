@@ -24,6 +24,7 @@ import com.najasin.domain.user.dto.CharacterItems;
 import com.najasin.domain.user.dto.Page;
 import com.najasin.domain.user.repository.UserRepository;
 import com.najasin.domain.userType.repository.UserTypeRepository;
+import com.najasin.domain.userUserType.entity.UserUserTypeId;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -146,6 +147,20 @@ public class UserUserTypeServiceTest {
 	}
 
 	@Test
+	@DisplayName("유저아이디로 유저타입관계들을 가져온다")
+	public void getUserUserTypesById() {
+		//given
+		List<UserUserType> list = new ArrayList<>();
+		list.add(mockUserUserType);
+		given(userRepository.findById(any())).willReturn(Optional.of(mockUser));
+		given(userUserTypeRepository.findAllByUser(any())).willReturn(list);
+		//when
+		List<UserUserType> getList = userUserTypeService.getUserUserTypesByUserId(mockUser.getId());
+		//then
+		assertEquals(getList, list);
+	}
+
+	@Test
 	@DisplayName("유저 아이디와 타입과 질문 유형 별 질문 응답을 가져온다")
 	public void getQAByUserIdAndUserTypeAndQuestionType(){
 		//given
@@ -171,6 +186,7 @@ public class UserUserTypeServiceTest {
 		given(userRepository.findById(any())).willReturn(Optional.of(mockUser));
 		given(userTypeRepository.findByName(any())).willReturn(Optional.of(mockUserType));
 		given(userUserTypeRepository.findById(any())).willReturn(Optional.ofNullable(mockUserUserType));
+		given(userUserTypeRepository.save(any())).willReturn(mockUserUserType);
 		//when
 		UserUserType userUserType = userUserTypeService.updateCharacter(mockUser.getId(), "JFF", dto);
 		//then
