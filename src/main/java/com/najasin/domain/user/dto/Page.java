@@ -2,6 +2,7 @@ package com.najasin.domain.user.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
@@ -24,11 +25,13 @@ public class Page {
     @Getter
     @Setter
     @AllArgsConstructor
+    @NoArgsConstructor
     public static class CharacterItems {
         private CharacterItem face;
         private CharacterItem body;
         private CharacterItem expression;
         private CharacterItem characterSet;
+
     }
     @Getter
     @Setter

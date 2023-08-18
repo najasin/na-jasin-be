@@ -56,6 +56,7 @@ public class AnswerService {
         for (PageUpdateRequestDTO.AnswerDTO dto : dtos) {
             Question question = questionRepository.findById(dto.getId()).orElseThrow(EntityNotFoundException::new);
             Answer answer = new Answer(user, question, dto.getAnswer());
+            answers.add(answer);
             answerRepository.save(answer);
         }
         user.updateAnswer(answers);

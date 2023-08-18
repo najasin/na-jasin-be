@@ -179,10 +179,16 @@ public class UserServiceTest {
 		assertEquals(mockUser, saveUser);
 	}
 
-
-
-
-
+	@Test
+	@DisplayName("유저 닉네임을 수정한다")
+	void updateNickname() {
+		//given
+		given(userRepository.findById(any())).willReturn(Optional.of(mockUser));
+		//when
+		userService.updateNickname(mockUser.getId(), "새로운 닉네임");
+		//then
+		assertEquals(mockUser.getNickname(), "새로운 닉네임");
+	}
 
 
 
@@ -206,7 +212,7 @@ public class UserServiceTest {
 	void generateUUID() {
 		// given
 		given(userRepository.findById(anyString()))
-			.willReturn(Optional.empty());
+				.willReturn(Optional.empty());
 
 		// when
 		String uuid = userService.generateUUID();

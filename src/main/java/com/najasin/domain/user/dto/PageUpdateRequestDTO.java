@@ -1,6 +1,8 @@
 package com.najasin.domain.user.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
@@ -19,6 +21,8 @@ public class PageUpdateRequestDTO {
 
     @Getter
     @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class AnswerDTO {
         private Long id;
         private String answer;

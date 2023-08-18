@@ -62,12 +62,7 @@ public class UserService {
 		return user;
 	}
 
-	@Transactional
-	public User deleteAnswers(String id) {
-		User user = userRepository.findById(id).orElseThrow(EntityNotFoundException::new);
-		user.updateAnswer(new ArrayList<>());
-		return userRepository.save(user);
-	}
+
 
 
 	public String generateUUID() {

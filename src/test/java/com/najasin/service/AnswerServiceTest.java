@@ -6,11 +6,13 @@ import com.najasin.domain.answer.service.AnswerService;
 import com.najasin.domain.question.entity.Question;
 import com.najasin.domain.question.entity.QuestionType;
 import com.najasin.domain.question.repository.QuestionRepository;
+import com.najasin.domain.user.dto.PageUpdateRequestDTO;
 import com.najasin.domain.user.entity.Oauth2Entity;
 import com.najasin.domain.user.entity.User;
 import com.najasin.domain.user.entity.enums.Provider;
 import com.najasin.domain.user.repository.UserRepository;
 import com.najasin.domain.userType.entity.UserType;
+import com.najasin.domain.userType.repository.UserTypeRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -43,6 +45,8 @@ public class AnswerServiceTest {
     private UserRepository userRepository;
     @Mock
     private QuestionRepository questionRepository;
+    @Mock
+    private UserTypeRepository userTypeRepository;
 
 
     private String mockUserId;
@@ -98,12 +102,11 @@ public class AnswerServiceTest {
     public void deleteAnswers() {
         // Given
         UserType userTypeToDelete = new UserType(1L, "JFF", null);
-        UserType userTypeToKeep = new UserType(2L, "DF", null);
 
         List<Answer> answersToDelete = new ArrayList<>();
 
-        for (int i = 1; i <= 5; i++) {
-            UserType questionUserType = i % 2 == 0 ? userTypeToDelete : userTypeToKeep;
+        for (int i = 1; i <= 3; i++) {
+            UserType questionUserType =  userTypeToDelete;
             Question question = new Question(null, null, null, null, questionUserType);
             Answer answer = new Answer(mockUser, question, null);
             if (questionUserType != userTypeToDelete) {
@@ -113,7 +116,7 @@ public class AnswerServiceTest {
 
         given(userRepository.findById(anyString())).willReturn(Optional.of(mockUser));
         given(answerRepository.findByUser_Id(anyString())).willReturn(answersToDelete);
-
+        given(userTypeRepository.findByName(anyString())).willReturn(Optional.of(userTypeToDelete));
         // When
         answerService.deleteAnswers(mockUserId, "JFF");
 
@@ -122,5 +125,20 @@ public class AnswerServiceTest {
                 .filter(answer -> answer.getQuestion().getUserType() != userTypeToDelete)
                 .collect(Collectors.toList());
         assertEquals(remainingAnswers.size(), mockUser.getAnswers().size());
+    }
+
+    @Test
+    @DisplayName("유저의 응답 정보를 업데이트한다")
+    public void updateAnswers() {
+        //given
+        given(userRepository.findById(any())).willReturn(Optional.ofNullable(mockUser));
+        given(questionRepository.findById(any())).willReturn(Optional.ofNullable(mockQuestion));
+        List<PageUpdateRequestDTO.AnswerDTO> dto = new ArrayList<>();
+        dto.add(new PageUpdateRequestDTO.AnswerDTO(1L, "응답 1"));
+        dto.add(new PageUpdateRequestDTO.AnswerDTO(2L, "응답 2"));
+        //when
+        answerService.updateAnswers(mockUserId, dto);
+        //then
+        assertEquals(mockUser.getAnswers().size(), dto.size());
     }
 }

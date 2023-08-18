@@ -68,7 +68,6 @@ public class UserController {
 	public ResponseEntity<ApiResponse<?>> putAnswers(
 			@PathVariable String userTypeName,
 			@RequestBody PutAnswer putAnswer
-//			@AuthenticationPrincipal UserDetails userDetails
 	) {
 //		String userId = userDetails.getUsername();
 		String userId = "1";
@@ -89,9 +88,6 @@ public class UserController {
 			//@AuthenticationPrincipal UserDetails userDetails
 	) {
 		String userId = "1";
-		System.out.println(dto.getFace());
-		System.out.println(dto.getBody());
-		System.out.println(dto.getExpression());
 		userUserTypeService.updateCharacter(userId, userTypeName, dto);
 		return new ResponseEntity<>(
 				ApiResponse.createSuccess(UserResponse.SUCCESS_UPDATE.getMessage()),
