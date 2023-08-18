@@ -12,9 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -28,20 +26,60 @@ public class UserKeywordService {
         User user = userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
         Keyword keyword = keywordRepository.findById(keywordId).orElseThrow(EntityNotFoundException::new);
         UserKeyword newUK = new UserKeyword(user, keyword, percent);
+        user.updateKeyword(newUK);
         return userKeywordRepository.save(newUK);
     }
 
     @Transactional
-    public UserKeyword updateByOthers(String userId, Long keywordId, int percent) {
+    public Map<String, Integer> getOriginKeywordPercents(String userId) {
         User user = userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
-        Keyword keyword = keywordRepository.findById(keywordId).orElseThrow(EntityNotFoundException::new);
+        Map<String, Integer> originKeywordPercents = new HashMap<>();
+        for (UserKeyword UK : user.getUserKeywords()) {
+            String keyword = UK.getKeyword().getName();
+            Integer originPercent = UK.getOriginPercent();
+            originKeywordPercents.put(keyword, originPercent);
+        }
+        return originKeywordPercents;
+    }
+
+    @Transactional
+    public Map<String, Long> getOtherKeywordPercents(String userId) {
+        User user = userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
+        Map<String, Long> otherKeywordPercents = new HashMap<>();
+        for (UserKeyword UK : user.getUserKeywords()) {
+            String keyword = UK.getKeyword().getName();
+            Long otherPercent = Long.valueOf(UK.getOriginPercent() + UK.getOthersPercent()) / (UK.getOthersCount() + 1);
+            otherKeywordPercents.put(keyword, otherPercent);
+        }
+        return otherKeywordPercents;
+    }
+
+
+    @Transactional
+    public UserKeyword updateByOthers(String userId, String keywordName, int percent) {
+        User user = userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
+        Keyword keyword = keywordRepository.findKeywordByName(keywordName);
         UserKeyword prevUK = null;
         for(UserKeyword userKeyword: user.getUserKeywords()) {
-            if (userKeyword.getKeyword().getId() == keywordId) {
+            if (userKeyword.getKeyword().getName().equals(keywordName)) {
                 prevUK = userKeyword;
             }
         }
         UserKeyword newUK = new UserKeyword(user, keyword, prevUK.getOriginPercent(), prevUK.getOthersPercent() + percent, prevUK.getOthersCount() + 1);
+        user.updateKeyword(newUK);
         return userKeywordRepository.save(newUK);
+    }
+
+    @Transactional
+    public void updateByUser(String userId, Map<String, Integer> dto) {
+        User user = userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
+        userKeywordRepository.deleteAll(user.getUserKeywords());
+        user.deleteKeywords();
+        for (String keywordName : dto.keySet()) {
+            Keyword keyword = keywordRepository.findKeywordByName(keywordName);
+            UserKeyword userKeyword = new UserKeyword(user, keyword, dto.get(keywordName));
+            user.updateKeyword(userKeyword);
+            userKeywordRepository.save(userKeyword);
+        }
     }
 }

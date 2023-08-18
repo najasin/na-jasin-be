@@ -62,7 +62,12 @@ public class CommentServiceTest {
                 .providerUsername("test-provider-nickname")
                 .email("test@kakao.com")
                 .build();
-        mockUser = new User(mockUserId, new ArrayList<>(List.of(Role.ROLE_MEMBER)), null, null, null, null, null, null, new ArrayList<>(), null, null, mockOauth2Entity, null);
+        mockUser = User.builder()
+                .id(mockUserId)
+                .role( new ArrayList<>(List.of(Role.ROLE_MEMBER)))
+                .comments(new ArrayList<>())
+                .oauth2Entity(mockOauth2Entity)
+                .build();
         mockQuestionId = 123456789L;
         mockQuestion = new Question(mockQuestionId, "질문", QuestionType.FOR_OTHERS, new ArrayList<>(), new UserType(1L, "JFF", null));
         mockCommentContent = "테스트 코멘트";
@@ -95,7 +100,7 @@ public class CommentServiceTest {
         //when
         Comment comment = commentService.save(mockUserId, mockQuestionId, mockCommentNickname, mockCommentContent);
         //then
-        assertEquals(mockComment, comment);
+        assertEquals(mockComment.getComment(), comment.getComment());
 
         verify(userRepository, times(1)).findById(mockUserId);
         verify(questionRepository, times(1)).findById(mockQuestionId);

@@ -1,4 +1,4 @@
-package com.najasin.domain.expression.entity;
+package com.najasin.domain.character.body.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -10,19 +10,18 @@ import lombok.NoArgsConstructor;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Expression {
+public class Body {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "expression_id")
+    @Column(name = "body_id")
     private Long id;
 
-    @Column(name = "expression_name")
+    @Column(name = "body_name")
     private String name;
 
-    @Column(name = "expression_show_url")
+    @Column(name = "body_show_url")
     private String show_url;
 
-    @Column(name = "expression_layout_url")
+    @Column(name = "body_layout_url")
     private String layout_url;
-
 }

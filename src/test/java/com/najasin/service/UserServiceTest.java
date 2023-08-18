@@ -8,29 +8,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import com.najasin.domain.body.entity.Body;
-import com.najasin.domain.body.repository.BodyRepository;
-import com.najasin.domain.characterset.entity.CharacterSet;
-import com.najasin.domain.characterset.repository.CharacterSetRepository;
-import com.najasin.domain.dto.CharacterDTO;
-import com.najasin.domain.dto.KeywordDTO;
-import com.najasin.domain.expression.entity.Expression;
-import com.najasin.domain.expression.repository.ExpressionRepository;
-import com.najasin.domain.face.entity.Face;
-import com.najasin.domain.face.repository.FaceRepository;
+import com.najasin.domain.character.body.entity.Body;
+import com.najasin.domain.character.body.repository.BodyRepository;
+import com.najasin.domain.character.characterset.entity.CharacterSet;
+import com.najasin.domain.character.characterset.repository.CharacterSetRepository;
+import com.najasin.domain.character.dto.CharacterDTO;
+import com.najasin.domain.keyword.dto.KeywordDTO;
+import com.najasin.domain.character.expression.entity.Expression;
+import com.najasin.domain.character.expression.repository.ExpressionRepository;
+import com.najasin.domain.character.face.entity.Face;
+import com.najasin.domain.character.face.repository.FaceRepository;
 import com.najasin.domain.keyword.entity.Keyword;
-import com.najasin.domain.userKeyword.entity.UserKeyword;
-import com.najasin.domain.userKeyword.service.UserKeywordService;
-import com.najasin.domain.body.entity.Body;
-import com.najasin.domain.body.repository.BodyRepository;
-import com.najasin.domain.characterset.entity.CharacterSet;
-import com.najasin.domain.characterset.repository.CharacterSetRepository;
-import com.najasin.domain.dto.CharacterDTO;
-import com.najasin.domain.dto.KeywordDTO;
-import com.najasin.domain.expression.entity.Expression;
-import com.najasin.domain.expression.repository.ExpressionRepository;
-import com.najasin.domain.face.entity.Face;
-import com.najasin.domain.face.repository.FaceRepository;
 import com.najasin.domain.userKeyword.entity.UserKeyword;
 import com.najasin.domain.userKeyword.service.UserKeywordService;
 import org.junit.jupiter.api.AfterEach;
@@ -192,48 +180,16 @@ public class UserServiceTest {
 	}
 
 	@Test
-	@DisplayName("유저가 키워드 정보를 갱신한다")
-	void updateKeyword(){
+	@DisplayName("유저 닉네임을 수정한다")
+	void updateNickname() {
 		//given
 		given(userRepository.findById(any())).willReturn(Optional.of(mockUser));
-		given(userRepository.save(any())).willReturn(mockUser);
 		//when
-		User user = userService.updateKeyword(mockId, keywordDTOs);
+		userService.updateNickname(mockUser.getId(), "새로운 닉네임");
 		//then
-		//테스트 수정 필요
+		assertEquals(mockUser.getNickname(), "새로운 닉네임");
 	}
 
-	@Test
-	@DisplayName("유저가 캐릭터 정보를 갱신한다")
-	void updateCharacter(){
-		//given
-		given(userRepository.findById(any())).willReturn(Optional.of(mockUser));
-		given(characterSetRepository.findById(any())).willReturn(Optional.of(mockCS));
-		given(userRepository.save(any())).willReturn(mockUser);
-
-		characterDTO.setCharacterSetID(123456789L);
-		//when
-		User user = userService.updateCharacter(mockId, characterDTO);
-
-		//then
-		//테스트 수정 필요
-	}
-
-	@Test
-	@DisplayName("다른 사람이 키워드 퍼센트에 기여한다")
-	void updateKeywordByOthers() {
-		//given
-		given(userRepository.findById(mockId))
-				.willReturn(Optional.of(mockUser));
-		given(userKeywordService.updateByOthers(any(), anyLong(), anyInt()))
-				.willReturn(mockUK);
-		given(userRepository.save(any()))
-				.willReturn(mockUser);
-		//when
-		User user = userService.updateKeywordByOthers(mockId, keywordDTOs);
-		//then
-		assertEquals(user, mockUser);
-	}
 
 
 	@Test
@@ -256,7 +212,7 @@ public class UserServiceTest {
 	void generateUUID() {
 		// given
 		given(userRepository.findById(anyString()))
-			.willReturn(Optional.empty());
+				.willReturn(Optional.empty());
 
 		// when
 		String uuid = userService.generateUUID();

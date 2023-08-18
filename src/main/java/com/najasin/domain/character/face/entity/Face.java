@@ -1,4 +1,4 @@
-package com.najasin.domain.face.entity;
+package com.najasin.domain.character.face.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
