@@ -47,7 +47,7 @@ public class UserUserTypeService {
     @Transactional
     public List<UserUserType> getUserUserTypesByUserId(String userId) {
         User user = userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
-        return userUserTypeRepository.findALlByUser(user);
+        return userUserTypeRepository.findAllByUser(user);
     }
 
     @Transactional
@@ -61,18 +61,21 @@ public class UserUserTypeService {
     public List<Page.QAPair> getQAByUserIdAndUserTypeAndQuestionType(String userId, String userTypeName, QuestionType questionType) {
         UserUserType userUserType = this.getUserUserTypeById(userId, userTypeName);
         List<Page.QAPair> myQaParis = new ArrayList<>();
+
         if (questionType == QuestionType.FOR_USER) {
             for (Answer answer : userUserType.getUser().getAnswers()) {
                 Page.QAPair qaPair = new Page.QAPair(answer.getQuestion().getId(), answer.getQuestion().getQuestion(), answer.getAnswer());
                 myQaParis.add(qaPair);
             }
         }
+
         else if (questionType == QuestionType.FOR_OTHERS){
             for (Comment comment : userUserType.getUser().getComments()) {
                 Page.QAPair qaPair = new Page.QAPair(comment.getQuestion().getId(), comment.getQuestion().getQuestion(), comment.getComment());
                 myQaParis.add(qaPair);
             }
         }
+
         return myQaParis;
     }
 
@@ -80,6 +83,7 @@ public class UserUserTypeService {
     public UserUserType updateCharacter(String userId, String userTypeName , CharacterItems dto) {
         User user = userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
         UserUserType userUserType = this.getUserUserTypeById(userId, userTypeName);
+
         if (dto.getSet()== null) {
             Face face = null; Body body = null; Expression expression = null;
             if (dto.getFace()!=null) face = faceRepository.findById(dto.getFace().getId()).orElse(null);
@@ -91,6 +95,7 @@ public class UserUserTypeService {
             CharacterSet characterSet = characterSetRepository.findById(dto.getSet().getId()).orElseThrow(EntityNotFoundException::new);
             userUserType.updateCharacter(null, null, null, characterSet);
         }
+
         user.updateUserUserType(userUserType);
         return userUserTypeRepository.save(userUserType);
     }
@@ -102,10 +107,12 @@ public class UserUserTypeService {
         Body body = userUserType.getBody();
         Expression expression = userUserType.getExpression();
         CharacterSet characterSet = userUserType.getSet();
+
         if (characterSet != null) {
             Page.CharacterItem characterItem = new Page.CharacterItem(characterSet.getId(), characterSet.getUrl(), characterSet.getUrl());
             return new CharacterInfoDTO(null, null, null, characterItem);
         }
+
         Page.CharacterItem faceItem = (face!=null)? new Page.CharacterItem(face.getId(), face.getShow_url(), face.getLayout_url()):null;
         Page.CharacterItem bodyItem = (body!=null)? new Page.CharacterItem(body.getId(), body.getShow_url(), body.getLayout_url()):null;
         Page.CharacterItem expressionItem = (expression!=null)? new Page.CharacterItem(expression.getId(), expression.getShow_url(), expression.getLayout_url()):null;

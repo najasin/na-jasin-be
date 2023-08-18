@@ -8,5 +8,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface UserUserTypeRepository extends JpaRepository<UserUserType, UserUserTypeId> {
-    List<UserUserType> findALlByUser(User user);
+    List<UserUserType> findAllByUser(User user);
 }
