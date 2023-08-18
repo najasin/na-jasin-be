@@ -44,12 +44,17 @@ public class UserUserTypeService {
     private final UserTypeService userTypeService;
 
 
+    @Transactional
+    public List<UserUserType> getUserUserTypesByUserId(String userId) {
+        User user = userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
+        return userUserTypeRepository.findALlByUser(user);
+    }
 
     @Transactional
     public UserUserType getUserUserTypeById(String userId, String userTypeName) {
         User user = userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
         UserType userType = userTypeRepository.findByName(userTypeName).orElseThrow(EntityNotFoundException::new);
-        return userUserTypeRepository.findById(new UserUserTypeId(user, userType)).orElseThrow(EntityNotFoundException::new);
+        return userUserTypeRepository.findById(new UserUserTypeId(user, userType)).orElse(new UserUserType(user, userType));
     }
 
     @Transactional
@@ -87,7 +92,7 @@ public class UserUserTypeService {
             userUserType.updateCharacter(null, null, null, characterSet);
         }
         user.updateUserUserType(userUserType);
-        return userUserType;
+        return userUserTypeRepository.save(userUserType);
     }
 
     @Transactional

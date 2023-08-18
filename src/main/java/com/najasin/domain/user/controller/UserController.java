@@ -67,7 +67,7 @@ public class UserController {
 			@RequestBody PutAnswer putAnswer
 	) {
 //		String userId = userDetails.getUsername();
-		String userId = "1";
+		String userId = "b660136f-2ea3-4e78-aeab-a2a9edb2c45e";
 		answerService.deleteAnswers(userId, userTypeName);
 		for (AnswerDTO dto : putAnswer.getAnswers()) {
 			answerService.save(userId, dto.getId(), dto.getAnswer());
@@ -84,7 +84,7 @@ public class UserController {
 			@RequestBody CharacterItems dto
 			//@AuthenticationPrincipal UserDetails userDetails
 	) {
-		String userId = "1";
+		String userId = "b660136f-2ea3-4e78-aeab-a2a9edb2c45e";
 		userUserTypeService.updateCharacter(userId, userTypeName, dto);
 		return new ResponseEntity<>(
 				ApiResponse.createSuccess(UserResponse.SUCCESS_UPDATE.getMessage()),
@@ -99,7 +99,7 @@ public class UserController {
 			@RequestBody String nickname
 			//			@AuthenticationPrincipal UserDetails userDetails
 	) {
-		String userId = "1";
+		String userId = "b660136f-2ea3-4e78-aeab-a2a9edb2c45e";
 		userService.updateNickname(userId, nickname);
 		return new ResponseEntity<>(
 				ApiResponse.createSuccess(UserResponse.SUCCESS_UPDATE.getMessage()),
@@ -113,9 +113,9 @@ public class UserController {
 			@RequestBody PageUpdateRequestDTO dto
 			//		@AuthenticationPrincipal UserDetails userDetails
 	) {
-		String userId = "1";
+		String userId = "b660136f-2ea3-4e78-aeab-a2a9edb2c45e";
 		User user = userService.findById(userId);
-		user.updateNickname(dto.getNickname());
+		userService.updateNickname(userId, dto.getNickname());
 		userUserTypeService.updateCharacter(userId, userTypeName, dto.getCharacterItems());
 		answerService.deleteAnswers(userId, userTypeName);
 		answerService.updateAnswers(userId, dto.getAnswers());
@@ -152,11 +152,11 @@ public class UserController {
 	) {
 
 		Page page = new Page();
-		String userId = "1";
+		String userId = "b660136f-2ea3-4e78-aeab-a2a9edb2c45e";
 		User user = userService.findById(userId);
 
 		List<String> userTypes = new ArrayList<>();
-		for (UserUserType uut : user.getUserUserTypes()) {
+		for (UserUserType uut : userUserTypeService.getUserUserTypesByUserId(userId)) {
 			userTypes.add(uut.getUserType().getName());
 		}
 		page.setUserTypes(userTypes);
@@ -193,13 +193,14 @@ public class UserController {
 	}
 
 	@GetMapping("/{userTypeName}/mypage")
-	public ResponseEntity<ApiResponse<?>> getMyPage(@PathVariable String userTypeName, @RequestParam String userId) {
+	public ResponseEntity<ApiResponse<?>> getMyPage(@PathVariable String userTypeName) {
 
+		String userId = "b660136f-2ea3-4e78-aeab-a2a9edb2c45e";
 		Page page = new Page();
 		User user = userService.findById(userId);
 
 		List<String> userTypes = new ArrayList<>();
-		for (UserUserType uut : user.getUserUserTypes()) {
+		for (UserUserType uut : userUserTypeService.getUserUserTypesByUserId(userId)) {
 			userTypes.add(uut.getUserType().getName());
 		}
 		page.setUserTypes(userTypes);
