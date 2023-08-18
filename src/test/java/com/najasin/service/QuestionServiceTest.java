@@ -6,6 +6,7 @@ import com.najasin.domain.question.entity.Question;
 import com.najasin.domain.question.entity.QuestionType;
 import com.najasin.domain.question.repository.QuestionRepository;
 import com.najasin.domain.question.service.QuestionService;
+import com.najasin.domain.user.dto.Page;
 import com.najasin.domain.user.repository.UserRepository;
 import com.najasin.domain.userType.entity.UserType;
 import com.najasin.domain.userType.repository.UserTypeRepository;
@@ -20,6 +21,7 @@ import static junit.framework.TestCase.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
@@ -50,13 +52,13 @@ public class QuestionServiceTest {
         when(questionRepository.getQuestionsByQuestionTypeAndUserType(questionType, userType)).thenReturn(mockQuestions);
 
         //when
-        List<String> ret = questionService.getQuestionByQuestionTypeAndUserType(questionType, userTypeName);
+        List<Page.Questions> ret = questionService.getQuestionByQuestionTypeAndUserType(questionType, userTypeName);
 
         //then
         assertNotNull(ret);
         assertEquals(2, ret.size());
-        assertEquals("Question 1", ret.get(0));
-        assertEquals("Question 2", ret.get(1));
+        assertEquals("Question 1", ret.get(0).getQuestion());
+        assertEquals("Question 2", ret.get(1).getQuestion());
 
         verify(userTypeRepository, times(1)).findByName(userTypeName);
         verify(questionRepository, times(1)).getQuestionsByQuestionTypeAndUserType(questionType, userType);

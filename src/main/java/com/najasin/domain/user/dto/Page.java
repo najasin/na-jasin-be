@@ -19,7 +19,7 @@ public class Page {
     private CharacterItems characterItems;
     private List<QAPair> myManualQAPair;
     private List<QAPair> othersManualQAPair;
-    private List<String> questions;
+    private List<Questions> questions;
     private List<String> exampleKeywords;
     private Map<String, Integer> originKeywordPercents;
     private Map<String, Long> otherKeywordPercents;
@@ -52,5 +52,13 @@ public class Page {
         private Long id;
         private String question;
         private String answer;
+    }
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Questions{
+        private Long id;
+        private String question;
     }
 }
