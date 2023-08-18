@@ -36,10 +36,10 @@ public class SecurityConfig {
 			.csrf((AbstractHttpConfigurer::disable))
 			.formLogin((AbstractHttpConfigurer::disable))
 			.headers(AbstractHttpConfigurer::disable)
-			.authorizeHttpRequests(setAuthorizeHttpRequests())
-			.oauth2Login(setOAuth2Config())
-			.sessionManagement(config -> config.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-			.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+//			.authorizeHttpRequests(setAuthorizeHttpRequests())
+//			.oauth2Login(setOAuth2Config())
+//			.sessionManagement(config -> config.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+//			.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
 			.build();
 	}
 

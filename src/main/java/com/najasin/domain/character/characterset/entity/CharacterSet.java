@@ -1,4 +1,4 @@
-package com.najasin.domain.body.entity;
+package com.najasin.domain.character.characterset.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -7,21 +7,19 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@Entity
+@Entity(name = "characterSet")
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Body {
+public class CharacterSet {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "body_id")
+    @Column(name = "set_id")
     private Long id;
 
-    @Column(name = "body_name")
+    @Column(name = "set_name")
     private String name;
 
-    @Column(name = "body_show_url")
-    private String show_url;
+    @Column(name = "set_url")
+    private String url;
 
-    @Column(name = "body_layout_url")
-    private String layout_url;
 }
