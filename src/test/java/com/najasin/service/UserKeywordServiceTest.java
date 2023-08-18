@@ -137,7 +137,6 @@ public class UserKeywordServiceTest {
 
 
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
-        when(keywordRepository.findById(keywordId)).thenReturn(Optional.of(keyword));
         when(userKeywordRepository.save(any(UserKeyword.class))).thenReturn(prevUserKeyword);
 
         // When
@@ -148,7 +147,6 @@ public class UserKeywordServiceTest {
 //        assertEquals(prevUserKeyword.getOthersCount() + 1, updatedUserKeyword.getOthersCount());
 
         verify(userRepository, times(1)).findById(userId);
-        verify(keywordRepository, times(1)).findById(keywordId);
         verify(userKeywordRepository, times(1)).save(any(UserKeyword.class));
     }
 

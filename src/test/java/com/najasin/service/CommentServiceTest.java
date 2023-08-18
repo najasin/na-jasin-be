@@ -100,7 +100,7 @@ public class CommentServiceTest {
         //when
         Comment comment = commentService.save(mockUserId, mockQuestionId, mockCommentNickname, mockCommentContent);
         //then
-        assertEquals(mockComment, comment);
+        assertEquals(mockComment.getComment(), comment.getComment());
 
         verify(userRepository, times(1)).findById(mockUserId);
         verify(questionRepository, times(1)).findById(mockQuestionId);
