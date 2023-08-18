@@ -10,10 +10,7 @@ import com.najasin.domain.comment.repository.CommentRepository;
 import com.najasin.domain.comment.service.CommentService;
 import com.najasin.domain.question.entity.QuestionType;
 import com.najasin.domain.question.service.QuestionService;
-import com.najasin.domain.user.dto.CharacterItems;
-import com.najasin.domain.user.dto.Page;
-import com.najasin.domain.user.dto.PageUpdateRequestDTO;
-import com.najasin.domain.user.dto.PutAnswer;
+import com.najasin.domain.user.dto.*;
 import com.najasin.domain.user.entity.User;
 import com.najasin.domain.userKeyword.entity.UserKeyword;
 import com.najasin.domain.userKeyword.service.UserKeywordService;
@@ -124,7 +121,7 @@ public class UserController {
 		answerService.updateAnswers(userId, dto.getAnswers());
 		userKeywordService.updateByUser(userId, dto.getKeywordPercents());
 		return new ResponseEntity<>(
-				ApiResponse.createSuccess(UserResponse.SUCCESS_UPDATE.getMessage()),
+				ApiResponse.createSuccessWithData(UserResponse.SUCCESS_UPDATE.getMessage(), new UserInfoResponse(userId, userTypeName)),
 				HttpStatus.OK
 		);
 	}
