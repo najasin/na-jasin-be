@@ -141,7 +141,7 @@ public class UserKeywordServiceTest {
         when(userKeywordRepository.save(any(UserKeyword.class))).thenReturn(prevUserKeyword);
 
         // When
-        UserKeyword updatedUserKeyword = userKeywordService.updateByOthers(userId, keywordId, percentToAdd);
+        UserKeyword updatedUserKeyword = userKeywordService.updateByOthers(userId, keyword.getName(), percentToAdd);
 
         // Then
 //        assertEquals(prevUserKeyword.getOthersPercent() + percentToAdd, updatedUserKeyword.getOthersPercent());

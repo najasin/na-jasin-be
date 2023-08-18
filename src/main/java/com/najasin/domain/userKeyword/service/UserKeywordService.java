@@ -56,12 +56,12 @@ public class UserKeywordService {
 
 
     @Transactional
-    public UserKeyword updateByOthers(String userId, Long keywordId, int percent) {
+    public UserKeyword updateByOthers(String userId, String keywordName, int percent) {
         User user = userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
-        Keyword keyword = keywordRepository.findById(keywordId).orElseThrow(EntityNotFoundException::new);
+        Keyword keyword = keywordRepository.findKeywordByName(keywordName);
         UserKeyword prevUK = null;
         for(UserKeyword userKeyword: user.getUserKeywords()) {
-            if (userKeyword.getKeyword().getId() == keywordId) {
+            if (userKeyword.getKeyword().getName().equals(keywordName)) {
                 prevUK = userKeyword;
             }
         }

@@ -1,5 +1,6 @@
 package com.najasin.domain.user.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,6 +11,7 @@ import java.util.Map;
 
 @Getter
 @Setter
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Page {
     private List<String> userTypes;
     private String nickname;
@@ -26,6 +28,7 @@ public class Page {
     @Setter
     @AllArgsConstructor
     @NoArgsConstructor
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class CharacterItems {
         private CharacterItem face;
         private CharacterItem body;

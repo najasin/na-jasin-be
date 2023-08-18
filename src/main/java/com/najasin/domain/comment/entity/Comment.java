@@ -15,16 +15,17 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-@IdClass(CommentId.class)
 public class Comment {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id", insertable = false, updatable = false)
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     private User user;
 
-    @Id
     @ManyToOne
-    @JoinColumn(name = "question_id", referencedColumnName = "question_id", insertable = false, updatable = false)
+    @JoinColumn(name = "question_id", referencedColumnName = "question_id")
     private Question question;
 
     @Column(name = "comment")

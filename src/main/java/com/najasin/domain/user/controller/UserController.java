@@ -139,6 +139,9 @@ public class UserController {
 		for (PageUpdateRequestDTO.AnswerDTO answerDTO : dto.getAnswers()) {
 			commentService.save(userId, answerDTO.getId(), dto.getNickname(), answerDTO.getAnswer());
 		}
+		for (String keyword : dto.getOtherKeywordPercents().keySet()) {
+			userKeywordService.updateByOthers(userId, keyword, dto.getOtherKeywordPercents().get(keyword));
+		}
 		return new ResponseEntity<>(
 				ApiResponse.createSuccess(UserResponse.SUCCESS_UPDATE.getMessage()),
 				HttpStatus.OK
