@@ -113,7 +113,7 @@ jobs:
           spring.security.oauth2.client.registration.kakao.client-secret: ${{ secrets.KAKAO_CLIENT_SECRET }}
           spring.data.redis.host: ${{ secrets.ELASTIC_CACHE_HOST }}
           jwt.secret: ${{ secrets.JWT_SECRET }}
-          clint.url: ${{ secrets.CLIENT_URL }}
+          client.url: ${{ secrets.CLIENT_URL }}
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
