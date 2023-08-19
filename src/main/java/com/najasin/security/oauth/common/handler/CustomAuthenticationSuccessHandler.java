@@ -59,9 +59,8 @@ public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 			.append("&refreshToken=").append(oAuth2Response.refreshToken())
 			.append("&userId=").append(oAuth2Response.userId())
 			.append("&userType=").append(oAuth2Response.userType());
+
+		getRedirectStrategy().sendRedirect(request, response, sb.toString());
 		
-		if (!response.isCommitted()) {
-			getRedirectStrategy().sendRedirect(request, response, sb.toString());
-		}
 	}
 }
