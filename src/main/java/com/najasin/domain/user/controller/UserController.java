@@ -62,6 +62,12 @@ public class UserController {
 		);
 	}
 
+	@GetMapping
+	public String test(@AuthorizeUser User user) {
+		System.out.println(user.toString());
+		return "test";
+	}
+
 	@PutMapping("/{userTypeName}/answers")
 	public ResponseEntity<ApiResponse<?>> putAnswers(
 			@PathVariable String userTypeName,
