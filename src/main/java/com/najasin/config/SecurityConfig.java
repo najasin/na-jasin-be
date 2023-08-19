@@ -47,6 +47,7 @@ public class SecurityConfig {
 		return requests ->
 			requests.requestMatchers(
 					new AntPathRequestMatcher("/swagger-ui/index.html"),
+					new AntPathRequestMatcher("/success"),
 					new AntPathRequestMatcher("/api/auth"),
 					new AntPathRequestMatcher("/auth2/**"),
 					new AntPathRequestMatcher("/login/**")
