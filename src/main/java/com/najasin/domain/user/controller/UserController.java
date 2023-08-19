@@ -153,9 +153,9 @@ public class UserController {
 		Manual manual = new Manual();
 		String userId = user.getId();
 		manual.setNickname(user.getNickname());
-		manual.setBaseImage("임시 이미지 url");
+		manual.setBaseImage("https://picsum.photos/200/300?random=1");
 		CharacterItems characterInfoDTO = userUserTypeService.getCharacter(userId, userTypeName);
-		manual.setCharacterItems(characterService.getAllCharacterItems());
+		manual.setCharacterItems(characterService.getAllCharacterItems().getCharacterItems());
 		manual.setQuestions(questionService.getQuestionByQuestionTypeAndUserType(QuestionType.FOR_USER, userTypeName));
 		return new ResponseEntity<>(
 				ApiResponse.createSuccessWithData(UserResponse.SUCCESS_GET_PAGE.getMessage(), manual),
@@ -171,7 +171,7 @@ public class UserController {
 
 		page.setQuestions(questionService.getQuestionByQuestionTypeAndUserType(QuestionType.FOR_OTHERS, userTypeName));
 		page.setNickname(user.getNickname());
-		page.setBaseImage("임시 베이스 이미지 url");
+		page.setBaseImage("https://picsum.photos/200/300?random=1");
 		CharacterItems characterInfoDTO = userUserTypeService.getCharacter(userId, userTypeName);
 		page.setCharacterItems(new CharacterItems(characterInfoDTO.getFace(), characterInfoDTO.getBody(), characterInfoDTO.getExpression(), characterInfoDTO.getSet()));
 		page.setMyManualQAPair(userUserTypeService.getQAByUserIdAndUserTypeForUser(userId, userTypeName, QuestionType.FOR_USER));
@@ -200,7 +200,7 @@ public class UserController {
 		page.setUserTypes(userTypes);
 
 		page.setNickname(user.getNickname());
-		page.setBaseImage("임시 베이스 이미지 url");
+		page.setBaseImage("https://picsum.photos/200/300?random=1");
 		CharacterItems characterInfoDTO = userUserTypeService.getCharacter(userId, userTypeName);
 		page.setCharacterItems(new CharacterItems(characterInfoDTO.getFace(), characterInfoDTO.getBody(), characterInfoDTO.getExpression(), characterInfoDTO.getSet()));
 

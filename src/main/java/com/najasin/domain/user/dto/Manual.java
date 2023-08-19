@@ -16,7 +16,7 @@ public class Manual {
     private List<String> userTypes;
     private String nickname;
     private String baseImage;
-    private AllCharacterItems characterItems;
+    private AllCharacterItems.CharacterItems characterItems;
     private List<QAPair> myManualQAPair;
     private List<OtherManual> othersManualQAPair;
     private List<Page.Questions> questions;
