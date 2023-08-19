@@ -1,5 +1,6 @@
 package com.najasin.domain.character.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,12 +11,14 @@ import java.util.List;
 
 @Getter
 @Setter
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class AllCharacterItems {
     String baseImage;
     CharacterItems characterItems;
 
     @Getter
     @Setter
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     static public class CharacterItems{
         List<CharacterItem> face = new ArrayList<>();
         List<CharacterItem> body = new ArrayList<>();
@@ -23,14 +26,6 @@ public class AllCharacterItems {
         List<CharacterItem> set = new ArrayList<>();
     }
 
-    @Getter
-    @Setter
-    @AllArgsConstructor
-    @NoArgsConstructor
-    static public class CharacterItem{
-        Long id;
-        String showCase;
-        String layoutCase;
-    }
+
 }
 

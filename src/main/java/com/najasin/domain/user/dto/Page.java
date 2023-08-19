@@ -1,6 +1,7 @@
 package com.najasin.domain.user.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.najasin.domain.character.dto.CharacterItems;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,27 +25,7 @@ public class Page {
     private Map<String, Integer> originKeywordPercents;
     private Map<String, Long> otherKeywordPercents;
 
-    @Getter
-    @Setter
-    @AllArgsConstructor
-    @NoArgsConstructor
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    public static class CharacterItems {
-        private CharacterItem face;
-        private CharacterItem body;
-        private CharacterItem expression;
-        private CharacterItem characterSet;
 
-    }
-    @Getter
-    @Setter
-    @AllArgsConstructor
-    public static class CharacterItem {
-        private Long id;
-        private String showCase;
-        private String layoutCase;
-
-    }
     @Getter
     @Setter
     @AllArgsConstructor

@@ -1,4 +1,4 @@
-package com.najasin.domain.user.dto;
+package com.najasin.domain.character.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

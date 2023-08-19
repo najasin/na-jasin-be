@@ -5,14 +5,14 @@ import com.najasin.domain.character.body.entity.Body;
 import com.najasin.domain.character.body.repository.BodyRepository;
 import com.najasin.domain.character.characterset.entity.CharacterSet;
 import com.najasin.domain.character.characterset.repository.CharacterSetRepository;
-import com.najasin.domain.character.dto.CharacterInfoDTO;
+import com.najasin.domain.character.dto.CharacterItem;
+import com.najasin.domain.character.dto.CharacterItems;
 import com.najasin.domain.character.expression.entity.Expression;
 import com.najasin.domain.character.expression.repository.ExpressionRepository;
 import com.najasin.domain.character.face.entity.Face;
 import com.najasin.domain.character.face.repository.FaceRepository;
 import com.najasin.domain.comment.entity.Comment;
 import com.najasin.domain.question.entity.QuestionType;
-import com.najasin.domain.user.dto.CharacterItems;
 import com.najasin.domain.user.dto.Page;
 import com.najasin.domain.user.entity.User;
 import com.najasin.domain.user.repository.UserRepository;
@@ -101,7 +101,7 @@ public class UserUserTypeService {
     }
 
     @Transactional
-    public CharacterInfoDTO getCharacter(String userId, String userTypeName) {
+    public CharacterItems getCharacter(String userId, String userTypeName) {
         UserUserType userUserType = this.getUserUserTypeById(userId, userTypeName);
         Face face = userUserType.getFace();
         Body body = userUserType.getBody();
@@ -109,14 +109,31 @@ public class UserUserTypeService {
         CharacterSet characterSet = userUserType.getSet();
 
         if (characterSet != null) {
-            Page.CharacterItem characterItem = new Page.CharacterItem(characterSet.getId(), characterSet.getUrl(), characterSet.getUrl());
-            return new CharacterInfoDTO(null, null, null, characterItem);
+            CharacterItem characterItem = CharacterItem.builder()
+                    .id(characterSet.getId())
+                    .showCase(characterSet.getUrl())
+                    .layoutCase(characterSet.getUrl())
+                    .build();
+            return new CharacterItems(null, null, null, characterItem);
         }
 
-        Page.CharacterItem faceItem = (face!=null)? new Page.CharacterItem(face.getId(), face.getShow_url(), face.getLayout_url()):null;
-        Page.CharacterItem bodyItem = (body!=null)? new Page.CharacterItem(body.getId(), body.getShow_url(), body.getLayout_url()):null;
-        Page.CharacterItem expressionItem = (expression!=null)? new Page.CharacterItem(expression.getId(), expression.getShow_url(), expression.getLayout_url()):null;
-        return new CharacterInfoDTO(faceItem, bodyItem, expressionItem, null);
+        CharacterItem faceItem = (face!=null)?
+                CharacterItem.builder()
+                        .id(face.getId())
+                        .showCase(face.getShow_url())
+                        .layoutCase(face.getLayout_url())
+                        .build() :  null;
+        CharacterItem bodyItem = (body!=null)?CharacterItem.builder()
+                .id(body.getId())
+                .showCase(body.getShow_url())
+                .layoutCase(body.getLayout_url())
+                .build() :  null;
+        CharacterItem expressionItem = (expression!=null)? CharacterItem.builder()
+                .id(expression.getId())
+                .showCase(expression.getShow_url())
+                .layoutCase(expression.getLayout_url())
+                .build() : null;
+        return new CharacterItems(faceItem, bodyItem, expressionItem, null);
     }
 
     @Transactional

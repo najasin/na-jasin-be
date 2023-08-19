@@ -12,19 +12,17 @@ import com.najasin.domain.character.body.entity.Body;
 import com.najasin.domain.character.body.repository.BodyRepository;
 import com.najasin.domain.character.characterset.entity.CharacterSet;
 import com.najasin.domain.character.characterset.repository.CharacterSetRepository;
-import com.najasin.domain.character.dto.CharacterInfoDTO;
+import com.najasin.domain.character.dto.CharacterItem;
 import com.najasin.domain.character.expression.entity.Expression;
 import com.najasin.domain.character.expression.repository.ExpressionRepository;
 import com.najasin.domain.character.face.entity.Face;
 import com.najasin.domain.character.face.repository.FaceRepository;
 import com.najasin.domain.question.entity.Question;
 import com.najasin.domain.question.entity.QuestionType;
-import com.najasin.domain.user.dto.CharacterItem;
-import com.najasin.domain.user.dto.CharacterItems;
+import com.najasin.domain.character.dto.CharacterItems;
 import com.najasin.domain.user.dto.Page;
 import com.najasin.domain.user.repository.UserRepository;
 import com.najasin.domain.userType.repository.UserTypeRepository;
-import com.najasin.domain.userUserType.entity.UserUserTypeId;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -93,8 +91,12 @@ public class UserUserTypeServiceTest {
 		mockUserType = new UserType(userTypeName);
 		mockUserUserType = new UserUserType(mockUser, mockUserType);
 		dto = new CharacterItems();
-		dto.setBody(new CharacterItem(2L));
-		dto.setFace(new CharacterItem(1L));
+		dto.setBody(CharacterItem.builder()
+				.id(2L)
+				.build());
+		dto.setFace(CharacterItem.builder()
+				.id(1L)
+				.build());
 		dto.setExpression(null);
 		dto.setSet(null);
 
@@ -207,7 +209,7 @@ public class UserUserTypeServiceTest {
 		given(userUserTypeRepository.findById(any())).willReturn(Optional.ofNullable(mockUserUserType));
 		given(userUserTypeRepository.findById(any())).willReturn(Optional.ofNullable(mockUserUserType));
 		//when
-		CharacterInfoDTO characterInfoDTO = userUserTypeService.getCharacter(mockUser.getId(), "JFF");
+		CharacterItems characterInfoDTO = userUserTypeService.getCharacter(mockUser.getId(), "JFF");
 		assertEquals(characterInfoDTO.getFace().getId(), mockFace.getId());
 		assertEquals(characterInfoDTO.getFace().getShowCase(), mockFace.getShow_url());
 		assertEquals(characterInfoDTO.getFace().getLayoutCase(), mockFace.getLayout_url());

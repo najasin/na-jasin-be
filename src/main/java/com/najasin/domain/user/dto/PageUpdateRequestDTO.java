@@ -1,5 +1,6 @@
 package com.najasin.domain.user.dto;
 
+import com.najasin.domain.character.dto.CharacterItems;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
