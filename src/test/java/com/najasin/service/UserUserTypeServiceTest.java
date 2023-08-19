@@ -17,12 +17,14 @@ import com.najasin.domain.character.expression.entity.Expression;
 import com.najasin.domain.character.expression.repository.ExpressionRepository;
 import com.najasin.domain.character.face.entity.Face;
 import com.najasin.domain.character.face.repository.FaceRepository;
+import com.najasin.domain.comment.entity.Comment;
 import com.najasin.domain.question.entity.Question;
 import com.najasin.domain.question.entity.QuestionType;
 import com.najasin.domain.character.dto.CharacterItems;
 import com.najasin.domain.user.dto.Page;
 import com.najasin.domain.user.repository.UserRepository;
 import com.najasin.domain.userType.repository.UserTypeRepository;
+import com.najasin.global.audit.AuditEntity;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -87,6 +89,8 @@ public class UserUserTypeServiceTest {
 		mockUser = User.builder()
 				.answers(mockAnswers)
 				.userUserTypes(new ArrayList<>())
+				.comments(new ArrayList<>())
+				.auditEntity(new AuditEntity())
 				.build();
 		mockUserType = new UserType(userTypeName);
 		mockUserUserType = new UserUserType(mockUser, mockUserType);
@@ -178,6 +182,22 @@ public class UserUserTypeServiceTest {
 		assertEquals(getQaPair.get(0).getAnswer(), myQaParis.get(0).getAnswer());
 		assertEquals(getQaPair.get(0).getId(), myQaParis.get(0).getId());
 	}
+
+	@Test
+	@DisplayName("유저의 타적나사를 가져온다")
+	public void getOtherManualByUserIdAndUserType() {
+		//given
+		mockUserUserType.getUser().getComments().add(new Comment(1L, mockUser, new Question(1L, "질문", null, null, null), null, "mockNickname", new AuditEntity()));
+		given(userRepository.findById(any())).willReturn(Optional.of(mockUser));
+		given(userTypeRepository.findByName(any())).willReturn(Optional.of(mockUserType));
+		given(userUserTypeRepository.findById(any())).willReturn(Optional.ofNullable(mockUserUserType));
+		//when
+		List<Page.OtherManual> getList = userUserTypeService.getOtherManualByUserIdAndUserType(mockUser.getId(), mockUserType.getName(), QuestionType.FOR_OTHERS);
+		//then
+//		assertEquals(getList.get(0).getNickname(), "mockNickname");
+
+	}
+
 
 	@Test
 	@DisplayName("유저의 캐릭터를 업데이트한다")

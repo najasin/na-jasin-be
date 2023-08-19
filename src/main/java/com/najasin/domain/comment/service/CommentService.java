@@ -56,22 +56,5 @@ public class CommentService {
         return true;
     }
 
-    @Transactional
-    public List<Page.QAPair> getOthersManualQAPair(String userId, String userTypeName) {
-        User user = userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
-        UserType userType = userTypeRepository.findByName(userTypeName).orElseThrow(EntityNotFoundException::new);
-        List<Comment> comments = commentRepository.findAllByUser(user);
-        List<Page.QAPair> qaPairs = new ArrayList<>();
-        for (Comment comment : comments) {
-            if (comment.getQuestion().getUserType() == userType) {
-                qaPairs.add(Page.QAPair.builder()
-                        .id(comment.getId())
-                        .answer(comment.getComment())
-                        .nickname(comment.getNickname())
-                        .question(comment.getQuestion().getQuestion())
-                        .build());
-            }
-        }
-        return qaPairs;
-    }
+
 }

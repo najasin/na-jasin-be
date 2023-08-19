@@ -87,11 +87,9 @@ public class UserUserTypeService {
                     .build();
             if (prevNickname.equals(comment.getNickname()) && temp.size() != 0&&Duration.between(prevTime,comment.getAuditEntity().getCreatedAt()).getSeconds()<=10) {
                 temp.get(temp.size() - 1).getQas().add(qaPair);
-                System.out.println(Duration.between(prevTime,comment.getAuditEntity().getCreatedAt()).getSeconds());
 
             } else {
                 prevNickname = comment.getNickname();
-                System.out.println(Duration.between(prevTime,comment.getAuditEntity().getCreatedAt()).getSeconds());
                 prevTime = comment.getAuditEntity().getCreatedAt();
                 temp.add(Page.OtherManual.builder()
                         .nickname(prevNickname)
