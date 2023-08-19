@@ -137,7 +137,7 @@ public class UserController {
 			userKeywordService.updateByOthers(userId, keyword, dto.getOtherKeywordPercents().get(keyword));
 		}
 		return new ResponseEntity<>(
-				ApiResponse.createSuccess(UserResponse.SUCCESS_UPDATE.getMessage()),
+				ApiResponse.createSuccessWithData(UserResponse.SUCCESS_UPDATE.getMessage(), new UserInfoResponse(userId, userTypeName)),
 				HttpStatus.OK
 		);
 	}
