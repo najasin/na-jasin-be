@@ -12,7 +12,6 @@ import com.najasin.domain.character.body.entity.Body;
 import com.najasin.domain.character.body.repository.BodyRepository;
 import com.najasin.domain.character.characterset.entity.CharacterSet;
 import com.najasin.domain.character.characterset.repository.CharacterSetRepository;
-import com.najasin.domain.character.dto.CharacterDTO;
 import com.najasin.domain.keyword.dto.KeywordDTO;
 import com.najasin.domain.character.expression.entity.Expression;
 import com.najasin.domain.character.expression.repository.ExpressionRepository;
@@ -78,7 +77,6 @@ public class UserServiceTest {
 	private UserKeyword mockUK;
 	private int mockPercent;
 
-	private CharacterDTO characterDTO = new CharacterDTO();
 	private List<KeywordDTO> keywordDTOs = new ArrayList<>();
 
 	@BeforeEach
