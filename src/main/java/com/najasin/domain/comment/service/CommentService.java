@@ -5,19 +5,26 @@ import com.najasin.domain.comment.entity.CommentId;
 import com.najasin.domain.comment.repository.CommentRepository;
 import com.najasin.domain.question.entity.Question;
 import com.najasin.domain.question.repository.QuestionRepository;
+import com.najasin.domain.user.dto.Page;
 import com.najasin.domain.user.entity.User;
 import com.najasin.domain.user.repository.UserRepository;
+import com.najasin.domain.userType.entity.UserType;
+import com.najasin.domain.userType.repository.UserTypeRepository;
 import com.najasin.global.audit.AuditEntity;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class CommentService {
     private final CommentRepository commentRepository;
     private final QuestionRepository questionRepository;
+    private final UserTypeRepository userTypeRepository;
     private final UserRepository userRepository;
 
     @Transactional
@@ -47,5 +54,24 @@ public class CommentService {
         question.getComments().remove(comment);
         commentRepository.delete(comment);
         return true;
+    }
+
+    @Transactional
+    public List<Page.QAPair> getOthersManualQAPair(String userId, String userTypeName) {
+        User user = userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
+        UserType userType = userTypeRepository.findByName(userTypeName).orElseThrow(EntityNotFoundException::new);
+        List<Comment> comments = commentRepository.findAllByUser(user);
+        List<Page.QAPair> qaPairs = new ArrayList<>();
+        for (Comment comment : comments) {
+            if (comment.getQuestion().getUserType() == userType) {
+                qaPairs.add(Page.QAPair.builder()
+                        .id(comment.getId())
+                        .answer(comment.getComment())
+                        .nickname(comment.getNickname())
+                        .question(comment.getQuestion().getQuestion())
+                        .build());
+            }
+        }
+        return qaPairs;
     }
 }

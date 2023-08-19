@@ -165,6 +165,7 @@ public class UserController {
 		CharacterItems characterInfoDTO = userUserTypeService.getCharacter(userId, userTypeName);
 		page.setCharacterItems(new CharacterItems(characterInfoDTO.getFace(), characterInfoDTO.getBody(), characterInfoDTO.getExpression(), characterInfoDTO.getSet()));
 		page.setQuestions(questionService.getQuestionByQuestionTypeAndUserType(QuestionType.FOR_USER, userTypeName));
+		page.setOthersManualQAPair(commentService.getOthersManualQAPair(userId, userTypeName));
 		return new ResponseEntity<>(
 				ApiResponse.createSuccessWithData(UserResponse.SUCCESS_GET_PAGE.getMessage(), page),
 				HttpStatus.OK
