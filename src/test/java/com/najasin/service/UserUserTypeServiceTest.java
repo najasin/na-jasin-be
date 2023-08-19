@@ -23,6 +23,7 @@ import com.najasin.domain.character.dto.CharacterItems;
 import com.najasin.domain.user.dto.Page;
 import com.najasin.domain.user.repository.UserRepository;
 import com.najasin.domain.userType.repository.UserTypeRepository;
+import com.najasin.domain.userUserType.entity.UserUserTypeId;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
