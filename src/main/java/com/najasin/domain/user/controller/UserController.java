@@ -1,5 +1,7 @@
 package com.najasin.domain.user.controller;
 
+import static java.util.Objects.*;
+
 import com.najasin.domain.answer.service.AnswerService;
 import com.najasin.domain.answer.dto.AnswerDTO;
 import com.najasin.domain.character.CharacterService;
@@ -30,8 +32,6 @@ import lombok.RequiredArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.najasin.domain.user.entity.QUser.user;
-
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api")
@@ -44,7 +44,6 @@ public class UserController {
 	private final UserUserTypeService userUserTypeService;
 	private final UserKeywordService userKeywordService;
 	private final CharacterService characterService;
-//	String userId = "63a47bcb-ebb1-4618-b357-fdd6681bd0fc";
 
 	@PostMapping("/logout")
 	public ResponseEntity<ApiResponse<?>> logout(@AccessToken String accessToken, @RefreshToken String refreshToken) {
@@ -149,12 +148,12 @@ public class UserController {
 			@AuthorizeUser User user
 
 	) {
-//		User user = userService.findById(userId);
 		Manual manual = new Manual();
-		String userId = user.getId();
-		manual.setNickname(user.getNickname());
+
+		if(!isNull(user)) {
+			manual.setNickname(user.getId());
+		}
 		manual.setBaseImage("https://picsum.photos/200/300?random=1");
-		CharacterItems characterInfoDTO = userUserTypeService.getCharacter(userId, userTypeName);
 		manual.setCharacterItems(characterService.getAllCharacterItems().getCharacterItems());
 		manual.setQuestions(questionService.getQuestionByQuestionTypeAndUserType(QuestionType.FOR_USER, userTypeName));
 		return new ResponseEntity<>(
@@ -189,7 +188,6 @@ public class UserController {
 			@PathVariable String userTypeName,
 			@AuthorizeUser User user
 	) {
-//		User user = userService.findById(userId);
 		String userId = user.getId();
 		Page page = new Page();
 
@@ -216,10 +214,8 @@ public class UserController {
 		);
 	}
 
-	@GetMapping("/{userTypeName}/characterItems")
-	public ResponseEntity<ApiResponse<?>> getCharacterItems(
-			@PathVariable String userTypeName
-	){
+	@GetMapping("/characterItems")
+	public ResponseEntity<ApiResponse<?>> getCharacterItems(){
 		AllCharacterItems allCharacterItems = characterService.getAllCharacterItems();
 		return new ResponseEntity<>(
 				ApiResponse.createSuccessWithData(UserResponse.SUCCESS_GET_PAGE.getMessage(), allCharacterItems),

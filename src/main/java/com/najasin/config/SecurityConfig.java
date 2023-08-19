@@ -60,7 +60,8 @@ public class SecurityConfig {
 					new AntPathRequestMatcher("/success/**"),
 					new AntPathRequestMatcher("/api/auth"),
 					new AntPathRequestMatcher("/auth2/**"),
-					new AntPathRequestMatcher("/login/**")
+					new AntPathRequestMatcher("/login/**"),
+					new AntPathRequestMatcher("/api/*/my-manual", "GET")
 				).permitAll()
 				.requestMatchers(new AntPathRequestMatcher("/api/**")).hasAnyRole("ADMIN", "MEMBER")
 				.anyRequest().authenticated();
