@@ -1,27 +1,20 @@
 package com.najasin.domain.user.controller;
 
-import com.najasin.domain.answer.entity.Answer;
 import com.najasin.domain.answer.service.AnswerService;
 import com.najasin.domain.answer.dto.AnswerDTO;
 import com.najasin.domain.character.CharacterService;
 import com.najasin.domain.character.dto.AllCharacterItems;
-import com.najasin.domain.character.dto.CharacterInfoDTO;
-import com.najasin.domain.comment.repository.CommentRepository;
+import com.najasin.domain.character.dto.CharacterItems;
 import com.najasin.domain.comment.service.CommentService;
 import com.najasin.domain.question.entity.QuestionType;
 import com.najasin.domain.question.service.QuestionService;
 import com.najasin.domain.user.dto.*;
+import com.najasin.domain.user.dto.message.UserInfoResponse;
 import com.najasin.domain.user.entity.User;
-import com.najasin.domain.userKeyword.entity.UserKeyword;
 import com.najasin.domain.userKeyword.service.UserKeywordService;
-import com.najasin.domain.userType.entity.UserType;
-import com.najasin.domain.userType.repository.UserTypeRepository;
 import com.najasin.domain.userUserType.entity.UserUserType;
-import com.najasin.domain.userUserType.entity.UserUserTypeId;
-import com.najasin.domain.userUserType.repository.UserUserTypeRepository;
 import com.najasin.domain.userUserType.service.UserUserTypeService;
 import com.najasin.global.annotation.AuthorizeUser;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,9 +28,9 @@ import com.najasin.global.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
+import static com.najasin.domain.user.entity.QUser.user;
 
 @RequiredArgsConstructor
 @RestController
@@ -51,6 +44,7 @@ public class UserController {
 	private final UserUserTypeService userUserTypeService;
 	private final UserKeywordService userKeywordService;
 	private final CharacterService characterService;
+//	String userId = "63a47bcb-ebb1-4618-b357-fdd6681bd0fc";
 
 	@PostMapping("/logout")
 	public ResponseEntity<ApiResponse<?>> logout(@AccessToken String accessToken, @RefreshToken String refreshToken) {
@@ -76,7 +70,6 @@ public class UserController {
 			@RequestBody PutAnswer putAnswer,
 			@AuthorizeUser User user
 	) {
-//		String userId = userDetails.getUsername();
 		String userId = user.getId();
 		answerService.deleteAnswers(userId, userTypeName);
 		for (AnswerDTO dto : putAnswer.getAnswers()) {
@@ -95,6 +88,7 @@ public class UserController {
 			@AuthorizeUser User user
 
 	) {
+
 		String userId = user.getId();
 		userUserTypeService.updateCharacter(userId, userTypeName, dto);
 		return new ResponseEntity<>(
@@ -111,6 +105,7 @@ public class UserController {
 			@AuthorizeUser User user
 
 	) {
+
 		String userId = user.getId();
 		userService.updateNickname(userId, nickname);
 		return new ResponseEntity<>(
@@ -125,6 +120,7 @@ public class UserController {
 			@RequestBody PageUpdateRequestDTO dto,
 			@AuthorizeUser User user
 	) {
+
 		String userId = user.getId();
 		userService.updateNickname(userId, dto.getNickname());
 		userUserTypeService.updateCharacter(userId, userTypeName, dto.getCharacterItems());
@@ -150,7 +146,7 @@ public class UserController {
 			userKeywordService.updateByOthers(userId, keyword, dto.getOtherKeywordPercents().get(keyword));
 		}
 		return new ResponseEntity<>(
-				ApiResponse.createSuccess(UserResponse.SUCCESS_UPDATE.getMessage()),
+				ApiResponse.createSuccessWithData(UserResponse.SUCCESS_UPDATE.getMessage(), new UserInfoResponse(userId, userTypeName)),
 				HttpStatus.OK
 		);
 	}
@@ -161,22 +157,16 @@ public class UserController {
 			@AuthorizeUser User user
 
 	) {
-
-		Page page = new Page();
+//		User user = userService.findById(userId);
+		Manual manual = new Manual();
 		String userId = user.getId();
-
-		List<String> userTypes = new ArrayList<>();
-		for (UserUserType uut : userUserTypeService.getUserUserTypesByUserId(userId)) {
-			userTypes.add(uut.getUserType().getName());
-		}
-		page.setUserTypes(userTypes);
-		page.setNickname(user.getNickname());
-		page.setBaseImage("임시 이미지 url");
-		CharacterInfoDTO characterInfoDTO = userUserTypeService.getCharacter(userId, userTypeName);
-		page.setCharacterItems(new Page.CharacterItems(characterInfoDTO.getFace(), characterInfoDTO.getBody(), characterInfoDTO.getExpression(), characterInfoDTO.getCharacterSet()));
-		page.setQuestions(questionService.getQuestionByQuestionTypeAndUserType(QuestionType.FOR_USER, userTypeName));
+		manual.setNickname(user.getNickname());
+		manual.setBaseImage("임시 이미지 url");
+		CharacterItems characterInfoDTO = userUserTypeService.getCharacter(userId, userTypeName);
+		manual.setCharacterItems(characterService.getAllCharacterItems());
+		manual.setQuestions(questionService.getQuestionByQuestionTypeAndUserType(QuestionType.FOR_USER, userTypeName));
 		return new ResponseEntity<>(
-				ApiResponse.createSuccessWithData(UserResponse.SUCCESS_GET_PAGE.getMessage(), page),
+				ApiResponse.createSuccessWithData(UserResponse.SUCCESS_GET_PAGE.getMessage(), manual),
 				HttpStatus.OK
 		);
 	}
@@ -190,9 +180,9 @@ public class UserController {
 		page.setQuestions(questionService.getQuestionByQuestionTypeAndUserType(QuestionType.FOR_OTHERS, userTypeName));
 		page.setNickname(user.getNickname());
 		page.setBaseImage("임시 베이스 이미지 url");
-		CharacterInfoDTO characterInfoDTO = userUserTypeService.getCharacter(userId, userTypeName);
-		page.setCharacterItems(new Page.CharacterItems(characterInfoDTO.getFace(), characterInfoDTO.getBody(), characterInfoDTO.getExpression(), characterInfoDTO.getCharacterSet()));
-		page.setMyManualQAPair(userUserTypeService.getQAByUserIdAndUserTypeAndQuestionType(userId, userTypeName, QuestionType.FOR_USER));
+		CharacterItems characterInfoDTO = userUserTypeService.getCharacter(userId, userTypeName);
+		page.setCharacterItems(new CharacterItems(characterInfoDTO.getFace(), characterInfoDTO.getBody(), characterInfoDTO.getExpression(), characterInfoDTO.getSet()));
+		page.setMyManualQAPair(userUserTypeService.getQAByUserIdAndUserTypeForUser(userId, userTypeName, QuestionType.FOR_USER));
 
 		page.setOriginKeywordPercents(userKeywordService.getOriginKeywordPercents(userId));
 		page.setOtherKeywordPercents(userKeywordService.getOtherKeywordPercents(userId));
@@ -207,7 +197,7 @@ public class UserController {
 			@PathVariable String userTypeName,
 			@AuthorizeUser User user
 	) {
-
+//		User user = userService.findById(userId);
 		String userId = user.getId();
 		Page page = new Page();
 
@@ -219,11 +209,11 @@ public class UserController {
 
 		page.setNickname(user.getNickname());
 		page.setBaseImage("임시 베이스 이미지 url");
-		CharacterInfoDTO characterInfoDTO = userUserTypeService.getCharacter(userId, userTypeName);
-		page.setCharacterItems(new Page.CharacterItems(characterInfoDTO.getFace(), characterInfoDTO.getBody(), characterInfoDTO.getExpression(), characterInfoDTO.getCharacterSet()));
+		CharacterItems characterInfoDTO = userUserTypeService.getCharacter(userId, userTypeName);
+		page.setCharacterItems(new CharacterItems(characterInfoDTO.getFace(), characterInfoDTO.getBody(), characterInfoDTO.getExpression(), characterInfoDTO.getSet()));
 
-		page.setMyManualQAPair(userUserTypeService.getQAByUserIdAndUserTypeAndQuestionType(userId, userTypeName, QuestionType.FOR_USER));
-		page.setOthersManualQAPair(userUserTypeService.getQAByUserIdAndUserTypeAndQuestionType(userId, userTypeName, QuestionType.FOR_OTHERS));
+		page.setMyManualQAPair(userUserTypeService.getQAByUserIdAndUserTypeForUser(userId, userTypeName, QuestionType.FOR_USER));
+		page.setOthersManualQAPair(userUserTypeService.getOtherManualByUserIdAndUserType(userId, userTypeName, QuestionType.FOR_OTHERS));
 
 		page.setOriginKeywordPercents(userKeywordService.getOriginKeywordPercents(userId));
 		page.setOtherKeywordPercents(userKeywordService.getOtherKeywordPercents(userId));

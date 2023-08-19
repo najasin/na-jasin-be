@@ -1,4 +1,4 @@
-package com.najasin.domain.user.dto;
+package com.najasin.domain.user.dto.message;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
