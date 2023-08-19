@@ -44,6 +44,7 @@ public class UserController {
 	private final UserUserTypeService userUserTypeService;
 	private final UserKeywordService userKeywordService;
 	private final CharacterService characterService;
+//	String userId = "63a47bcb-ebb1-4618-b357-fdd6681bd0fc";
 
 	@PostMapping("/logout")
 	public ResponseEntity<ApiResponse<?>> logout(@AccessToken String accessToken, @RefreshToken String refreshToken) {
@@ -149,21 +150,15 @@ public class UserController {
 
 	) {
 //		User user = userService.findById(userId);
-		Page page = new Page();
+		Manual manual = new Manual();
 		String userId = user.getId();
-
-		List<String> userTypes = new ArrayList<>();
-		for (UserUserType uut : userUserTypeService.getUserUserTypesByUserId(userId)) {
-			userTypes.add(uut.getUserType().getName());
-		}
-		page.setUserTypes(userTypes);
-		page.setNickname(user.getNickname());
-		page.setBaseImage("임시 이미지 url");
+		manual.setNickname(user.getNickname());
+		manual.setBaseImage("임시 이미지 url");
 		CharacterItems characterInfoDTO = userUserTypeService.getCharacter(userId, userTypeName);
-		page.setCharacterItems(new CharacterItems(characterInfoDTO.getFace(), characterInfoDTO.getBody(), characterInfoDTO.getExpression(), characterInfoDTO.getSet()));
-		page.setQuestions(questionService.getQuestionByQuestionTypeAndUserType(QuestionType.FOR_USER, userTypeName));
+		manual.setCharacterItems(characterService.getAllCharacterItems());
+		manual.setQuestions(questionService.getQuestionByQuestionTypeAndUserType(QuestionType.FOR_USER, userTypeName));
 		return new ResponseEntity<>(
-				ApiResponse.createSuccessWithData(UserResponse.SUCCESS_GET_PAGE.getMessage(), page),
+				ApiResponse.createSuccessWithData(UserResponse.SUCCESS_GET_PAGE.getMessage(), manual),
 				HttpStatus.OK
 		);
 	}
