@@ -51,15 +51,17 @@ public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 			.userType(userType)
 			.build();
 
-		Gson gson = new Gson();
-		String jsonResponse = gson.toJson(oAuth2Response);
+		StringBuilder sb = new StringBuilder();
+		sb.append("http://localhost:3000")
+			// .append("/")
+			// .append(redirectEndPoint)
+			.append("?accessToken=").append(oAuth2Response.accessToken())
+			.append("&refreshToken=").append(oAuth2Response.refreshToken())
+			.append("&userId=").append(oAuth2Response.userId())
+			.append("&userType=").append(oAuth2Response.userType());
 
-		response.setContentType("application/json");
-		response.setStatus(HttpServletResponse.SC_OK);
+		System.out.println(sb);
 
-		try (PrintWriter out = response.getWriter()) {
-			out.print(jsonResponse);
-			out.flush();
-		}
+		getRedirectStrategy().sendRedirect(request, response, sb.toString());
 	}
 }
