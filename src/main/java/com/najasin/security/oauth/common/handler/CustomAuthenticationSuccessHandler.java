@@ -53,8 +53,8 @@ public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("https://na-jasin.com")
-			.append("/")
-			.append(redirectEndPoint)
+			// .append("/")
+			// .append(redirectEndPoint)
 			.append("?accessToken=").append(oAuth2Response.accessToken())
 			.append("&refreshToken=").append(oAuth2Response.refreshToken())
 			.append("&userId=").append(oAuth2Response.userId())
