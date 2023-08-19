@@ -10,6 +10,7 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 import com.najasin.domain.user.entity.User;
+import com.najasin.domain.user.repository.UserRepository;
 import com.najasin.domain.user.service.UserService;
 import com.najasin.global.annotation.AuthorizeUser;
 import com.najasin.security.model.PrincipalUser;
@@ -19,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 @Component
 @RequiredArgsConstructor
 public class UserArgumentsResolver implements HandlerMethodArgumentResolver {
-	private final UserService userService;
+	private final UserRepository userRepository;
 
 	@Override
 	public boolean supportsParameter(MethodParameter parameter) {
@@ -32,6 +33,6 @@ public class UserArgumentsResolver implements HandlerMethodArgumentResolver {
 		NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
 		String authentication = SecurityContextHolder.getContext().getAuthentication().getName();
 
-		return userService.findById(authentication);
+		return userRepository.findById(authentication).orElse(null);
 	}
 }
