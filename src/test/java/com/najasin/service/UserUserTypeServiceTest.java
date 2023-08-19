@@ -23,7 +23,6 @@ import com.najasin.domain.character.dto.CharacterItems;
 import com.najasin.domain.user.dto.Page;
 import com.najasin.domain.user.repository.UserRepository;
 import com.najasin.domain.userType.repository.UserTypeRepository;
-import com.najasin.domain.userUserType.entity.UserUserTypeId;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -173,7 +172,7 @@ public class UserUserTypeServiceTest {
 		List<Page.QAPair> myQaParis = new ArrayList<>();
 		myQaParis.add(new Page.QAPair(1L, "test question", "answer"));
 		//when
-		List<Page.QAPair> getQaPair = userUserTypeService.getQAByUserIdAndUserTypeAndQuestionType(mockUser.getId(), "JFF", QuestionType.FOR_USER);
+		List<Page.QAPair> getQaPair = userUserTypeService.getQAByUserIdAndUserTypeForUser(mockUser.getId(), "JFF", QuestionType.FOR_USER);
 		//then
 		assertEquals(getQaPair.get(0).getQuestion(), myQaParis.get(0).getQuestion());
 		assertEquals(getQaPair.get(0).getAnswer(), myQaParis.get(0).getAnswer());

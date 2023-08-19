@@ -16,7 +16,7 @@ public class Page {
     private String baseImage;
     private CharacterItems characterItems;
     private List<QAPair> myManualQAPair;
-    private List<QAPair> othersManualQAPair;
+    private List<OtherManual> othersManualQAPair;
     private List<Questions> questions;
     private List<String> exampleKeywords;
     private Map<String, Integer> originKeywordPercents;
@@ -25,8 +25,17 @@ public class Page {
 
     @Getter
     @Setter
+    @Builder
+    public static class OtherManual{
+        String nickname;
+        List<QAPair> qas;
+    }
+
+    @Getter
+    @Setter
     @AllArgsConstructor
     @Builder
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class QAPair {
         private Long id;
         private String question;

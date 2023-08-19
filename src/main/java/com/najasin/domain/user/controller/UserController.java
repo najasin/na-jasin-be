@@ -15,7 +15,6 @@ import com.najasin.domain.userKeyword.service.UserKeywordService;
 import com.najasin.domain.userUserType.entity.UserUserType;
 import com.najasin.domain.userUserType.service.UserUserTypeService;
 import com.najasin.global.annotation.AuthorizeUser;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,6 +29,8 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.najasin.domain.user.entity.QUser.user;
 
 @RequiredArgsConstructor
 @RestController
@@ -57,12 +58,10 @@ public class UserController {
 	@PutMapping("/{userTypeName}/answers")
 	public ResponseEntity<ApiResponse<?>> putAnswers(
 			@PathVariable String userTypeName,
-			@RequestBody PutAnswer putAnswer
-//			@AuthorizeUser User user
+			@RequestBody PutAnswer putAnswer,
+			@AuthorizeUser User user
 	) {
-//		String userId = userDetails.getUsername();
-		String userId = "b660136f-2ea3-4e78-aeab-a2a9edb2c45e";
-//		String userId = user.getId();
+		String userId = user.getId();
 		answerService.deleteAnswers(userId, userTypeName);
 		for (AnswerDTO dto : putAnswer.getAnswers()) {
 			answerService.save(userId, dto.getId(), dto.getAnswer());
@@ -76,13 +75,12 @@ public class UserController {
 	@PutMapping("/{userTypeName}/character")
 	public ResponseEntity<ApiResponse<?>> putCharacter(
 			@PathVariable String userTypeName,
-			@RequestBody CharacterItems dto
-//			@AuthorizeUser User user
+			@RequestBody CharacterItems dto,
+			@AuthorizeUser User user
 
 	) {
-		String userId = "b660136f-2ea3-4e78-aeab-a2a9edb2c45e";
 
-//		String userId = user.getId();
+		String userId = user.getId();
 		userUserTypeService.updateCharacter(userId, userTypeName, dto);
 		return new ResponseEntity<>(
 				ApiResponse.createSuccess(UserResponse.SUCCESS_UPDATE.getMessage()),
@@ -94,13 +92,12 @@ public class UserController {
 	@PutMapping("/{userTypeName}/nickname")
 	public ResponseEntity<ApiResponse<?>> putNickname(
 			@PathVariable String userTypeName,
-			@RequestBody String nickname
-//			@AuthorizeUser User user
+			@RequestBody String nickname,
+			@AuthorizeUser User user
 
 	) {
-		String userId = "b660136f-2ea3-4e78-aeab-a2a9edb2c45e";
 
-//		String userId = user.getId();
+		String userId = user.getId();
 		userService.updateNickname(userId, nickname);
 		return new ResponseEntity<>(
 				ApiResponse.createSuccess(UserResponse.SUCCESS_UPDATE.getMessage()),
@@ -111,12 +108,11 @@ public class UserController {
 	@PostMapping("/{userTypeName}/my-manual")
 	public ResponseEntity<ApiResponse<?>> postMyManual(
 			@PathVariable String userTypeName,
-			@RequestBody PageUpdateRequestDTO dto
-//			@AuthorizeUser User user
+			@RequestBody PageUpdateRequestDTO dto,
+			@AuthorizeUser User user
 	) {
-		String userId = "b660136f-2ea3-4e78-aeab-a2a9edb2c45e";
 
-//		String userId = user.getId();
+		String userId = user.getId();
 		userService.updateNickname(userId, dto.getNickname());
 		userUserTypeService.updateCharacter(userId, userTypeName, dto.getCharacterItems());
 		answerService.deleteAnswers(userId, userTypeName);
@@ -148,14 +144,13 @@ public class UserController {
 
 	@GetMapping("/{userTypeName}/my-manual")
 	public ResponseEntity<ApiResponse<?>> getMyManual(
-			@PathVariable String userTypeName
-//			@AuthorizeUser User user
+			@PathVariable String userTypeName,
+			@AuthorizeUser User user
 
 	) {
-		String userId = "b660136f-2ea3-4e78-aeab-a2a9edb2c45e";
-		User user = userService.findById(userId);
+//		User user = userService.findById(userId);
 		Page page = new Page();
-//		String userId = user.getId();
+		String userId = user.getId();
 
 		List<String> userTypes = new ArrayList<>();
 		for (UserUserType uut : userUserTypeService.getUserUserTypesByUserId(userId)) {
@@ -167,7 +162,6 @@ public class UserController {
 		CharacterItems characterInfoDTO = userUserTypeService.getCharacter(userId, userTypeName);
 		page.setCharacterItems(new CharacterItems(characterInfoDTO.getFace(), characterInfoDTO.getBody(), characterInfoDTO.getExpression(), characterInfoDTO.getSet()));
 		page.setQuestions(questionService.getQuestionByQuestionTypeAndUserType(QuestionType.FOR_USER, userTypeName));
-		page.setOthersManualQAPair(commentService.getOthersManualQAPair(userId, userTypeName));
 		return new ResponseEntity<>(
 				ApiResponse.createSuccessWithData(UserResponse.SUCCESS_GET_PAGE.getMessage(), page),
 				HttpStatus.OK
@@ -185,7 +179,7 @@ public class UserController {
 		page.setBaseImage("임시 베이스 이미지 url");
 		CharacterItems characterInfoDTO = userUserTypeService.getCharacter(userId, userTypeName);
 		page.setCharacterItems(new CharacterItems(characterInfoDTO.getFace(), characterInfoDTO.getBody(), characterInfoDTO.getExpression(), characterInfoDTO.getSet()));
-		page.setMyManualQAPair(userUserTypeService.getQAByUserIdAndUserTypeAndQuestionType(userId, userTypeName, QuestionType.FOR_USER));
+		page.setMyManualQAPair(userUserTypeService.getQAByUserIdAndUserTypeForUser(userId, userTypeName, QuestionType.FOR_USER));
 
 		page.setOriginKeywordPercents(userKeywordService.getOriginKeywordPercents(userId));
 		page.setOtherKeywordPercents(userKeywordService.getOtherKeywordPercents(userId));
@@ -197,12 +191,11 @@ public class UserController {
 
 	@GetMapping("/{userTypeName}/mypage")
 	public ResponseEntity<ApiResponse<?>> getMyPage(
-			@PathVariable String userTypeName
-//			@AuthorizeUser User user
+			@PathVariable String userTypeName,
+			@AuthorizeUser User user
 	) {
-		String userId = "b660136f-2ea3-4e78-aeab-a2a9edb2c45e";
-		User user = userService.findById(userId);
-//		String userId = user.getId();
+//		User user = userService.findById(userId);
+		String userId = user.getId();
 		Page page = new Page();
 
 		List<String> userTypes = new ArrayList<>();
@@ -216,8 +209,8 @@ public class UserController {
 		CharacterItems characterInfoDTO = userUserTypeService.getCharacter(userId, userTypeName);
 		page.setCharacterItems(new CharacterItems(characterInfoDTO.getFace(), characterInfoDTO.getBody(), characterInfoDTO.getExpression(), characterInfoDTO.getSet()));
 
-		page.setMyManualQAPair(userUserTypeService.getQAByUserIdAndUserTypeAndQuestionType(userId, userTypeName, QuestionType.FOR_USER));
-		page.setOthersManualQAPair(userUserTypeService.getQAByUserIdAndUserTypeAndQuestionType(userId, userTypeName, QuestionType.FOR_OTHERS));
+		page.setMyManualQAPair(userUserTypeService.getQAByUserIdAndUserTypeForUser(userId, userTypeName, QuestionType.FOR_USER));
+		page.setOthersManualQAPair(userUserTypeService.getOtherManualByUserIdAndUserType(userId, userTypeName, QuestionType.FOR_OTHERS));
 
 		page.setOriginKeywordPercents(userKeywordService.getOriginKeywordPercents(userId));
 		page.setOtherKeywordPercents(userKeywordService.getOtherKeywordPercents(userId));

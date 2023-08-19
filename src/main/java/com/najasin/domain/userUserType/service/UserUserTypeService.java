@@ -26,6 +26,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import com.najasin.domain.userType.service.UserTypeService;
@@ -58,26 +60,49 @@ public class UserUserTypeService {
     }
 
     @Transactional
-    public List<Page.QAPair> getQAByUserIdAndUserTypeAndQuestionType(String userId, String userTypeName, QuestionType questionType) {
+    public List<Page.QAPair> getQAByUserIdAndUserTypeForUser(String userId, String userTypeName, QuestionType questionType) {
         UserUserType userUserType = this.getUserUserTypeById(userId, userTypeName);
         List<Page.QAPair> myQaParis = new ArrayList<>();
-
-        if (questionType == QuestionType.FOR_USER) {
-            for (Answer answer : userUserType.getUser().getAnswers()) {
-                Page.QAPair qaPair = new Page.QAPair(answer.getQuestion().getId(), answer.getQuestion().getQuestion(), answer.getAnswer());
-                myQaParis.add(qaPair);
-            }
+        for (Answer answer : userUserType.getUser().getAnswers()) {
+            Page.QAPair qaPair = new Page.QAPair(answer.getQuestion().getId(), answer.getQuestion().getQuestion(), answer.getAnswer());
+            myQaParis.add(qaPair);
         }
-
-        else if (questionType == QuestionType.FOR_OTHERS){
-            for (Comment comment : userUserType.getUser().getComments()) {
-                Page.QAPair qaPair = new Page.QAPair(comment.getQuestion().getId(), comment.getQuestion().getQuestion(), comment.getComment());
-                myQaParis.add(qaPair);
-            }
-        }
-
         return myQaParis;
     }
+
+    @Transactional
+    public List<Page.OtherManual> getOtherManualByUserIdAndUserType(String userId, String userTypeName, QuestionType questionType) {
+        UserUserType userUserType = this.getUserUserTypeById(userId, userTypeName);
+        if (userUserType.getUser().getComments().size() == 0) {
+            return null;
+        }
+        List<Page.OtherManual> temp = new ArrayList<>();
+        String prevNickname = userUserType.getUser().getComments().get(0).getNickname();
+        LocalDateTime prevTime = userUserType.getUser().getComments().get(0).getAuditEntity().getCreatedAt();
+        for (Comment comment : userUserType.getUser().getComments()) {
+            Page.QAPair qaPair = Page.QAPair.builder()
+                    .id(comment.getQuestion().getId())
+                    .question(comment.getQuestion().getQuestion())
+                    .answer(comment.getComment())
+                    .build();
+            if (prevNickname.equals(comment.getNickname()) && temp.size() != 0&&Duration.between(prevTime,comment.getAuditEntity().getCreatedAt()).getSeconds()<=10) {
+                temp.get(temp.size() - 1).getQas().add(qaPair);
+                System.out.println(Duration.between(prevTime,comment.getAuditEntity().getCreatedAt()).getSeconds());
+
+            } else {
+                prevNickname = comment.getNickname();
+                System.out.println(Duration.between(prevTime,comment.getAuditEntity().getCreatedAt()).getSeconds());
+                prevTime = comment.getAuditEntity().getCreatedAt();
+                temp.add(Page.OtherManual.builder()
+                        .nickname(prevNickname)
+                        .qas(new ArrayList<>())
+                        .build());
+                temp.get(temp.size() - 1).getQas().add(qaPair);
+            }
+        }
+        return temp;
+    }
+
 
     @Transactional
     public UserUserType updateCharacter(String userId, String userTypeName , CharacterItems dto) {

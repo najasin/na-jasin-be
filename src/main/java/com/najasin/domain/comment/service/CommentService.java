@@ -31,7 +31,6 @@ public class CommentService {
     public Comment save(String userId, Long questionId, String nickname, String comment) {
         User user = userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
         Question question = questionRepository.findById(questionId).orElseThrow(EntityNotFoundException::new);
-
         Comment newComment = Comment.builder()
                 .user(user)
                 .question(question)
@@ -39,6 +38,7 @@ public class CommentService {
                 .nickname(nickname)
                 .auditEntity(new AuditEntity())
                 .build();
+
         commentRepository.save(newComment);
         user.getComments().add(newComment);
         question.getComments().add(newComment);
