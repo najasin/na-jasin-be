@@ -52,7 +52,7 @@ public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 			.build();
 
 		StringBuilder sb = new StringBuilder();
-		sb.append(clientUrl)
+		sb.append("https://na-jasin.com")
 			.append("/")
 			.append(redirectEndPoint)
 			.append("?accessToken=").append(oAuth2Response.accessToken())
@@ -60,7 +60,8 @@ public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 			.append("&userId=").append(oAuth2Response.userId())
 			.append("&userType=").append(oAuth2Response.userType());
 
+		System.out.println(sb);
+
 		getRedirectStrategy().sendRedirect(request, response, sb.toString());
-		
 	}
 }

@@ -1,7 +1,10 @@
 package com.najasin.config;
 
+import java.util.List;
+
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -15,6 +18,9 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.najasin.security.jwt.filter.JwtAuthenticationFilter;
 import com.najasin.security.oauth.service.CustomOAuth2UserService;
@@ -27,7 +33,10 @@ public class SecurityConfig {
 	private final CustomOAuth2UserService customOAuth2UserService;
 	private final CustomOidcUserService customOidcUserService;
 	private final AuthenticationSuccessHandler successHandler;
-	 private final JwtAuthenticationFilter jwtAuthenticationFilter;
+	private final JwtAuthenticationFilter jwtAuthenticationFilter;
+
+	@Value("${client.url}")
+	private String clientUrl;
 
 	@Bean
 	SecurityFilterChain oauth2SecurityFilterChain(HttpSecurity http) throws Exception {
@@ -36,6 +45,7 @@ public class SecurityConfig {
 			.csrf((AbstractHttpConfigurer::disable))
 			.formLogin((AbstractHttpConfigurer::disable))
 			.headers(AbstractHttpConfigurer::disable)
+			.cors((configurationSource) -> corsConfigurationSource())
 			.authorizeHttpRequests(setAuthorizeHttpRequests())
 			.oauth2Login(setOAuth2Config())
 			.sessionManagement(config -> config.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -63,5 +73,18 @@ public class SecurityConfig {
 					userInfoEndpointConfig.userService(customOAuth2UserService)
 						.oidcUserService(customOidcUserService))
 				.successHandler(successHandler);
+	}
+
+	@Bean
+	public CorsConfigurationSource corsConfigurationSource() {
+		CorsConfiguration configuration = new CorsConfiguration();
+		configuration.setAllowedOrigins(List.of(clientUrl, "https://www.na-jasin.com", "http://localhost:8080"));
+		configuration.addAllowedHeader("*");
+		configuration.addAllowedMethod("*");
+		configuration.setAllowCredentials(true);
+
+		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		source.registerCorsConfiguration("/**", configuration);
+		return source;
 	}
 }
