@@ -61,5 +61,8 @@ public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 			out.print(jsonResponse);
 			out.flush();
 		}
+
+		String redirectUri = clientUrl + "/" + redirectEndPoint;
+		getRedirectStrategy().sendRedirect(request, response, redirectUri);
 	}
 }
