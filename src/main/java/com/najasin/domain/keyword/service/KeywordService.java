@@ -16,10 +16,6 @@ public class KeywordService {
 
     @Transactional
     public List<String> getAllKeywords() {
-        List<String> keywords = new ArrayList<>();
-        for (Keyword keyword : keywordRepository.findAll()) {
-            keywords.add(keyword.getName());
-        }
-        return keywords;
+        return keywordRepository.findAll().stream().map(Keyword::getName).toList();
     }
 }
