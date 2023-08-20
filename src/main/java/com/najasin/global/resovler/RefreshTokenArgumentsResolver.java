@@ -21,8 +21,6 @@ public class RefreshTokenArgumentsResolver implements HandlerMethodArgumentResol
 	@Override
 	public String resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
 		NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
-		String authorizationHeader = webRequest.getHeader("Refresh");
-
-		return authorizationHeader.substring(7);
+		return webRequest.getHeader("Refresh");
 	}
 }
