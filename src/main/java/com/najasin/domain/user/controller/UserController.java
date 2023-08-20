@@ -151,7 +151,7 @@ public class UserController {
 			@AuthorizeUser User user
 	) {
 		Manual manual = new Manual();
-		manual.setNickname("");
+    
 		if(!isNull(user)) {
 			manual.setNickname(user.getId());
 		}
@@ -192,6 +192,7 @@ public class UserController {
 			@PathVariable String userTypeName,
 			@AuthorizeUser User user
 	) {
+//		User user = userService.findById(userId);
 		String userId = user.getId();
 		Page page = new Page();
 
