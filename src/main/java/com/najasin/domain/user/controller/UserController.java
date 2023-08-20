@@ -8,6 +8,8 @@ import com.najasin.domain.character.CharacterService;
 import com.najasin.domain.character.dto.AllCharacterItems;
 import com.najasin.domain.character.dto.CharacterItems;
 import com.najasin.domain.comment.service.CommentService;
+import com.najasin.domain.keyword.repository.KeywordRepository;
+import com.najasin.domain.keyword.service.KeywordService;
 import com.najasin.domain.question.entity.QuestionType;
 import com.najasin.domain.question.service.QuestionService;
 import com.najasin.domain.user.dto.*;
@@ -44,6 +46,8 @@ public class UserController {
 	private final UserUserTypeService userUserTypeService;
 	private final UserKeywordService userKeywordService;
 	private final CharacterService characterService;
+	private final KeywordService keywordService;
+//	String userId = "63a47bcb-ebb1-4618-b357-fdd6681bd0fc";
 
 	@PostMapping("/logout")
 	public ResponseEntity<ApiResponse<?>> logout(@AccessToken String accessToken, @RefreshToken String refreshToken) {
@@ -146,13 +150,14 @@ public class UserController {
 	public ResponseEntity<ApiResponse<?>> getMyManual(
 			@PathVariable String userTypeName,
 			@AuthorizeUser User user
-
 	) {
 		Manual manual = new Manual();
-
+		String userId = user.getId();
 		if(!isNull(user)) {
 			manual.setNickname(user.getId());
 		}
+		manual.setBaseImage("https://picsum.photos/200/300?random=1");
+		manual.setExampleKeywords(keywordService.getAllKeywords());
 		manual.setBaseImage("https://picsum.photos/200/300?random=1");
 		manual.setCharacterItems(characterService.getAllCharacterItems().getCharacterItems());
 		manual.setQuestions(questionService.getQuestionByQuestionTypeAndUserType(QuestionType.FOR_USER, userTypeName));
@@ -188,6 +193,7 @@ public class UserController {
 			@PathVariable String userTypeName,
 			@AuthorizeUser User user
 	) {
+//		User user = userService.findById(userId);
 		String userId = user.getId();
 		Page page = new Page();
 
