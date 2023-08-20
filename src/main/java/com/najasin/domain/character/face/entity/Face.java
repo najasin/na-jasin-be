@@ -19,9 +19,9 @@ public class Face {
     @Column(name = "face_name")
     private String name;
 
-    @Column(name = "face_show_url")
+    @Column(name = "face_show_url",columnDefinition = "TEXT")
     private String show_url;
 
-    @Column(name = "face_layout_url")
+    @Column(name = "face_layout_url",columnDefinition = "TEXT")
     private String layout_url;
 }

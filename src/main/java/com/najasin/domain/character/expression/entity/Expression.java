@@ -19,10 +19,10 @@ public class Expression {
     @Column(name = "expression_name")
     private String name;
 
-    @Column(name = "expression_show_url")
+    @Column(name = "expression_show_url",columnDefinition = "TEXT")
     private String show_url;
 
-    @Column(name = "expression_layout_url")
+    @Column(name = "expression_layout_url",columnDefinition = "TEXT")
     private String layout_url;
 
 }
