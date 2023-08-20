@@ -19,7 +19,7 @@ public class CharacterSet {
     @Column(name = "set_name")
     private String name;
 
-    @Column(name = "set_url")
+    @Column(name = "set_url",columnDefinition = "TEXT")
     private String url;
 
 }

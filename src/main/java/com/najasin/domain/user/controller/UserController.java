@@ -8,6 +8,8 @@ import com.najasin.domain.character.CharacterService;
 import com.najasin.domain.character.dto.AllCharacterItems;
 import com.najasin.domain.character.dto.CharacterItems;
 import com.najasin.domain.comment.service.CommentService;
+import com.najasin.domain.keyword.repository.KeywordRepository;
+import com.najasin.domain.keyword.service.KeywordService;
 import com.najasin.domain.keyword.service.KeywordService;
 import com.najasin.domain.question.entity.QuestionType;
 import com.najasin.domain.question.service.QuestionService;
@@ -46,7 +48,7 @@ public class UserController {
 	private final UserKeywordService userKeywordService;
 	private final CharacterService characterService;
 	private final KeywordService keywordService;
-//	String userId = "63a47bcb-ebb1-4618-b357-fdd6681bd0fc";
+	private String basicURL = "https://najasin-images.s3.ap-northeast-2.amazonaws.com/characters/base-character.svg";
 
 	@PostMapping("/logout")
 	public ResponseEntity<ApiResponse<?>> logout(@AccessToken String accessToken, @RefreshToken String refreshToken) {
@@ -151,13 +153,13 @@ public class UserController {
 			@AuthorizeUser User user
 	) {
 		Manual manual = new Manual();
-    
+
+		String userId = user.getId();
 		if(!isNull(user)) {
 			manual.setNickname(user.getId());
 		}
-		manual.setBaseImage("https://picsum.photos/200/300?random=1");
+		manual.setBaseImage(basicURL);
 		manual.setExampleKeywords(keywordService.getAllKeywords());
-		manual.setBaseImage("https://picsum.photos/200/300?random=1");
 		manual.setCharacterItems(characterService.getAllCharacterItems().getCharacterItems());
 		manual.setQuestions(questionService.getQuestionByQuestionTypeAndUserType(QuestionType.FOR_USER, userTypeName));
 		return new ResponseEntity<>(
@@ -174,7 +176,7 @@ public class UserController {
 
 		page.setQuestions(questionService.getQuestionByQuestionTypeAndUserType(QuestionType.FOR_OTHERS, userTypeName));
 		page.setNickname(user.getNickname());
-		page.setBaseImage("https://picsum.photos/200/300?random=1");
+		page.setBaseImage(basicURL);
 		CharacterItems characterInfoDTO = userUserTypeService.getCharacter(userId, userTypeName);
 		page.setCharacterItems(new CharacterItems(characterInfoDTO.getFace(), characterInfoDTO.getBody(), characterInfoDTO.getExpression(), characterInfoDTO.getSet()));
 		page.setMyManualQAPair(userUserTypeService.getQAByUserIdAndUserTypeForUser(userId, userTypeName, QuestionType.FOR_USER));
@@ -192,7 +194,6 @@ public class UserController {
 			@PathVariable String userTypeName,
 			@AuthorizeUser User user
 	) {
-//		User user = userService.findById(userId);
 		String userId = user.getId();
 		Page page = new Page();
 
@@ -203,7 +204,7 @@ public class UserController {
 		page.setUserTypes(userTypes);
 
 		page.setNickname(user.getNickname());
-		page.setBaseImage("https://picsum.photos/200/300?random=1");
+		page.setBaseImage(basicURL);
 		CharacterItems characterInfoDTO = userUserTypeService.getCharacter(userId, userTypeName);
 		page.setCharacterItems(new CharacterItems(characterInfoDTO.getFace(), characterInfoDTO.getBody(), characterInfoDTO.getExpression(), characterInfoDTO.getSet()));
 
