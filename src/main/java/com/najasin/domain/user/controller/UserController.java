@@ -47,7 +47,7 @@ public class UserController {
 	private final UserKeywordService userKeywordService;
 	private final CharacterService characterService;
 	private final KeywordService keywordService;
-//	String userId = "63a47bcb-ebb1-4618-b357-fdd6681bd0fc";
+	private String basicURL = "https://najasin-images.s3.ap-northeast-2.amazonaws.com/characters/base-character.svg";
 
 	@PostMapping("/logout")
 	public ResponseEntity<ApiResponse<?>> logout(@AccessToken String accessToken, @RefreshToken String refreshToken) {
@@ -117,6 +117,7 @@ public class UserController {
 	) {
 
 		String userId = user.getId();
+		System.out.println(userId);
 		userService.updateNickname(userId, dto.getNickname());
 		userUserTypeService.updateCharacter(userId, userTypeName, dto.getCharacterItems());
 		answerService.deleteAnswers(userId, userTypeName);
@@ -156,9 +157,8 @@ public class UserController {
 		if(!isNull(user)) {
 			manual.setNickname(user.getId());
 		}
-		manual.setBaseImage("https://picsum.photos/200/300?random=1");
+		manual.setBaseImage(basicURL);
 		manual.setExampleKeywords(keywordService.getAllKeywords());
-		manual.setBaseImage("https://picsum.photos/200/300?random=1");
 		manual.setCharacterItems(characterService.getAllCharacterItems().getCharacterItems());
 		manual.setQuestions(questionService.getQuestionByQuestionTypeAndUserType(QuestionType.FOR_USER, userTypeName));
 		return new ResponseEntity<>(
@@ -175,7 +175,7 @@ public class UserController {
 
 		page.setQuestions(questionService.getQuestionByQuestionTypeAndUserType(QuestionType.FOR_OTHERS, userTypeName));
 		page.setNickname(user.getNickname());
-		page.setBaseImage("https://picsum.photos/200/300?random=1");
+		page.setBaseImage(basicURL);
 		CharacterItems characterInfoDTO = userUserTypeService.getCharacter(userId, userTypeName);
 		page.setCharacterItems(new CharacterItems(characterInfoDTO.getFace(), characterInfoDTO.getBody(), characterInfoDTO.getExpression(), characterInfoDTO.getSet()));
 		page.setMyManualQAPair(userUserTypeService.getQAByUserIdAndUserTypeForUser(userId, userTypeName, QuestionType.FOR_USER));
@@ -204,7 +204,7 @@ public class UserController {
 		page.setUserTypes(userTypes);
 
 		page.setNickname(user.getNickname());
-		page.setBaseImage("https://picsum.photos/200/300?random=1");
+		page.setBaseImage(basicURL);
 		CharacterItems characterInfoDTO = userUserTypeService.getCharacter(userId, userTypeName);
 		page.setCharacterItems(new CharacterItems(characterInfoDTO.getFace(), characterInfoDTO.getBody(), characterInfoDTO.getExpression(), characterInfoDTO.getSet()));
 

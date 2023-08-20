@@ -19,9 +19,9 @@ public class Body {
     @Column(name = "body_name")
     private String name;
 
-    @Column(name = "body_show_url")
+    @Column(name = "body_show_url",columnDefinition = "TEXT")
     private String show_url;
 
-    @Column(name = "body_layout_url")
+    @Column(name = "body_layout_url",columnDefinition = "TEXT")
     private String layout_url;
 }

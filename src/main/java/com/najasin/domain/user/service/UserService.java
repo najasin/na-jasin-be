@@ -47,6 +47,7 @@ public class UserService {
 
 	@Transactional(readOnly = true)
 	public User findById(String id) {
+		System.out.println(id);
 		return userRepository.findById(id).orElseThrow(EntityNotFoundException::new);
 	}
 
@@ -61,8 +62,6 @@ public class UserService {
 		user.updateNickname(nickname);
 		return user;
 	}
-
-
 
 
 	public String generateUUID() {
