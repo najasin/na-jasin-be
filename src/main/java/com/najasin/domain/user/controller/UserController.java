@@ -150,19 +150,14 @@ public class UserController {
 	public ResponseEntity<ApiResponse<?>> getMyManual(
 			@PathVariable String userTypeName,
 			@AuthorizeUser User user
-
 	) {
 		Manual manual = new Manual();
 		String userId = user.getId();
-		manual.setNickname(user.getNickname());
-		manual.setBaseImage("https://picsum.photos/200/300?random=1");
-		CharacterItems characterInfoDTO = userUserTypeService.getCharacter(userId, userTypeName);
-		manual.setCharacterItems(characterService.getAllCharacterItems().getCharacterItems());
-		manual.setExampleKeywords(keywordService.getAllKeywords());
-
 		if(!isNull(user)) {
 			manual.setNickname(user.getId());
 		}
+		manual.setBaseImage("https://picsum.photos/200/300?random=1");
+		manual.setExampleKeywords(keywordService.getAllKeywords());
 		manual.setBaseImage("https://picsum.photos/200/300?random=1");
 		manual.setCharacterItems(characterService.getAllCharacterItems().getCharacterItems());
 		manual.setQuestions(questionService.getQuestionByQuestionTypeAndUserType(QuestionType.FOR_USER, userTypeName));
