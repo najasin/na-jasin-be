@@ -6,6 +6,8 @@ import com.najasin.domain.character.CharacterService;
 import com.najasin.domain.character.dto.AllCharacterItems;
 import com.najasin.domain.character.dto.CharacterItems;
 import com.najasin.domain.comment.service.CommentService;
+import com.najasin.domain.keyword.repository.KeywordRepository;
+import com.najasin.domain.keyword.service.KeywordService;
 import com.najasin.domain.question.entity.QuestionType;
 import com.najasin.domain.question.service.QuestionService;
 import com.najasin.domain.user.dto.*;
@@ -44,6 +46,7 @@ public class UserController {
 	private final UserUserTypeService userUserTypeService;
 	private final UserKeywordService userKeywordService;
 	private final CharacterService characterService;
+	private final KeywordService keywordService;
 //	String userId = "63a47bcb-ebb1-4618-b357-fdd6681bd0fc";
 
 	@PostMapping("/logout")
@@ -156,6 +159,7 @@ public class UserController {
 		manual.setBaseImage("https://picsum.photos/200/300?random=1");
 		CharacterItems characterInfoDTO = userUserTypeService.getCharacter(userId, userTypeName);
 		manual.setCharacterItems(characterService.getAllCharacterItems().getCharacterItems());
+		manual.setExampleKeywords(keywordService.getAllKeywords());
 		manual.setQuestions(questionService.getQuestionByQuestionTypeAndUserType(QuestionType.FOR_USER, userTypeName));
 		return new ResponseEntity<>(
 				ApiResponse.createSuccessWithData(UserResponse.SUCCESS_GET_PAGE.getMessage(), manual),
