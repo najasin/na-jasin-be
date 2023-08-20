@@ -10,6 +10,7 @@ import com.najasin.domain.character.dto.CharacterItems;
 import com.najasin.domain.comment.service.CommentService;
 import com.najasin.domain.keyword.repository.KeywordRepository;
 import com.najasin.domain.keyword.service.KeywordService;
+import com.najasin.domain.keyword.service.KeywordService;
 import com.najasin.domain.question.entity.QuestionType;
 import com.najasin.domain.question.service.QuestionService;
 import com.najasin.domain.user.dto.*;
@@ -117,7 +118,6 @@ public class UserController {
 	) {
 
 		String userId = user.getId();
-		System.out.println(userId);
 		userService.updateNickname(userId, dto.getNickname());
 		userUserTypeService.updateCharacter(userId, userTypeName, dto.getCharacterItems());
 		answerService.deleteAnswers(userId, userTypeName);
@@ -153,6 +153,7 @@ public class UserController {
 			@AuthorizeUser User user
 	) {
 		Manual manual = new Manual();
+
 		String userId = user.getId();
 		if(!isNull(user)) {
 			manual.setNickname(user.getId());
@@ -193,7 +194,6 @@ public class UserController {
 			@PathVariable String userTypeName,
 			@AuthorizeUser User user
 	) {
-//		User user = userService.findById(userId);
 		String userId = user.getId();
 		Page page = new Page();
 
