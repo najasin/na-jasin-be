@@ -1,5 +1,7 @@
 package com.najasin.domain.user.controller;
 
+import static java.util.Objects.*;
+
 import com.najasin.domain.answer.service.AnswerService;
 import com.najasin.domain.answer.dto.AnswerDTO;
 import com.najasin.domain.character.CharacterService;
@@ -30,8 +32,6 @@ import lombok.RequiredArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.najasin.domain.user.entity.QUser.user;
-
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api")
@@ -44,7 +44,6 @@ public class UserController {
 	private final UserUserTypeService userUserTypeService;
 	private final UserKeywordService userKeywordService;
 	private final CharacterService characterService;
-//	String userId = "63a47bcb-ebb1-4618-b357-fdd6681bd0fc";
 
 	@PostMapping("/logout")
 	public ResponseEntity<ApiResponse<?>> logout(@AccessToken String accessToken, @RefreshToken String refreshToken) {
@@ -54,14 +53,6 @@ public class UserController {
 				ApiResponse.createSuccess(UserResponse.SUCCESS_LOGOUT.getMessage()),
 				HttpStatus.OK
 		);
-	}
-
-	@GetMapping("/test")
-	public String test(@AuthorizeUser User user) {
-		System.out.println(user.toString());
-		System.out.println(user.getId());
-		System.out.println(user.getNickname());
-		return "test";
 	}
 
 	@PutMapping("/{userTypeName}/answers")
@@ -157,13 +148,13 @@ public class UserController {
 			@AuthorizeUser User user
 
 	) {
-//		User user = userService.findById(userId);
 		Manual manual = new Manual();
-		String userId = user.getId();
-		manual.setNickname(user.getNickname());
-		manual.setBaseImage("임시 이미지 url");
-		CharacterItems characterInfoDTO = userUserTypeService.getCharacter(userId, userTypeName);
-		manual.setCharacterItems(characterService.getAllCharacterItems());
+
+		if(!isNull(user)) {
+			manual.setNickname(user.getId());
+		}
+		manual.setBaseImage("https://picsum.photos/200/300?random=1");
+		manual.setCharacterItems(characterService.getAllCharacterItems().getCharacterItems());
 		manual.setQuestions(questionService.getQuestionByQuestionTypeAndUserType(QuestionType.FOR_USER, userTypeName));
 		return new ResponseEntity<>(
 				ApiResponse.createSuccessWithData(UserResponse.SUCCESS_GET_PAGE.getMessage(), manual),
@@ -179,7 +170,7 @@ public class UserController {
 
 		page.setQuestions(questionService.getQuestionByQuestionTypeAndUserType(QuestionType.FOR_OTHERS, userTypeName));
 		page.setNickname(user.getNickname());
-		page.setBaseImage("임시 베이스 이미지 url");
+		page.setBaseImage("https://picsum.photos/200/300?random=1");
 		CharacterItems characterInfoDTO = userUserTypeService.getCharacter(userId, userTypeName);
 		page.setCharacterItems(new CharacterItems(characterInfoDTO.getFace(), characterInfoDTO.getBody(), characterInfoDTO.getExpression(), characterInfoDTO.getSet()));
 		page.setMyManualQAPair(userUserTypeService.getQAByUserIdAndUserTypeForUser(userId, userTypeName, QuestionType.FOR_USER));
@@ -197,7 +188,6 @@ public class UserController {
 			@PathVariable String userTypeName,
 			@AuthorizeUser User user
 	) {
-//		User user = userService.findById(userId);
 		String userId = user.getId();
 		Page page = new Page();
 
@@ -208,7 +198,7 @@ public class UserController {
 		page.setUserTypes(userTypes);
 
 		page.setNickname(user.getNickname());
-		page.setBaseImage("임시 베이스 이미지 url");
+		page.setBaseImage("https://picsum.photos/200/300?random=1");
 		CharacterItems characterInfoDTO = userUserTypeService.getCharacter(userId, userTypeName);
 		page.setCharacterItems(new CharacterItems(characterInfoDTO.getFace(), characterInfoDTO.getBody(), characterInfoDTO.getExpression(), characterInfoDTO.getSet()));
 
@@ -224,10 +214,8 @@ public class UserController {
 		);
 	}
 
-	@GetMapping("/{userTypeName}/characterItems")
-	public ResponseEntity<ApiResponse<?>> getCharacterItems(
-			@PathVariable String userTypeName
-	){
+	@GetMapping("/characterItems")
+	public ResponseEntity<ApiResponse<?>> getCharacterItems(){
 		AllCharacterItems allCharacterItems = characterService.getAllCharacterItems();
 		return new ResponseEntity<>(
 				ApiResponse.createSuccessWithData(UserResponse.SUCCESS_GET_PAGE.getMessage(), allCharacterItems),

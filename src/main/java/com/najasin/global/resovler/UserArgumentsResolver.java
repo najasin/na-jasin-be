@@ -1,7 +1,10 @@
 package com.najasin.global.resovler;
 
+import static java.util.Objects.*;
+
 import org.springframework.core.MethodParameter;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -30,7 +33,11 @@ public class UserArgumentsResolver implements HandlerMethodArgumentResolver {
 	@Override
 	public User resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
 		NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
-		String authentication = SecurityContextHolder.getContext().getAuthentication().getName();
+		SecurityContext securityContext = SecurityContextHolder.getContext();
+		if(isNull(securityContext)) {
+			return null;
+		}
+		String authentication = securityContext.getAuthentication().getName();
 
 		return userService.findById(authentication);
 	}
