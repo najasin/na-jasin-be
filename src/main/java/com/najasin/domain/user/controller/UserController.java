@@ -8,7 +8,6 @@ import com.najasin.domain.character.CharacterService;
 import com.najasin.domain.character.dto.AllCharacterItems;
 import com.najasin.domain.character.dto.CharacterItems;
 import com.najasin.domain.comment.service.CommentService;
-import com.najasin.domain.keyword.repository.KeywordRepository;
 import com.najasin.domain.keyword.service.KeywordService;
 import com.najasin.domain.question.entity.QuestionType;
 import com.najasin.domain.question.service.QuestionService;
@@ -152,7 +151,7 @@ public class UserController {
 			@AuthorizeUser User user
 	) {
 		Manual manual = new Manual();
-		String userId = user.getId();
+		manual.setNickname("");
 		if(!isNull(user)) {
 			manual.setNickname(user.getId());
 		}
@@ -193,7 +192,6 @@ public class UserController {
 			@PathVariable String userTypeName,
 			@AuthorizeUser User user
 	) {
-//		User user = userService.findById(userId);
 		String userId = user.getId();
 		Page page = new Page();
 

@@ -32,8 +32,10 @@ public class LoggingAspect {
 		Object[] args = joinPoint.getArgs();
 		if (!isNull(args)) {
 			for (Object arg : args) {
-				log.info("parameter type = {}", arg.getClass().getSimpleName());
-				log.info("parameter value = {}", arg);
+				if(!isNull(arg)) {
+					log.info("parameter type = {}", arg.getClass().getSimpleName());
+					log.info("parameter value = {}", arg);
+				}
 			}
 		}
 	}
