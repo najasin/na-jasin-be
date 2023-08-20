@@ -1,5 +1,7 @@
 package com.najasin.domain.user.controller;
 
+import static java.util.Objects.*;
+
 import com.najasin.domain.answer.service.AnswerService;
 import com.najasin.domain.answer.dto.AnswerDTO;
 import com.najasin.domain.character.CharacterService;
@@ -31,8 +33,6 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.najasin.domain.user.entity.QUser.user;
 
 @RequiredArgsConstructor
 @RestController
@@ -152,7 +152,6 @@ public class UserController {
 			@AuthorizeUser User user
 
 	) {
-//		User user = userService.findById(userId);
 		Manual manual = new Manual();
 		String userId = user.getId();
 		manual.setNickname(user.getNickname());
@@ -160,6 +159,12 @@ public class UserController {
 		CharacterItems characterInfoDTO = userUserTypeService.getCharacter(userId, userTypeName);
 		manual.setCharacterItems(characterService.getAllCharacterItems().getCharacterItems());
 		manual.setExampleKeywords(keywordService.getAllKeywords());
+
+		if(!isNull(user)) {
+			manual.setNickname(user.getId());
+		}
+		manual.setBaseImage("https://picsum.photos/200/300?random=1");
+		manual.setCharacterItems(characterService.getAllCharacterItems().getCharacterItems());
 		manual.setQuestions(questionService.getQuestionByQuestionTypeAndUserType(QuestionType.FOR_USER, userTypeName));
 		return new ResponseEntity<>(
 				ApiResponse.createSuccessWithData(UserResponse.SUCCESS_GET_PAGE.getMessage(), manual),
@@ -220,10 +225,8 @@ public class UserController {
 		);
 	}
 
-	@GetMapping("/{userTypeName}/characterItems")
-	public ResponseEntity<ApiResponse<?>> getCharacterItems(
-			@PathVariable String userTypeName
-	){
+	@GetMapping("/characterItems")
+	public ResponseEntity<ApiResponse<?>> getCharacterItems(){
 		AllCharacterItems allCharacterItems = characterService.getAllCharacterItems();
 		return new ResponseEntity<>(
 				ApiResponse.createSuccessWithData(UserResponse.SUCCESS_GET_PAGE.getMessage(), allCharacterItems),
