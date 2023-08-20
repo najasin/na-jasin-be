@@ -33,12 +33,11 @@ public class UserArgumentsResolver implements HandlerMethodArgumentResolver {
 	@Override
 	public User resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
 		NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
-		SecurityContext securityContext = SecurityContextHolder.getContext();
-		if(isNull(securityContext)) {
+		String userId = SecurityContextHolder.getContext().getAuthentication().getName();
+
+		if(userId.equals("anonymousUser")) {
 			return null;
 		}
-		String authentication = securityContext.getAuthentication().getName();
-
-		return userService.findById(authentication);
+		return userService.findById(userId);
 	}
 }

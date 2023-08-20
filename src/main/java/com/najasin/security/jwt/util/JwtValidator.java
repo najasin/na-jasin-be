@@ -49,7 +49,7 @@ public class JwtValidator {
 		JwtWrongSignatureException,
 		JwtExpirationException,
 		JwtNotSupportException, JwtWrongException, JwtBlackListException {
-		Claims claims = null;
+		Claims claims;
 		try {
 			claims = Jwts.parserBuilder()
 				.setSigningKey(key)

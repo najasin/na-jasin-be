@@ -22,8 +22,6 @@ public class AccessTokenArgumentsResolver implements HandlerMethodArgumentResolv
 	@Override
 	public String resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
 		NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
-		String authorizationHeader = webRequest.getHeader("Authorization");
-
-		return authorizationHeader.substring(7);
+		return webRequest.getHeader("Authorization");
 	}
 }
