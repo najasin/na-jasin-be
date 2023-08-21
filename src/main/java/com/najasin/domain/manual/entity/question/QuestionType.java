@@ -1,4 +1,4 @@
-package com.najasin.domain.manual.question.entity;
+package com.najasin.domain.manual.entity.question;
 
 public enum QuestionType {
     FOR_USER,

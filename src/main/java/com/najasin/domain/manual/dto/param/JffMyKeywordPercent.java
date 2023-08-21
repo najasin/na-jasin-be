@@ -1,7 +1,7 @@
 package com.najasin.domain.manual.dto.param;
 
-import com.najasin.domain.manual.keyword.entity.Keyword;
-import com.najasin.domain.manual.userKeyword.entity.UserKeyword;
+import com.najasin.domain.manual.entity.keyword.Keyword;
+import com.najasin.domain.manual.entity.userKeyword.UserKeyword;
 import com.najasin.domain.user.entity.User;
 
 public record JffMyKeywordPercent(Long id,

@@ -1,7 +1,7 @@
-package com.najasin.domain.manual.answer.repository;
+package com.najasin.domain.manual.repository;
 
-import com.najasin.domain.manual.answer.entity.Answer;
-import com.najasin.domain.manual.answer.entity.AnswerId;
+import com.najasin.domain.manual.entity.answer.Answer;
+import com.najasin.domain.manual.entity.answer.AnswerId;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

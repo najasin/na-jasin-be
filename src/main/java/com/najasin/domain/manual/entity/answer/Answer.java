@@ -1,6 +1,6 @@
-package com.najasin.domain.manual.answer.entity;
+package com.najasin.domain.manual.entity.answer;
 
-import com.najasin.domain.manual.question.entity.Question;
+import com.najasin.domain.manual.entity.question.Question;
 import com.najasin.domain.user.dto.param.MyAnswerParam;
 import com.najasin.domain.user.entity.User;
 

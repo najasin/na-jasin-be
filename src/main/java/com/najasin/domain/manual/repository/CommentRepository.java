@@ -1,7 +1,7 @@
-package com.najasin.domain.comment.repository;
+package com.najasin.domain.manual.repository;
 
-import com.najasin.domain.comment.entity.Comment;
-import com.najasin.domain.comment.entity.CommentId;
+import com.najasin.domain.manual.entity.comment.Comment;
+import com.najasin.domain.manual.entity.comment.CommentId;
 import com.najasin.domain.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 

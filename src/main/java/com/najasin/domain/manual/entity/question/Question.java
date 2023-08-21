@@ -1,4 +1,4 @@
-package com.najasin.domain.manual.question.entity;
+package com.najasin.domain.manual.entity.question;
 
 import com.najasin.domain.manual.dto.param.JffMyQuestion;
 import com.najasin.domain.user.entity.userType.UserType;

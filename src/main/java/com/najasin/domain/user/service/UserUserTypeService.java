@@ -3,11 +3,11 @@ package com.najasin.domain.user.service;
 import static java.util.Objects.*;
 
 import com.najasin.domain.character.service.CharacterService;
-import com.najasin.domain.manual.answer.entity.Answer;
-import com.najasin.domain.manual.answer.service.AnswerService;
+import com.najasin.domain.manual.entity.answer.Answer;
+import com.najasin.domain.manual.service.AnswerService;
 import com.najasin.domain.manual.dto.param.ManualCharacterItems;
-import com.najasin.domain.manual.userKeyword.entity.UserKeyword;
-import com.najasin.domain.manual.userKeyword.service.UserKeywordService;
+import com.najasin.domain.manual.entity.userKeyword.UserKeyword;
+import com.najasin.domain.manual.service.UserKeywordService;
 import com.najasin.domain.user.dto.param.MyAnswerParam;
 import com.najasin.domain.user.dto.param.MyKeywordPercentParam;
 import com.najasin.domain.user.dto.response.MyPageResponse;

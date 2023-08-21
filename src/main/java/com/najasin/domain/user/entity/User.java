@@ -3,14 +3,7 @@ package com.najasin.domain.user.entity;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.najasin.domain.character.entity.Body;
-import com.najasin.domain.character.entity.CharacterSet;
-import com.najasin.domain.character.entity.Expression;
-import com.najasin.domain.character.entity.Face;
-import com.najasin.domain.manual.answer.entity.Answer;
-import com.najasin.domain.comment.entity.Comment;
 import com.najasin.domain.user.entity.userType.UserType;
-import com.najasin.domain.manual.userKeyword.entity.UserKeyword;
 import com.najasin.domain.user.entity.userType.UserUserType;
 import jakarta.persistence.*;
 import lombok.*;
@@ -35,24 +28,11 @@ public class User {
 	@Column(name = "user_id")
 	private String id;
 
-	@Column(name = "nickname")
-	private String nickname;
-
 	@ElementCollection(fetch = FetchType.EAGER)
 	@Enumerated(EnumType.STRING)
 	@CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
 	@Column(name = "role")
 	private List<Role> role;
-
-
-	// @OneToMany(mappedBy = "user")
-	// private List<UserKeyword> userKeywords;
-	//
-	// @OneToMany(mappedBy = "user")
-	// private List<Answer> answers;
-	//
-	// @OneToMany(mappedBy = "user")
-	// private List<Comment> comments;
 
 	@OneToMany(mappedBy = "user")
 	private List<UserUserType> userUserTypes;
@@ -73,40 +53,12 @@ public class User {
 		this.role = new ArrayList<>(List.of(Role.ROLE_MEMBER));
 
 		this.auditEntity = new AuditEntity();
-		// userKeywords = new ArrayList<>();
-		// answers = new ArrayList<>();
-		// comments = new ArrayList<>();
 		userUserTypes = new ArrayList<>();
 	}
 
 	public void updateLastUserType(UserType lastUserType) {
 		this.lastUserType = lastUserType;
 	}
-
-	// public void updateAnswer(List<Answer> answers) {
-	// 	this.answers = answers;
-	// }
-
-	public void updateNickname(String nickname) {
-		this.nickname = nickname;
-	}
-
-	// public void updateUserUserType(UserUserType userUserType) {
-	// 	for (UserUserType uut : this.userUserTypes) {
-	// 		if (uut.getUserType() == userUserType.getUserType()) {
-	// 			this.userUserTypes.remove(uut);
-	// 			break;
-	// 		}
-	// 	}
-	// 	this.userUserTypes.add(userUserType);
-	// }
-	//
-	// public void deleteKeywords(){
-	// 	this.userKeywords = new ArrayList<>();}
-	//
-	// public void updateKeyword(UserKeyword userKeyword) {
-	// 	this.userKeywords.add(userKeyword);
-	// }
 
 	public List<SimpleGrantedAuthority> getRole() {
 		return role.stream()

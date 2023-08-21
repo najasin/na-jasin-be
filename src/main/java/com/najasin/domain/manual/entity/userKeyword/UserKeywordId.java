@@ -1,6 +1,6 @@
-package com.najasin.domain.manual.userKeyword.entity;
+package com.najasin.domain.manual.entity.userKeyword;
 
-import com.najasin.domain.manual.keyword.entity.Keyword;
+import com.najasin.domain.manual.entity.keyword.Keyword;
 import com.najasin.domain.user.entity.User;
 import jakarta.persistence.Embeddable;
 import lombok.Getter;

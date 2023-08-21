@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.najasin.domain.manual.answer.service.AnswerService;
+import com.najasin.domain.manual.service.AnswerService;
 import com.najasin.domain.user.dto.request.AnswerUpdateRequest;
 import com.najasin.domain.user.dto.request.CharacterUpdateRequest;
 import com.najasin.domain.user.dto.request.NicknameUpdateRequest;

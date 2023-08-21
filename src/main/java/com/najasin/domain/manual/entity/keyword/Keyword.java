@@ -1,4 +1,4 @@
-package com.najasin.domain.manual.keyword.entity;
+package com.najasin.domain.manual.entity.keyword;
 
 import com.najasin.domain.manual.dto.param.JffMyKeyword;
 

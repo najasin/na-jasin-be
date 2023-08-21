@@ -1,16 +1,15 @@
-package com.najasin.domain.manual.answer.service;
+package com.najasin.domain.manual.service;
 
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.najasin.domain.manual.answer.entity.Answer;
-import com.najasin.domain.manual.answer.repository.AnswerRepository;
+import com.najasin.domain.manual.entity.answer.Answer;
+import com.najasin.domain.manual.repository.AnswerRepository;
 import com.najasin.domain.manual.dto.param.JffMyAnswer;
-import com.najasin.domain.manual.question.entity.Question;
+import com.najasin.domain.manual.entity.question.Question;
 import com.najasin.domain.user.dto.param.AnswerUpdateParam;
 import com.najasin.domain.user.entity.User;
 

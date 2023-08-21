@@ -1,4 +1,4 @@
-package com.najasin.domain.manual.userKeyword.service;
+package com.najasin.domain.manual.service;
 
 import java.util.Comparator;
 import java.util.List;
@@ -7,9 +7,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.najasin.domain.manual.dto.param.JffMyKeywordPercent;
-import com.najasin.domain.manual.keyword.entity.Keyword;
-import com.najasin.domain.manual.userKeyword.entity.UserKeyword;
-import com.najasin.domain.manual.userKeyword.repository.UserKeywordRepository;
+import com.najasin.domain.manual.entity.keyword.Keyword;
+import com.najasin.domain.manual.entity.userKeyword.UserKeyword;
+import com.najasin.domain.manual.repository.UserKeywordRepository;
 import com.najasin.domain.user.entity.User;
 
 import lombok.RequiredArgsConstructor;

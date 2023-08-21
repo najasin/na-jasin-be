@@ -1,6 +1,6 @@
-package com.najasin.domain.manual.question.service;
+package com.najasin.domain.manual.service;
 
-import static com.najasin.domain.manual.question.entity.QuestionType.*;
+import static com.najasin.domain.manual.entity.question.QuestionType.*;
 
 import java.util.List;
 
@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.najasin.domain.manual.dto.param.JffMyQuestion;
-import com.najasin.domain.manual.question.entity.Question;
-import com.najasin.domain.manual.question.repository.QuestionRepository;
+import com.najasin.domain.manual.entity.question.Question;
+import com.najasin.domain.manual.repository.QuestionRepository;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
