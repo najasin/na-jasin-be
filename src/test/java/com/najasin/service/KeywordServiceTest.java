@@ -1,41 +1,23 @@
 package com.najasin.service;
 
-import com.najasin.domain.answer.entity.Answer;
-import com.najasin.domain.answer.repository.AnswerRepository;
-import com.najasin.domain.answer.service.AnswerService;
 import com.najasin.domain.keyword.entity.Keyword;
 import com.najasin.domain.keyword.repository.KeywordRepository;
 import com.najasin.domain.keyword.service.KeywordService;
-import com.najasin.domain.question.entity.Question;
-import com.najasin.domain.question.entity.QuestionType;
-import com.najasin.domain.question.repository.QuestionRepository;
-import com.najasin.domain.user.dto.PageUpdateRequestDTO;
-import com.najasin.domain.user.entity.Oauth2Entity;
-import com.najasin.domain.user.entity.User;
-import com.najasin.domain.user.entity.enums.Provider;
-import com.najasin.domain.user.repository.UserRepository;
-import com.najasin.domain.userType.entity.UserType;
-import com.najasin.domain.userType.repository.UserTypeRepository;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import static org.mockito.Mockito.*;
 
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static junit.framework.TestCase.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.times;
 
 @ExtendWith(MockitoExtension.class)
 public class KeywordServiceTest {

@@ -11,8 +11,8 @@ import com.najasin.domain.user.entity.Oauth2Entity;
 import com.najasin.domain.user.entity.User;
 import com.najasin.domain.user.entity.enums.Provider;
 import com.najasin.domain.user.repository.UserRepository;
-import com.najasin.domain.userType.entity.UserType;
-import com.najasin.domain.userType.repository.UserTypeRepository;
+import com.najasin.domain.user.entity.userType.UserType;
+import com.najasin.domain.user.repository.UserTypeRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -32,7 +32,6 @@ import java.util.stream.Collectors;
 import static junit.framework.TestCase.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.times;
 
 @ExtendWith(MockitoExtension.class)
 public class AnswerServiceTest {

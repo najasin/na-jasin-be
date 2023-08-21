@@ -1,14 +1,11 @@
 package com.najasin.domain.user.service;
 
-import java.util.ArrayList;
 import java.util.UUID;
 
-import com.najasin.domain.character.body.repository.BodyRepository;
-import com.najasin.domain.character.characterset.repository.CharacterSetRepository;
-import com.najasin.domain.character.expression.repository.ExpressionRepository;
-import com.najasin.domain.character.face.repository.FaceRepository;
-import com.najasin.domain.userKeyword.service.UserKeywordService;
-import com.najasin.domain.comment.service.CommentService;
+import com.najasin.domain.character.repository.BodyRepository;
+import com.najasin.domain.character.repository.CharacterSetRepository;
+import com.najasin.domain.character.repository.ExpressionRepository;
+import com.najasin.domain.character.repository.FaceRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,8 +26,6 @@ public class UserService {
 	private final FaceRepository faceRepository;
 	private final BodyRepository bodyRepository;
 	private final ExpressionRepository expressionRepository;
-	private final UserKeywordService userKeywordService;
-	private final CommentService commentService;
 	private final RedisBlackListUtil redisBlackListUtil;
 
 

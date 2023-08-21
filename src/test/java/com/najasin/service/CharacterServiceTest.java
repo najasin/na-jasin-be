@@ -1,15 +1,15 @@
 package com.najasin.service;
 
-import com.najasin.domain.character.CharacterService;
-import com.najasin.domain.character.body.entity.Body;
-import com.najasin.domain.character.body.repository.BodyRepository;
-import com.najasin.domain.character.characterset.entity.CharacterSet;
-import com.najasin.domain.character.characterset.repository.CharacterSetRepository;
+import com.najasin.domain.character.service.CharacterService;
+import com.najasin.domain.character.entity.Body;
+import com.najasin.domain.character.repository.BodyRepository;
+import com.najasin.domain.character.entity.CharacterSet;
+import com.najasin.domain.character.repository.CharacterSetRepository;
 import com.najasin.domain.character.dto.AllCharacterItems;
-import com.najasin.domain.character.expression.entity.Expression;
-import com.najasin.domain.character.expression.repository.ExpressionRepository;
-import com.najasin.domain.character.face.entity.Face;
-import com.najasin.domain.character.face.repository.FaceRepository;
+import com.najasin.domain.character.entity.Expression;
+import com.najasin.domain.character.repository.ExpressionRepository;
+import com.najasin.domain.character.entity.Face;
+import com.najasin.domain.character.repository.FaceRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -23,7 +23,6 @@ import java.util.List;
 
 import static junit.framework.TestCase.assertEquals;
 import static org.mockito.Mockito.when;
-import static junit.framework.TestCase.*;
 
 @ExtendWith(MockitoExtension.class)
 public class CharacterServiceTest {

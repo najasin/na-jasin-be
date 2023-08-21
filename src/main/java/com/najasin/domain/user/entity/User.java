@@ -5,9 +5,9 @@ import java.util.List;
 
 import com.najasin.domain.answer.entity.Answer;
 import com.najasin.domain.comment.entity.Comment;
+import com.najasin.domain.user.entity.userType.UserType;
 import com.najasin.domain.userKeyword.entity.UserKeyword;
-import com.najasin.domain.userType.entity.UserType;
-import com.najasin.domain.userUserType.entity.UserUserType;
+import com.najasin.domain.user.entity.userType.UserUserType;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;

@@ -14,9 +14,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.najasin.domain.userType.entity.UserType;
-import com.najasin.domain.userType.repository.UserTypeRepository;
-import com.najasin.domain.userType.service.UserTypeService;
+import com.najasin.domain.user.entity.userType.UserType;
+import com.najasin.domain.user.repository.UserTypeRepository;
+import com.najasin.domain.user.service.UserTypeService;
 
 import jakarta.persistence.EntityNotFoundException;
 

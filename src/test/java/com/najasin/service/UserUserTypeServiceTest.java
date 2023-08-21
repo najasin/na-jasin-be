@@ -8,22 +8,22 @@ import java.util.List;
 import java.util.Optional;
 
 import com.najasin.domain.answer.entity.Answer;
-import com.najasin.domain.character.body.entity.Body;
-import com.najasin.domain.character.body.repository.BodyRepository;
-import com.najasin.domain.character.characterset.entity.CharacterSet;
-import com.najasin.domain.character.characterset.repository.CharacterSetRepository;
+import com.najasin.domain.character.entity.Body;
+import com.najasin.domain.character.repository.BodyRepository;
+import com.najasin.domain.character.entity.CharacterSet;
+import com.najasin.domain.character.repository.CharacterSetRepository;
 import com.najasin.domain.character.dto.CharacterItem;
-import com.najasin.domain.character.expression.entity.Expression;
-import com.najasin.domain.character.expression.repository.ExpressionRepository;
-import com.najasin.domain.character.face.entity.Face;
-import com.najasin.domain.character.face.repository.FaceRepository;
+import com.najasin.domain.character.entity.Expression;
+import com.najasin.domain.character.repository.ExpressionRepository;
+import com.najasin.domain.character.entity.Face;
+import com.najasin.domain.character.repository.FaceRepository;
 import com.najasin.domain.comment.entity.Comment;
 import com.najasin.domain.question.entity.Question;
 import com.najasin.domain.question.entity.QuestionType;
 import com.najasin.domain.character.dto.CharacterItems;
 import com.najasin.domain.user.dto.Page;
 import com.najasin.domain.user.repository.UserRepository;
-import com.najasin.domain.userType.repository.UserTypeRepository;
+import com.najasin.domain.user.repository.UserTypeRepository;
 import com.najasin.global.audit.AuditEntity;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,11 +36,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.najasin.domain.user.entity.Oauth2Entity;
 import com.najasin.domain.user.entity.User;
-import com.najasin.domain.userType.entity.UserType;
-import com.najasin.domain.userType.service.UserTypeService;
-import com.najasin.domain.userUserType.entity.UserUserType;
-import com.najasin.domain.userUserType.repository.UserUserTypeRepository;
-import com.najasin.domain.userUserType.service.UserUserTypeService;
+import com.najasin.domain.user.entity.userType.UserType;
+import com.najasin.domain.user.service.UserTypeService;
+import com.najasin.domain.user.entity.userType.UserUserType;
+import com.najasin.domain.user.repository.UserUserTypeRepository;
+import com.najasin.domain.user.service.UserUserTypeService;
 
 @ExtendWith(MockitoExtension.class)
 public class UserUserTypeServiceTest {

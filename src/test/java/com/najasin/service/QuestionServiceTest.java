@@ -1,15 +1,12 @@
 package com.najasin.service;
 
-import com.najasin.domain.answer.repository.AnswerRepository;
-import com.najasin.domain.answer.service.AnswerService;
 import com.najasin.domain.question.entity.Question;
 import com.najasin.domain.question.entity.QuestionType;
 import com.najasin.domain.question.repository.QuestionRepository;
 import com.najasin.domain.question.service.QuestionService;
 import com.najasin.domain.user.dto.Page;
-import com.najasin.domain.user.repository.UserRepository;
-import com.najasin.domain.userType.entity.UserType;
-import com.najasin.domain.userType.repository.UserTypeRepository;
+import com.najasin.domain.user.entity.userType.UserType;
+import com.najasin.domain.user.repository.UserTypeRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,7 +18,6 @@ import static junit.framework.TestCase.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
