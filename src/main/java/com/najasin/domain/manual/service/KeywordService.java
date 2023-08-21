@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.najasin.domain.manual.dto.param.JffMyKeyword;
+import com.najasin.domain.manual.dto.param.JffKeywordParam;
 import com.najasin.domain.manual.entity.keyword.Keyword;
 import com.najasin.domain.manual.repository.KeywordRepository;
 
@@ -28,7 +28,7 @@ public class KeywordService {
 	}
 
 	@Transactional(readOnly = true)
-	public List<JffMyKeyword> findAll() {
+	public List<JffKeywordParam> findAll() {
 		return keywordRepository.findAll().stream().map(Keyword::toJffMyKeyword).toList();
 	}
 }

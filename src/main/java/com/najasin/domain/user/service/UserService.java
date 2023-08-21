@@ -33,7 +33,6 @@ public class UserService {
 
 	@Transactional(readOnly = true)
 	public User findById(String id) {
-		System.out.println(id);
 		return userRepository.findById(id).orElseThrow(EntityNotFoundException::new);
 	}
 

@@ -7,9 +7,10 @@ import com.najasin.domain.manual.entity.answer.Answer;
 import com.najasin.domain.manual.service.AnswerService;
 import com.najasin.domain.manual.dto.param.ManualCharacterItems;
 import com.najasin.domain.manual.entity.userKeyword.UserKeyword;
+import com.najasin.domain.manual.service.CommentService;
 import com.najasin.domain.manual.service.UserKeywordService;
-import com.najasin.domain.user.dto.param.MyAnswerParam;
-import com.najasin.domain.user.dto.param.MyKeywordPercentParam;
+import com.najasin.domain.user.dto.param.AnswerParam;
+import com.najasin.domain.user.dto.param.CommentParam;
 import com.najasin.domain.user.dto.response.MyPageResponse;
 import com.najasin.domain.user.dto.response.UserTypeUpdateResponse;
 import com.najasin.domain.user.entity.User;
@@ -34,6 +35,7 @@ public class UserUserTypeService {
 	private final CharacterService characterService;
 	private final AnswerService answerService;
 	private final UserKeywordService userKeywordService;
+	private final CommentService commentService;
 	@Value("${base-image}")
 	private String baseImage;
 
@@ -78,14 +80,12 @@ public class UserUserTypeService {
 		List<UserType> userTypes =
 			isNull(user) ? null : user.getUserUserTypes().stream().map(UserUserType::getUserType).toList();
 		UserUserType userUserType = findByUserIdAndUserTypeName(userId, userType);
-		List<MyAnswerParam> answers = answerService.findByUserIdAndUserType(userId, userType)
+		List<AnswerParam> answers = answerService.findByUserIdAndUserType(userId, userType)
 			.stream()
 			.map(Answer::toMyAnswerParam)
 			.toList();
-		List<MyKeywordPercentParam> percents = userKeywordService.findByUserId(userId)
-			.stream()
-			.map(UserKeyword::toMyKeywordPercentParam)
-			.toList();
+		List<UserKeyword> percents = userKeywordService.findByUserId(userId);
+		List<CommentParam> comments = commentService.mapToCommentParam(commentService.findAllByUserId(userId));
 
 		return MyPageResponse.builder()
 			.userTypes(isNull(userTypes) ? null : userTypes.stream().map(UserType::getName).toList())
@@ -93,7 +93,9 @@ public class UserUserTypeService {
 			.baseImage(baseImage)
 			.characterItems(userUserType.toMyCharacterItemsParam())
 			.myManualQAPair(answers)
-			.originKeywordPercents(percents)
+			.othersManualQAPairs(comments)
+			.originKeywordPercents(percents.stream().map(UserKeyword::toMyKeywordPercentParam).toList())
+			.otherKeywordPercents(percents.stream().map(UserKeyword::toOthersKeywordPercentParam).toList())
 			.isOwner(!isNull(user))
 			.build();
 	}

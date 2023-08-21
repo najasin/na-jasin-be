@@ -1,7 +1,7 @@
 package com.najasin.domain.manual.entity.userKeyword;
 
 import com.najasin.domain.manual.entity.keyword.Keyword;
-import com.najasin.domain.user.dto.param.MyKeywordPercentParam;
+import com.najasin.domain.user.dto.param.KeywordPercentParam;
 import com.najasin.domain.user.entity.User;
 
 import jakarta.persistence.*;
@@ -43,7 +43,11 @@ public class UserKeyword {
 		this.othersCount = 0;
 	}
 
-	public MyKeywordPercentParam toMyKeywordPercentParam() {
-		return new MyKeywordPercentParam(keyword.getId(), keyword.getName(), originPercent);
+	public KeywordPercentParam toMyKeywordPercentParam() {
+		return new KeywordPercentParam(keyword.getId(), keyword.getName(), originPercent);
+	}
+
+	public KeywordPercentParam toOthersKeywordPercentParam() {
+		return new KeywordPercentParam(keyword.getId(), keyword.getName(), othersCount);
 	}
 }

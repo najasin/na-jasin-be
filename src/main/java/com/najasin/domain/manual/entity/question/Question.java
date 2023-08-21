@@ -1,6 +1,6 @@
 package com.najasin.domain.manual.entity.question;
 
-import com.najasin.domain.manual.dto.param.JffMyQuestion;
+import com.najasin.domain.manual.dto.param.JffQuestionParam;
 import com.najasin.domain.user.entity.userType.UserType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -29,7 +29,7 @@ public class Question {
     @JoinColumn(name = "user_type_id", referencedColumnName = "user_type_id")
     private UserType userType;
 
-    public JffMyQuestion toJffMyQuestion() {
-        return new JffMyQuestion(id, question);
+    public JffQuestionParam toJffMyQuestion() {
+        return new JffQuestionParam(id, question);
     }
 }

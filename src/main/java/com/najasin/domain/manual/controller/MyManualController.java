@@ -18,11 +18,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.najasin.domain.character.dto.param.CharacterItemsParam;
 import com.najasin.domain.character.service.CharacterService;
 import com.najasin.domain.manual.service.AnswerService;
-import com.najasin.domain.manual.dto.param.JffMyKeyword;
+import com.najasin.domain.manual.dto.param.JffKeywordParam;
 import com.najasin.domain.manual.dto.request.MyManualCreateRequest;
 import com.najasin.domain.manual.dto.response.JffMyManualCreateResponse;
 import com.najasin.domain.manual.dto.response.JffMyManualResponse;
-import com.najasin.domain.manual.dto.param.JffMyQuestion;
+import com.najasin.domain.manual.dto.param.JffQuestionParam;
 import com.najasin.domain.manual.entity.keyword.Keyword;
 import com.najasin.domain.manual.service.KeywordService;
 import com.najasin.domain.manual.entity.question.Question;
@@ -55,8 +55,8 @@ public class MyManualController {
 		CharacterItemsParam characterItems = characterService.findAllItems();
 
 		// 추후에 다른 분기에 대한 처리 필요
-		List<JffMyQuestion> questionList = questionService.findAll(userType);
-		List<JffMyKeyword> keywordList = keywordService.findAll();
+		List<JffQuestionParam> questionList = questionService.findAll(userType);
+		List<JffKeywordParam> keywordList = keywordService.findAll();
 
 		return ResponseEntity.ok(createSuccessWithData(
 			FIND_MY_MANUAL_SUCCESS.getMsg(),

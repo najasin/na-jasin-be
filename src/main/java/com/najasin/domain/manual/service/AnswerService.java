@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.najasin.domain.manual.entity.answer.Answer;
 import com.najasin.domain.manual.repository.AnswerRepository;
-import com.najasin.domain.manual.dto.param.JffMyAnswer;
+import com.najasin.domain.manual.dto.param.JffAnswerParam;
 import com.najasin.domain.manual.entity.question.Question;
 import com.najasin.domain.user.dto.param.AnswerUpdateParam;
 import com.najasin.domain.user.entity.User;
@@ -21,8 +21,8 @@ public class AnswerService {
 	private final AnswerRepository answerRepository;
 
 	@Transactional
-	public void saveAll(List<JffMyAnswer> answers, List<Question> questions, User user) {
-		answers.sort(Comparator.comparing(JffMyAnswer::id));
+	public void saveAll(List<JffAnswerParam> answers, List<Question> questions, User user) {
+		answers.sort(Comparator.comparing(JffAnswerParam::id));
 		questions.sort(Comparator.comparing(Question::getId));
 
 		for (int i = 0; i < answers.size(); i++) {

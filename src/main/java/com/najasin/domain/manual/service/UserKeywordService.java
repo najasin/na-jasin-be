@@ -6,7 +6,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.najasin.domain.manual.dto.param.JffMyKeywordPercent;
+import com.najasin.domain.manual.dto.param.JffKeywordPercentParam;
 import com.najasin.domain.manual.entity.keyword.Keyword;
 import com.najasin.domain.manual.entity.userKeyword.UserKeyword;
 import com.najasin.domain.manual.repository.UserKeywordRepository;
@@ -20,8 +20,8 @@ public class UserKeywordService {
 	private final UserKeywordRepository userKeywordRepository;
 
 	@Transactional
-	public void saveAll(List<JffMyKeywordPercent> keywordPercents, List<Keyword> keywords, User user) {
-		keywordPercents.sort(Comparator.comparing(JffMyKeywordPercent::id));
+	public void saveAll(List<JffKeywordPercentParam> keywordPercents, List<Keyword> keywords, User user) {
+		keywordPercents.sort(Comparator.comparing(JffKeywordPercentParam::id));
 		keywords.sort(Comparator.comparing(Keyword::getId));
 
 		for (int i = 0; i < keywordPercents.size(); i++) {

@@ -1,7 +1,7 @@
 package com.najasin.domain.manual.entity.answer;
 
 import com.najasin.domain.manual.entity.question.Question;
-import com.najasin.domain.user.dto.param.MyAnswerParam;
+import com.najasin.domain.user.dto.param.AnswerParam;
 import com.najasin.domain.user.entity.User;
 
 import jakarta.persistence.*;
@@ -26,18 +26,18 @@ public class Answer {
 	@JoinColumn(name = "question_id", referencedColumnName = "question_id", insertable = false, updatable = false)
 	private Question question;
 
-	@Column(name = "answer")
-	private String answer;
+	@Column(name = "content")
+	private String content;
 
 	public Long getQuestionId() {
 		return question.getId();
 	}
 
-	public void updateAnswer(String answer) {
-		this.answer = answer;
+	public void updateAnswer(String content) {
+		this.content = content;
 	}
 
-	public MyAnswerParam toMyAnswerParam() {
-		return new MyAnswerParam(question.getId(), question.getQuestion(), answer);
+	public AnswerParam toMyAnswerParam() {
+		return new AnswerParam(question.getId(), question.getQuestion(), content);
 	}
 }
