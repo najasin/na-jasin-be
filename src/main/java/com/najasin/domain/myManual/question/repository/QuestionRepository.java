@@ -1,7 +1,7 @@
-package com.najasin.domain.question.repository;
+package com.najasin.domain.myManual.question.repository;
 
-import com.najasin.domain.question.entity.Question;
-import com.najasin.domain.question.entity.QuestionType;
+import com.najasin.domain.myManual.question.entity.Question;
+import com.najasin.domain.myManual.question.entity.QuestionType;
 import com.najasin.domain.user.entity.userType.UserType;
 import org.springframework.data.jpa.repository.JpaRepository;
 

@@ -1,6 +1,6 @@
 package com.najasin.domain.comment.entity;
 
-import com.najasin.domain.question.entity.Question;
+import com.najasin.domain.myManual.question.entity.Question;
 import com.najasin.domain.user.entity.User;
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;

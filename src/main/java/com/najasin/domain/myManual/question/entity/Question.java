@@ -1,4 +1,4 @@
-package com.najasin.domain.question.entity;
+package com.najasin.domain.myManual.question.entity;
 
 import com.najasin.domain.comment.entity.Comment;
 import com.najasin.domain.user.entity.userType.UserType;

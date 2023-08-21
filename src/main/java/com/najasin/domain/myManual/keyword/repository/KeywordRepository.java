@@ -1,6 +1,6 @@
-package com.najasin.domain.keyword.repository;
+package com.najasin.domain.myManual.keyword.repository;
 
-import com.najasin.domain.keyword.entity.Keyword;
+import com.najasin.domain.myManual.keyword.entity.Keyword;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface KeywordRepository extends JpaRepository<Keyword, Long> {
