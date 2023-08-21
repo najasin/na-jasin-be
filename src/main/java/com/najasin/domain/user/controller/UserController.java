@@ -1,5 +1,8 @@
 package com.najasin.domain.user.controller;
 
+import static com.najasin.domain.user.dto.message.UserResponse.*;
+import static com.najasin.global.response.ApiResponse.*;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,10 +13,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.najasin.domain.user.dto.request.CharacterUpdateRequest;
+import com.najasin.domain.user.dto.response.UserTypeUpdateResponse;
 import com.najasin.domain.user.entity.User;
 import com.najasin.domain.user.dto.message.UserTypeMessage;
 import com.najasin.domain.user.dto.request.UserTypeUpdateRequest;
-import com.najasin.domain.user.dto.response.UserTypeResponse;
+import com.najasin.domain.user.entity.userType.UserUserType;
 import com.najasin.domain.user.service.UserUserTypeService;
 import com.najasin.global.annotation.AuthorizeUser;
 import com.najasin.global.response.ApiResponse;
@@ -35,12 +40,24 @@ public class UserController {
 	}
 
 	@PutMapping("/type")
-	public ResponseEntity<ApiResponse<UserTypeResponse>> updateUserType(@AuthorizeUser User user,
+	public ResponseEntity<ApiResponse<UserTypeUpdateResponse>> updateUserType(
+		@AuthorizeUser User user,
 		@RequestBody @Validated UserTypeUpdateRequest request) {
-		String updatedUserType = userUserTypeService.updateUserType(user, request.userType());
+		UserTypeUpdateResponse response = userUserTypeService.updateUserType(user, request.userType());
 
-		return ResponseEntity.ok(ApiResponse.createSuccessWithData(
+		return ResponseEntity.ok(createSuccessWithData(
 			UserTypeMessage.SUCCESS_UPDATE_USER_TYPE.getMsg(),
-			UserTypeResponse.of(updatedUserType)));
+			response));
+	}
+
+	@PutMapping("/{userType}/character")
+	public ResponseEntity<ApiResponse<?>> updateCharacter(
+		@AuthorizeUser User user,
+		@PathVariable String userType,
+		@RequestBody CharacterUpdateRequest request) {
+		UserUserType userUserType = userUserTypeService.findByUserIdAndUserTypeName(user.getId(), userType);
+		userUserTypeService.updateCharacter(userUserType, request.toManualCharacterItems());
+
+		return ResponseEntity.ok(createSuccess(SUCCESS_UPDATE_CHARACTER.getMessage()));
 	}
 }
