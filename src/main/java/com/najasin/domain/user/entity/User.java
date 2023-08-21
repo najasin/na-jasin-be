@@ -61,22 +61,6 @@ public class User {
 	@JoinColumn(name = "last_user_type", referencedColumnName = "user_type_id")
 	private UserType lastUserType;
 
-	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "face_id", referencedColumnName = "face_id")
-	private Face face;
-
-	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "expression_id", referencedColumnName = "expression_id")
-	private Expression expression;
-
-	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "body_id", referencedColumnName = "body_id")
-	private Body body;
-
-	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "set_id", referencedColumnName = "set_id")
-	private CharacterSet set;
-
 	@Embedded
 	private Oauth2Entity oauth2Entity;
 
@@ -97,22 +81,6 @@ public class User {
 
 	public void updateLastUserType(UserType lastUserType) {
 		this.lastUserType = lastUserType;
-	}
-
-	public void updateCharacter(CharacterSet set) {
-		this.set = set;
-
-		this.face = null;
-		this.body = null;
-		this.expression = null;
-	}
-
-	public void updateCharacter(Face face, Body body, Expression expression) {
-		this.face = face;
-		this.body = body;
-		this.expression = expression;
-
-		this.set = null;
 	}
 
 	// public void updateAnswer(List<Answer> answers) {

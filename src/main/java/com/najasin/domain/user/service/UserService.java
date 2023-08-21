@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.najasin.domain.character.service.CharacterService;
-import com.najasin.domain.manual.dto.param.ManualCharacterItems;
 import com.najasin.domain.user.entity.Oauth2Entity;
 import com.najasin.domain.user.entity.User;
 import com.najasin.domain.user.repository.UserRepository;
@@ -27,10 +26,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserService {
 	private final UserRepository userRepository;
-	private final CharacterService characterService;
-	private final FaceRepository faceRepository;
-	private final BodyRepository bodyRepository;
-	private final ExpressionRepository expressionRepository;
 	private final RedisBlackListUtil redisBlackListUtil;
 
 	@Transactional
@@ -53,18 +48,6 @@ public class UserService {
 	public void logout(String accessToken, String refreshToken) {
 		redisBlackListUtil.setBlackList(accessToken, "accessToken", 7);
 		redisBlackListUtil.setBlackList(refreshToken, "refreshToken", 7);
-	}
-
-	@Transactional
-	public void updateCharacter(User user, ManualCharacterItems items) {
-		if (!isNull(items.set())) {
-			user.updateCharacter(characterService.findCharacterSetById(items.set()));
-		} else {
-			user.updateCharacter(
-				characterService.findFaceById(items.face()),
-				characterService.findBodyById(items.body()),
-				characterService.findExpressionById(items.expression()));
-		}
 	}
 
 	@Transactional
