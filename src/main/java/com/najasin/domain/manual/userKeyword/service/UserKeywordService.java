@@ -33,4 +33,9 @@ public class UserKeywordService {
 	public UserKeyword save(UserKeyword userKeyword) {
 		return userKeywordRepository.save(userKeyword);
 	}
+
+	@Transactional(readOnly = true)
+	public List<UserKeyword> findByUserId(String userId) {
+		return userKeywordRepository.findByUserId(userId);
+	}
 }

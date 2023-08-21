@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.najasin.domain.character.dto.message.CharacterItemResponse;
-import com.najasin.domain.character.dto.response.CharacterItems;
+import com.najasin.domain.character.dto.param.CharacterItemsParam;
 import com.najasin.domain.character.dto.response.CharacterItemsResponse;
 import com.najasin.domain.character.service.CharacterService;
 import com.najasin.global.response.ApiResponse;
@@ -27,7 +27,7 @@ public class CharacterController {
 
 	@GetMapping
 	public ResponseEntity<ApiResponse<CharacterItemsResponse>> getCharacterItems() {
-		CharacterItems characterItems = characterService.findAllItems();
+		CharacterItemsParam characterItems = characterService.findAllItems();
 		return ResponseEntity.ok(createSuccessWithData(
 			CharacterItemResponse.FIND_ALL_ITEMS_SUCCESS.getMsg(),
 			CharacterItemsResponse.of(baseImage, characterItems)));

@@ -3,6 +3,7 @@ package com.najasin.domain.user.controller;
 import static com.najasin.domain.user.dto.message.UserResponse.*;
 import static com.najasin.global.response.ApiResponse.*;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.najasin.domain.user.dto.request.CharacterUpdateRequest;
 import com.najasin.domain.user.dto.request.NicknameUpdateRequest;
+import com.najasin.domain.user.dto.response.MyPageResponse;
 import com.najasin.domain.user.dto.response.UserTypeUpdateResponse;
 import com.najasin.domain.user.entity.User;
 import com.najasin.domain.user.dto.message.UserTypeMessage;
@@ -31,13 +33,17 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserController {
 	private final UserUserTypeService userUserTypeService;
+	@Value("${base-image}")
+	private String baseImage;
 
-	@GetMapping("/{userType}/mypage")
-	public ResponseEntity<ApiResponse<?>> getMyPage(
+	@GetMapping("/user/{userType}/mypage")
+	public ResponseEntity<ApiResponse<MyPageResponse>> getMyPage(
 		@AuthorizeUser User user,
 		@PathVariable String userType,
 		@RequestParam(name = "userId") String userId) {
-		return null;
+		MyPageResponse response = userUserTypeService.getMyPage(user, userType, userId);
+
+		return ResponseEntity.ok(createSuccessWithData(SUCCESS_GET_MY_PAGE.getMessage(), response));
 	}
 
 	@PutMapping("/type")
@@ -61,7 +67,6 @@ public class UserController {
 
 		return ResponseEntity.ok(createSuccess(SUCCESS_UPDATE_NICKNAME.getMessage()));
 	}
-
 
 	@PutMapping("/{userType}/character")
 	public ResponseEntity<ApiResponse<?>> updateCharacter(

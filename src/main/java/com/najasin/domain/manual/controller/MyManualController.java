@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.najasin.domain.character.dto.response.CharacterItems;
+import com.najasin.domain.character.dto.param.CharacterItemsParam;
 import com.najasin.domain.character.service.CharacterService;
 import com.najasin.domain.manual.answer.service.AnswerService;
 import com.najasin.domain.manual.dto.param.JffMyKeyword;
@@ -52,7 +52,7 @@ public class MyManualController {
 
 	@GetMapping
 	public ResponseEntity<ApiResponse<JffMyManualResponse>> getMyManual(@PathVariable String userType) {
-		CharacterItems characterItems = characterService.findAllItems();
+		CharacterItemsParam characterItems = characterService.findAllItems();
 
 		// 추후에 다른 분기에 대한 처리 필요
 		List<JffMyQuestion> questionList = questionService.findAll(userType);

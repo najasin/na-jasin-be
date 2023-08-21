@@ -59,7 +59,8 @@ public class SecurityConfig {
 					new AntPathRequestMatcher("/swagger-ui/index.html"),
 					new AntPathRequestMatcher("/auth2/**"),
 					new AntPathRequestMatcher("/login/**"),
-					new AntPathRequestMatcher("/api/*/my-manual", "GET"),
+					new AntPathRequestMatcher("/api/user/*/mypage", "GET"),
+					new AntPathRequestMatcher("/api/*/others-manual/**"),
 					new AntPathRequestMatcher("/api/characterItems")
 				).permitAll()
 				.requestMatchers(new AntPathRequestMatcher("/api/**")).hasAnyRole("ADMIN", "MEMBER")

@@ -1,6 +1,6 @@
 package com.najasin.domain.character.entity;
 
-import com.najasin.domain.character.dto.response.CharacterItem;
+import com.najasin.domain.character.dto.param.CharacterItemParam;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -27,7 +27,7 @@ public class Face {
     @Column(name = "face_layout_url",columnDefinition = "TEXT")
     private String layout_url;
 
-    public CharacterItem toCharacterItem() {
-        return new CharacterItem(id, show_url, layout_url);
+    public CharacterItemParam toCharacterItem() {
+        return new CharacterItemParam(id, show_url, layout_url);
     }
 }

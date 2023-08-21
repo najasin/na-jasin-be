@@ -34,4 +34,9 @@ public class AnswerService {
 	public Answer save(Answer answer) {
 		return answerRepository.save(answer);
 	}
+
+	@Transactional(readOnly = true)
+	public List<Answer> findByUserId(String userId) {
+		return answerRepository.findByUserId(userId);
+	}
 }

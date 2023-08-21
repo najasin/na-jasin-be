@@ -1,9 +1,13 @@
 package com.najasin.domain.user.entity.userType;
 
+import static java.util.Objects.*;
+
+import com.najasin.domain.character.dto.param.CharacterItemsParam;
 import com.najasin.domain.character.entity.Body;
 import com.najasin.domain.character.entity.CharacterSet;
 import com.najasin.domain.character.entity.Expression;
 import com.najasin.domain.character.entity.Face;
+import com.najasin.domain.user.dto.param.MyCharacterItemsParam;
 import com.najasin.domain.user.entity.User;
 
 import jakarta.persistence.*;
@@ -71,5 +75,14 @@ public class UserUserType {
 		this.expression = expression;
 
 		this.set = null;
+	}
+
+	public MyCharacterItemsParam toMyCharacterItemsParam() {
+		return MyCharacterItemsParam.builder()
+			.face(isNull(face) ? null : face.toCharacterItem())
+			.body(isNull(body) ? null : body.toCharacterItem())
+			.expression(isNull(expression) ? null : expression.toCharacterItem())
+			.set(isNull(set) ? null : set.toCharacterItem())
+			.build();
 	}
 }
