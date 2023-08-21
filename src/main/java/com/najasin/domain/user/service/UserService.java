@@ -1,18 +1,10 @@
 package com.najasin.domain.user.service;
 
-import static java.util.Objects.*;
-
 import java.util.UUID;
-
-import com.najasin.domain.character.repository.BodyRepository;
-import com.najasin.domain.character.repository.CharacterSetRepository;
-import com.najasin.domain.character.repository.ExpressionRepository;
-import com.najasin.domain.character.repository.FaceRepository;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.najasin.domain.character.service.CharacterService;
 import com.najasin.domain.user.entity.Oauth2Entity;
 import com.najasin.domain.user.entity.User;
 import com.najasin.domain.user.repository.UserRepository;
@@ -48,13 +40,6 @@ public class UserService {
 	public void logout(String accessToken, String refreshToken) {
 		redisBlackListUtil.setBlackList(accessToken, "accessToken", 7);
 		redisBlackListUtil.setBlackList(refreshToken, "refreshToken", 7);
-	}
-
-	@Transactional
-	public User updateNickname(String id, String nickname) {
-		User user = this.findById(id);
-		user.updateNickname(nickname);
-		return user;
 	}
 
 	public String generateUUID() {

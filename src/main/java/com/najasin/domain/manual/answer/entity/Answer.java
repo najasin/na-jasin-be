@@ -29,6 +29,14 @@ public class Answer {
 	@Column(name = "answer")
 	private String answer;
 
+	public Long getQuestionId() {
+		return question.getId();
+	}
+
+	public void updateAnswer(String answer) {
+		this.answer = answer;
+	}
+
 	public MyAnswerParam toMyAnswerParam() {
 		return new MyAnswerParam(question.getId(), question.getQuestion(), answer);
 	}

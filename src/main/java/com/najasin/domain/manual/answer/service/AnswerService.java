@@ -11,6 +11,7 @@ import com.najasin.domain.manual.answer.entity.Answer;
 import com.najasin.domain.manual.answer.repository.AnswerRepository;
 import com.najasin.domain.manual.dto.param.JffMyAnswer;
 import com.najasin.domain.manual.question.entity.Question;
+import com.najasin.domain.user.dto.param.AnswerUpdateParam;
 import com.najasin.domain.user.entity.User;
 
 import lombok.RequiredArgsConstructor;
@@ -35,8 +36,24 @@ public class AnswerService {
 		return answerRepository.save(answer);
 	}
 
+	@Transactional
+	public void updateAnswer(List<AnswerUpdateParam> updateAnswers, String userId, String userType) {
+		List<Answer> answers = findByUserIdAndUserType(userId, userType);
+
+		answers.sort(Comparator.comparing(Answer::getQuestionId));
+		updateAnswers.sort(Comparator.comparing(AnswerUpdateParam::id));
+
+		for(int i=0 ; i<updateAnswers.size() ; i++) {
+			answers.get(i).updateAnswer(updateAnswers.get(i).answer());
+		}
+	}
+
 	@Transactional(readOnly = true)
-	public List<Answer> findByUserId(String userId) {
-		return answerRepository.findByUserId(userId);
+	public List<Answer> findByUserIdAndUserType(String userId, String userType) {
+		List<Answer> answers = answerRepository.findByUserId(userId);
+
+		return answers.stream()
+			.filter((answer -> answer.getQuestion().getQuestion().equals(userType.toUpperCase())))
+			.toList();
 	}
 }

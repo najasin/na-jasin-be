@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.najasin.domain.manual.answer.service.AnswerService;
+import com.najasin.domain.user.dto.request.AnswerUpdateRequest;
 import com.najasin.domain.user.dto.request.CharacterUpdateRequest;
 import com.najasin.domain.user.dto.request.NicknameUpdateRequest;
 import com.najasin.domain.user.dto.response.MyPageResponse;
@@ -33,6 +35,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserController {
 	private final UserUserTypeService userUserTypeService;
+	private final AnswerService answerService;
 	@Value("${base-image}")
 	private String baseImage;
 
@@ -77,5 +80,15 @@ public class UserController {
 		userUserTypeService.updateCharacter(userUserType, request.toManualCharacterItems());
 
 		return ResponseEntity.ok(createSuccess(SUCCESS_UPDATE_CHARACTER.getMessage()));
+	}
+
+	@PutMapping("/{userType}/answer")
+	public ResponseEntity<ApiResponse<?>> updateAnswer(
+		@AuthorizeUser User user,
+		@PathVariable String userType,
+		@RequestBody AnswerUpdateRequest request) {
+		answerService.updateAnswer(request.answer(), user.getId(), userType);
+
+		return ResponseEntity.ok(createSuccess(SUCCESS_UPDATE_ANSWER.getMessage()));
 	}
 }

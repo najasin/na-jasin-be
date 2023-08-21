@@ -2,10 +2,6 @@ package com.najasin.domain.user.service;
 
 import static java.util.Objects.*;
 
-import com.najasin.domain.character.repository.BodyRepository;
-import com.najasin.domain.character.repository.CharacterSetRepository;
-import com.najasin.domain.character.repository.ExpressionRepository;
-import com.najasin.domain.character.repository.FaceRepository;
 import com.najasin.domain.character.service.CharacterService;
 import com.najasin.domain.manual.answer.entity.Answer;
 import com.najasin.domain.manual.answer.service.AnswerService;
@@ -17,9 +13,7 @@ import com.najasin.domain.user.dto.param.MyKeywordPercentParam;
 import com.najasin.domain.user.dto.response.MyPageResponse;
 import com.najasin.domain.user.dto.response.UserTypeUpdateResponse;
 import com.najasin.domain.user.entity.User;
-import com.najasin.domain.user.repository.UserRepository;
 import com.najasin.domain.user.entity.userType.UserType;
-import com.najasin.domain.user.repository.UserTypeRepository;
 import com.najasin.domain.user.entity.userType.UserUserType;
 import com.najasin.domain.user.repository.UserUserTypeRepository;
 
@@ -27,7 +21,6 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -85,7 +78,10 @@ public class UserUserTypeService {
 		List<UserType> userTypes =
 			isNull(user) ? null : user.getUserUserTypes().stream().map(UserUserType::getUserType).toList();
 		UserUserType userUserType = findByUserIdAndUserTypeName(userId, userType);
-		List<MyAnswerParam> answers = answerService.findByUserId(userId).stream().map(Answer::toMyAnswerParam).toList();
+		List<MyAnswerParam> answers = answerService.findByUserIdAndUserType(userId, userType)
+			.stream()
+			.map(Answer::toMyAnswerParam)
+			.toList();
 		List<MyKeywordPercentParam> percents = userKeywordService.findByUserId(userId)
 			.stream()
 			.map(UserKeyword::toMyKeywordPercentParam)
