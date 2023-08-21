@@ -1,5 +1,7 @@
 package com.najasin.domain.character.entity;
 
+import com.najasin.domain.character.dto.response.CharacterItem;
+
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -19,7 +21,13 @@ public class CharacterSet {
     @Column(name = "set_name")
     private String name;
 
-    @Column(name = "set_url",columnDefinition = "TEXT")
-    private String url;
+    @Column(name = "set_show_url",columnDefinition = "TEXT")
+    private String show_url;
 
+    @Column(name = "set_layout_url",columnDefinition = "TEXT")
+    private String layout_url;
+
+    public CharacterItem toCharacterItem() {
+        return new CharacterItem(id, show_url, layout_url);
+    }
 }
