@@ -71,3 +71,5 @@ client:
   host: localhost
   url: http://localhost:3000
   endpoint: success
+
+base-image: ${BASE_IMAGE}
