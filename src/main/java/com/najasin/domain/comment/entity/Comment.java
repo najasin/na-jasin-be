@@ -1,6 +1,6 @@
 package com.najasin.domain.comment.entity;
 
-import com.najasin.domain.myManual.question.entity.Question;
+import com.najasin.domain.manual.question.entity.Question;
 import com.najasin.domain.user.entity.User;
 import com.najasin.global.audit.AuditEntity;
 import jakarta.persistence.*;
