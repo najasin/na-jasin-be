@@ -1,5 +1,7 @@
 package com.najasin.domain.manual.keyword.entity;
 
+import com.najasin.domain.manual.dto.param.JffMyKeyword;
+
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -19,4 +21,7 @@ public class Keyword {
 	@Column(name = "keyword_name")
 	private String name;
 
+	public JffMyKeyword toJffMyKeyword() {
+		return new JffMyKeyword(id, name);
+	}
 }

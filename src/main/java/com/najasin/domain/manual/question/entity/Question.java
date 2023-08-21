@@ -1,6 +1,6 @@
 package com.najasin.domain.manual.question.entity;
 
-import com.najasin.domain.manual.dto.response.JffMyQuestion;
+import com.najasin.domain.manual.dto.param.JffMyQuestion;
 import com.najasin.domain.user.entity.userType.UserType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;

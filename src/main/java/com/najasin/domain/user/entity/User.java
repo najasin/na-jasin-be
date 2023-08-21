@@ -3,10 +3,10 @@ package com.najasin.domain.user.entity;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.najasin.domain.answer.entity.Answer;
+import com.najasin.domain.manual.answer.entity.Answer;
 import com.najasin.domain.comment.entity.Comment;
 import com.najasin.domain.user.entity.userType.UserType;
-import com.najasin.domain.userKeyword.entity.UserKeyword;
+import com.najasin.domain.manual.userKeyword.entity.UserKeyword;
 import com.najasin.domain.user.entity.userType.UserUserType;
 import jakarta.persistence.*;
 import lombok.*;

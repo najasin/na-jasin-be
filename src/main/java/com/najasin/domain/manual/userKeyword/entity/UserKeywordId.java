@@ -1,4 +1,4 @@
-package com.najasin.domain.userKeyword.entity;
+package com.najasin.domain.manual.userKeyword.entity;
 
 import com.najasin.domain.manual.keyword.entity.Keyword;
 import com.najasin.domain.user.entity.User;
