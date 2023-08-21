@@ -27,7 +27,6 @@ public class QuestionService {
 		return questionList.stream().map(Question::toJffMyQuestion).toList();
 	}
 
-	@Transactional(readOnly = true)
 	public List<Question> findAllByIdList(List<Long> questionIds) {
 		return questionIds.stream().map(this::findById).toList();
 	}
