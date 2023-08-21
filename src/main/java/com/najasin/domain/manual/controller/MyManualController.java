@@ -55,7 +55,7 @@ public class MyManualController {
 		CharacterItemsParam characterItems = characterService.findAllItems();
 
 		// 추후에 다른 분기에 대한 처리 필요
-		List<JffQuestionParam> questionList = questionService.findAll(userType);
+		List<JffQuestionParam> questionList = questionService.mapToJffQuestions(questionService.findAll(userType));
 		List<JffKeywordParam> keywordList = keywordService.findAll();
 
 		return ResponseEntity.ok(createSuccessWithData(

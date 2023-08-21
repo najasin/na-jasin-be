@@ -40,6 +40,14 @@ public class Comment {
     @Embedded
     private AuditEntity auditEntity;
 
+    @Builder
+    public Comment(User user, Question question, String content, String nickname) {
+        this.user = user;
+        this.question = question;
+        this.content = content;
+        this.nickname = nickname;
+    }
+
     public AnswerParam toAnswerParam() {
         return new AnswerParam(question.getId(), question.getQuestion(), content);
     }

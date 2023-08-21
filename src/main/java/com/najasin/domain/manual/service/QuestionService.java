@@ -21,9 +21,11 @@ public class QuestionService {
 	private final QuestionRepository questionRepository;
 
 	@Transactional(readOnly = true)
-	public List<JffQuestionParam> findAll(String userTypeName) {
-		List<Question> questionList = questionRepository.findAllByQuestionTypeAndUserTypeName(FOR_USER, userTypeName);
+	public List<Question> findAll(String userTypeName) {
+		return questionRepository.findAllByQuestionTypeAndUserTypeName(FOR_USER, userTypeName);
+	}
 
+	public List<JffQuestionParam> mapToJffQuestions(List<Question> questionList) {
 		return questionList.stream().map(Question::toJffMyQuestion).toList();
 	}
 

@@ -2,15 +2,19 @@ package com.najasin.domain.manual.service;
 
 import static java.util.Objects.*;
 
+import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.najasin.domain.manual.dto.param.JffCommentParam;
 import com.najasin.domain.manual.dto.param.JffQuestionParam;
+import com.najasin.domain.manual.dto.request.OthersManualCreateRequest;
 import com.najasin.domain.manual.dto.response.JffOtherManualResponse;
 import com.najasin.domain.manual.entity.answer.Answer;
+import com.najasin.domain.manual.entity.question.Question;
 import com.najasin.domain.manual.entity.userKeyword.UserKeyword;
 import com.najasin.domain.user.dto.param.AnswerParam;
 import com.najasin.domain.user.dto.param.CommentParam;
@@ -42,7 +46,7 @@ public class OthersManualService {
 			.toList();
 		List<UserKeyword> percents = userKeywordService.findByUserId(userId);
 		List<CommentParam> comments = commentService.mapToCommentParam(commentService.findAllByUserId(userId));
-		List<JffQuestionParam> questions = questionService.findAll(userType);
+		List<JffQuestionParam> questions = questionService.mapToJffQuestions(questionService.findAll(userType));
 
 		return JffOtherManualResponse.builder()
 			.nickname(userUserType.getNickname())
@@ -54,5 +58,15 @@ public class OthersManualService {
 			.originKeywordPercents(percents.stream().map(UserKeyword::toMyKeywordPercentParam).toList())
 			.otherKeywordPercents(percents.stream().map(UserKeyword::toOthersKeywordPercentParam).toList())
 			.build();
+	}
+
+	@Transactional
+	public void saveOthersManual(OthersManualCreateRequest request, String userType, User user) {
+		List<Question> questions = questionService.findAll(userType);
+
+		questions.sort(Comparator.comparing(Question::getId));
+		request.answers().sort(Comparator.comparing(JffCommentParam::id));
+
+		commentService.saveAll(request.answers(), questions, user, request.nickname());
 	}
 }

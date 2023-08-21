@@ -7,12 +7,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.najasin.domain.manual.dto.request.OthersManualCreateRequest;
 import com.najasin.domain.manual.dto.response.JffOtherManualResponse;
+import com.najasin.domain.manual.service.CommentService;
 import com.najasin.domain.manual.service.OthersManualService;
+import com.najasin.domain.user.entity.User;
+import com.najasin.domain.user.service.UserService;
 import com.najasin.global.response.ApiResponse;
 
 import lombok.RequiredArgsConstructor;
@@ -22,6 +27,8 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/{userType}/others-manual")
 public class OthersManualController {
 	private final OthersManualService othersManualService;
+	private final UserService userService;
+	private final CommentService commentService;
 
 	@GetMapping
 	public ResponseEntity<ApiResponse<JffOtherManualResponse>> getOthersManual(
@@ -33,7 +40,13 @@ public class OthersManualController {
 	}
 
 	@PostMapping
-	public ResponseEntity<ApiResponse<?>> saveOthersManual(@PathVariable String userType) {
+	public ResponseEntity<ApiResponse<?>> saveOthersManual(
+		@PathVariable String userType,
+		@RequestParam(required = true, value = "userId") String userId,
+		@RequestBody OthersManualCreateRequest request) {
+		User user = userService.findById(userId);
+
+		othersManualService.saveOthersManual(request, userType, user);
 		return null;
 	}
 }
