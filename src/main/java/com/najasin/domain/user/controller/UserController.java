@@ -55,7 +55,7 @@ public class UserController {
 	public ResponseEntity<ApiResponse<?>> updateNickname(
 		@AuthorizeUser User user,
 		@PathVariable String userType,
-		@RequestBody NicknameUpdateRequest request) {
+		@RequestBody @Validated NicknameUpdateRequest request) {
 		UserUserType userUserType = userUserTypeService.findByUserIdAndUserTypeName(user.getId(), userType);
 		userUserTypeService.updateNickname(userUserType, request.nickname());
 
