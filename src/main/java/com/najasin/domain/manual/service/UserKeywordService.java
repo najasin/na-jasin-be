@@ -34,6 +34,20 @@ public class UserKeywordService {
 		return userKeywordRepository.save(userKeyword);
 	}
 
+	@Transactional
+	public void updateAllOthersPercent(
+		List<JffKeywordPercentParam> otherKeywordPercents,
+		List<UserKeyword> userKeywords) {
+		for(int i=0 ; i<userKeywords.size() ; i++) {
+			updateOthersPercent(userKeywords.get(i), otherKeywordPercents.get(i).percent());
+		}
+	}
+
+	@Transactional
+	public void updateOthersPercent(UserKeyword userKeyword, int percent) {
+		userKeyword.updateOthersPercent(percent);
+	}
+
 	@Transactional(readOnly = true)
 	public List<UserKeyword> findByUserId(String userId) {
 		return userKeywordRepository.findByUserId(userId);

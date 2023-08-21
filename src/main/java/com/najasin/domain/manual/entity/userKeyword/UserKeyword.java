@@ -27,20 +27,34 @@ public class UserKeyword {
 	private Keyword keyword;
 
 	@Column
-	private int originPercent;
+	private Integer originPercent;
 
 	@Column
-	private int othersPercent;
+	private Integer othersPercent;
 
 	@Column
-	private int othersCount;
+	private Integer othersCount;
 
 	public UserKeyword(User user, Keyword keyword, int originPercent) {
 		this.user = user;
 		this.keyword = keyword;
 		this.originPercent = originPercent;
 		this.othersPercent = 0;
-		this.othersCount = 0;
+		this.othersCount = 1;
+	}
+
+	public void updateOthersPercent(int othersPercent) {
+		this.othersCount++;
+
+		if(this.othersCount == 2) {
+			this.othersPercent += this.originPercent;
+		}
+
+		this.othersPercent = (this.othersPercent +othersPercent) / this.othersCount;
+	}
+
+	public Long getKeyWordId() {
+		return keyword.getId();
 	}
 
 	public KeywordPercentParam toMyKeywordPercentParam() {

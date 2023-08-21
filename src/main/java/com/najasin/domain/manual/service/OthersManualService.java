@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.najasin.domain.manual.dto.param.JffCommentParam;
+import com.najasin.domain.manual.dto.param.JffKeywordPercentParam;
 import com.najasin.domain.manual.dto.param.JffQuestionParam;
 import com.najasin.domain.manual.dto.request.OthersManualCreateRequest;
 import com.najasin.domain.manual.dto.response.JffOtherManualResponse;
@@ -66,7 +67,11 @@ public class OthersManualService {
 
 		questions.sort(Comparator.comparing(Question::getId));
 		request.answers().sort(Comparator.comparing(JffCommentParam::id));
-
 		commentService.saveAll(request.answers(), questions, user, request.nickname());
+
+		List<UserKeyword> userKeywords = userKeywordService.findByUserId(user.getId());
+		userKeywords.sort(Comparator.comparing(UserKeyword::getKeyWordId));
+		request.otherKeywordPercents().sort(Comparator.comparing(JffKeywordPercentParam::id));
+		userKeywordService.updateAllOthersPercent(request.otherKeywordPercents(), userKeywords);
 	}
 }

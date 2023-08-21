@@ -3,6 +3,7 @@ package com.najasin.domain.manual.controller;
 import static com.najasin.domain.manual.dto.message.ManualMessage.*;
 import static com.najasin.global.response.ApiResponse.*;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -45,8 +46,10 @@ public class OthersManualController {
 		@RequestParam(required = true, value = "userId") String userId,
 		@RequestBody OthersManualCreateRequest request) {
 		User user = userService.findById(userId);
-
 		othersManualService.saveOthersManual(request, userType, user);
-		return null;
+		return new ResponseEntity<>(
+			createSuccess(CREATE_OTHERS_MANUAL_SUCCESS.getMsg()),
+			HttpStatus.CREATED
+		);
 	}
 }
