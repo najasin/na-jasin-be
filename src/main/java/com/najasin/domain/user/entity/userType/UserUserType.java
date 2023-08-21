@@ -53,6 +53,10 @@ public class UserUserType {
 		this.nickname = nickname;
 	}
 
+	public void updateNickname(String nickname) {
+		this.nickname = nickname;
+	}
+
 	public void updateCharacter(CharacterSet set) {
 		this.set = set;
 

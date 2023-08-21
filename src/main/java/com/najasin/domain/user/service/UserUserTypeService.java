@@ -52,6 +52,11 @@ public class UserUserTypeService {
 	}
 
 	@Transactional
+	public void updateNickname(UserUserType userUserType, String nickname) {
+		userUserType.updateNickname(nickname);
+	}
+
+	@Transactional
 	public void updateCharacter(UserUserType userUserType, ManualCharacterItems items) {
 		if (!isNull(items.set())) {
 			userUserType.updateCharacter(characterService.findCharacterSetById(items.set()));

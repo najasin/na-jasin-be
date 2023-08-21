@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.najasin.domain.user.dto.request.CharacterUpdateRequest;
+import com.najasin.domain.user.dto.request.NicknameUpdateRequest;
 import com.najasin.domain.user.dto.response.UserTypeUpdateResponse;
 import com.najasin.domain.user.entity.User;
 import com.najasin.domain.user.dto.message.UserTypeMessage;
@@ -49,6 +50,18 @@ public class UserController {
 			UserTypeMessage.SUCCESS_UPDATE_USER_TYPE.getMsg(),
 			response));
 	}
+
+	@PutMapping("/{userType}/nickname")
+	public ResponseEntity<ApiResponse<?>> updateNickname(
+		@AuthorizeUser User user,
+		@PathVariable String userType,
+		@RequestBody NicknameUpdateRequest request) {
+		UserUserType userUserType = userUserTypeService.findByUserIdAndUserTypeName(user.getId(), userType);
+		userUserTypeService.updateNickname(userUserType, request.nickname());
+
+		return ResponseEntity.ok(createSuccess(SUCCESS_UPDATE_NICKNAME.getMessage()));
+	}
+
 
 	@PutMapping("/{userType}/character")
 	public ResponseEntity<ApiResponse<?>> updateCharacter(
