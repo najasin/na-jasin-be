@@ -1,14 +1,19 @@
 package com.najasin.domain.user.service;
 
+import static java.util.Objects.*;
+
 import java.util.UUID;
 
 import com.najasin.domain.character.repository.BodyRepository;
 import com.najasin.domain.character.repository.CharacterSetRepository;
 import com.najasin.domain.character.repository.ExpressionRepository;
 import com.najasin.domain.character.repository.FaceRepository;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.najasin.domain.character.service.CharacterService;
+import com.najasin.domain.manual.dto.param.ManualCharacterItems;
 import com.najasin.domain.user.entity.Oauth2Entity;
 import com.najasin.domain.user.entity.User;
 import com.najasin.domain.user.repository.UserRepository;
@@ -22,17 +27,16 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserService {
 	private final UserRepository userRepository;
-	private final CharacterSetRepository characterSetRepository;
+	private final CharacterService characterService;
 	private final FaceRepository faceRepository;
 	private final BodyRepository bodyRepository;
 	private final ExpressionRepository expressionRepository;
 	private final RedisBlackListUtil redisBlackListUtil;
 
-
 	@Transactional
 	public User saveIfNewUser(OAuth2Request request) {
 		return userRepository.findUserByOauth2EntityProviderId(request.providerId()).orElseGet(
-				() -> save(request.toOauth2Entity()));
+			() -> save(request.toOauth2Entity()));
 	}
 
 	@Transactional
@@ -52,12 +56,23 @@ public class UserService {
 	}
 
 	@Transactional
+	public void updateCharacter(User user, ManualCharacterItems items) {
+		if (!isNull(items.set())) {
+			user.updateCharacter(characterService.findCharacterSetById(items.set()));
+		} else {
+			user.updateCharacter(
+				characterService.findFaceById(items.face()),
+				characterService.findBodyById(items.body()),
+				characterService.findExpressionById(items.expression()));
+		}
+	}
+
+	@Transactional
 	public User updateNickname(String id, String nickname) {
 		User user = this.findById(id);
 		user.updateNickname(nickname);
 		return user;
 	}
-
 
 	public String generateUUID() {
 		String uuid = UUID.randomUUID().toString();
@@ -68,7 +83,6 @@ public class UserService {
 
 		return uuid;
 	}
-
 
 	public boolean checkDuplicatedUUID(String uuid) {
 		return userRepository.findById(uuid).isPresent();

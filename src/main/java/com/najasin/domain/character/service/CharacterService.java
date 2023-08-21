@@ -13,6 +13,7 @@ import com.najasin.domain.character.repository.ExpressionRepository;
 import com.najasin.domain.character.entity.Face;
 import com.najasin.domain.character.repository.FaceRepository;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Service;
@@ -41,6 +42,26 @@ public class CharacterService {
 			.expression(expressionList)
 			.set(characterSetList)
 			.build();
+	}
+
+	@Transactional(readOnly = true)
+	public Face findFaceById(Long id) {
+		return faceRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+	}
+
+	@Transactional(readOnly = true)
+	public Body findBodyById(Long id) {
+		return bodyRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+	}
+
+	@Transactional(readOnly = true)
+	public Expression findExpressionById(Long id) {
+		return expressionRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+	}
+
+	@Transactional(readOnly = true)
+	public CharacterSet findCharacterSetById(Long id) {
+		return characterSetRepository.findById(id).orElseThrow(EntityNotFoundException::new);
 	}
 
 	@Transactional(readOnly = true)

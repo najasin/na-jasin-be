@@ -29,6 +29,7 @@ import com.najasin.domain.manual.question.entity.Question;
 import com.najasin.domain.manual.question.service.QuestionService;
 import com.najasin.domain.manual.userKeyword.service.UserKeywordService;
 import com.najasin.domain.user.entity.User;
+import com.najasin.domain.user.service.UserService;
 import com.najasin.domain.user.service.UserUserTypeService;
 import com.najasin.global.annotation.AuthorizeUser;
 import com.najasin.global.response.ApiResponse;
@@ -44,6 +45,7 @@ public class MyManualController {
 	private final KeywordService keywordService;
 	private final AnswerService answerService;
 	private final UserKeywordService userKeywordService;
+	private final UserService userService;
 	private final UserUserTypeService userUserTypeService;
 
 	@Value("${base-image}")
@@ -68,6 +70,8 @@ public class MyManualController {
 		@PathVariable String userType,
 		@RequestBody MyManualCreateRequest body) {
 		String saveUserType = userUserTypeService.updateUserType(user, userType);
+
+		userService.updateCharacter(user, body.characterItems());
 
 		List<Question> questions = questionService.findAllByIdList(body.getQuestionIdList());
 		answerService.saveAll(body.answers(), questions, user);
