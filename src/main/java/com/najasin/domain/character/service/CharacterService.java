@@ -1,62 +1,53 @@
-package com.najasin.domain.character;
+package com.najasin.domain.character.service;
 
+import java.util.List;
+
+import com.najasin.domain.character.dto.response.CharacterItem;
+import com.najasin.domain.character.dto.response.CharacterItems;
 import com.najasin.domain.character.entity.Body;
-import com.najasin.domain.character.body.repository.BodyRepository;
-import com.najasin.domain.character.characterset.entity.CharacterSet;
-import com.najasin.domain.character.characterset.repository.CharacterSetRepository;
-import com.najasin.domain.character.dto.AllCharacterItems;
-import com.najasin.domain.character.dto.CharacterItem;
-import com.najasin.domain.character.expression.entity.Expression;
-import com.najasin.domain.character.expression.repository.ExpressionRepository;
-import com.najasin.domain.character.face.entity.Face;
-import com.najasin.domain.character.face.repository.FaceRepository;
+import com.najasin.domain.character.repository.BodyRepository;
+import com.najasin.domain.character.entity.Expression;
+import com.najasin.domain.character.repository.ExpressionRepository;
+import com.najasin.domain.character.entity.Face;
+import com.najasin.domain.character.repository.FaceRepository;
 
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 public class CharacterService {
-    private final FaceRepository faceRepository;
-    private final BodyRepository bodyRepository;
-    private final ExpressionRepository expressionRepository;
-    private final CharacterSetRepository characterSetRepository;
+	private final FaceRepository faceRepository;
+	private final BodyRepository bodyRepository;
+	private final ExpressionRepository expressionRepository;
 
-    @Transactional
-    public AllCharacterItems getAllCharacterItems() {
-        AllCharacterItems allCharacterItems = new AllCharacterItems();
-        allCharacterItems.setBaseImage("기본 이미지 url");
-        AllCharacterItems.CharacterItems characterItems = new AllCharacterItems.CharacterItems();
-        for (Face face : faceRepository.findAll()) {
-            characterItems.getFace().add(CharacterItem.builder()
-                    .id(face.getId())
-                    .showCase(face.getShow_url())
-                    .layoutCase(face.getLayout_url())
-                    .build());
-        }
-        for (Body body : bodyRepository.findAll()) {
-            characterItems.getBody().add(CharacterItem.builder()
-                    .id(body.getId())
-                    .showCase(body.getShow_url())
-                    .layoutCase(body.getLayout_url())
-                    .build());
-        }
-        for (Expression expression : expressionRepository.findAll()) {
-            characterItems.getExpression().add(CharacterItem.builder()
-                    .id(expression.getId())
-                    .showCase(expression.getShow_url())
-                    .layoutCase(expression.getLayout_url())
-                    .build());
-        }
-        for (CharacterSet characterSet : characterSetRepository.findAll()) {
-            characterItems.getSet().add(CharacterItem.builder()
-                    .id(characterSet.getId())
-                    .showCase(characterSet.getUrl())
-                    .layoutCase(characterSet.getUrl())
-                    .build());
-        }
-        allCharacterItems.setCharacterItems(characterItems);
-        return allCharacterItems;
-    }
+	@Transactional(readOnly = true)
+	public CharacterItems findAllItems() {
+		List<CharacterItem> faceList = findFaceAll().stream().map(Face::toCharacterItem).toList();
+		List<CharacterItem> bodyList = findBodyAll().stream().map(Body::toCharacterItem).toList();
+		List<CharacterItem> expressionList = findExpressionAll().stream().map(Expression::toCharacterItem).toList();
+
+		return CharacterItems.builder()
+			.face(faceList)
+			.body(bodyList)
+			.expression(expressionList)
+			.build();
+	}
+
+	@Transactional(readOnly = true)
+	public List<Face> findFaceAll() {
+		return faceRepository.findAll();
+	}
+
+	@Transactional(readOnly = true)
+	public List<Body> findBodyAll() {
+		return bodyRepository.findAll();
+	}
+
+	@Transactional(readOnly = true)
+	public List<Expression> findExpressionAll() {
+		return expressionRepository.findAll();
+	}
 }
