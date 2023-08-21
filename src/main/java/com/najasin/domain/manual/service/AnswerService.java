@@ -23,7 +23,6 @@ public class AnswerService {
 	@Transactional
 	public void saveAll(List<JffAnswerParam> answers, List<Question> questions, User user) {
 		answers.sort(Comparator.comparing(JffAnswerParam::id));
-		questions.sort(Comparator.comparing(Question::getId));
 
 		for (int i = 0; i < answers.size(); i++) {
 			save(answers.get(i).toAnswerEntity(user, questions.get(i)));

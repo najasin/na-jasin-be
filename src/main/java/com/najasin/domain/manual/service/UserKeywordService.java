@@ -22,7 +22,6 @@ public class UserKeywordService {
 	@Transactional
 	public void saveAll(List<JffKeywordPercentParam> keywordPercents, List<Keyword> keywords, User user) {
 		keywordPercents.sort(Comparator.comparing(JffKeywordPercentParam::id));
-		keywords.sort(Comparator.comparing(Keyword::getId));
 
 		for (int i = 0; i < keywordPercents.size(); i++) {
 			save(keywordPercents.get(i).toUserKeywordEntity(user, keywords.get(i)));
