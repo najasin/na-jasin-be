@@ -13,7 +13,8 @@ public record MyPageResponse(List<String> userTypes,
 							 String baseImage,
 							 MyCharacterItemsParam characterItems,
 							 List<MyAnswerParam> myManualQAPair,
-							 List<MyKeywordPercentParam> originKeywordPercents) {
+							 List<MyKeywordPercentParam> originKeywordPercents,
+							 Boolean isOwner) {
 
 	@Builder
 	public MyPageResponse {

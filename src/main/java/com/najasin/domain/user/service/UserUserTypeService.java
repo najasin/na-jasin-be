@@ -94,6 +94,7 @@ public class UserUserTypeService {
 			.characterItems(userUserType.toMyCharacterItemsParam())
 			.myManualQAPair(answers)
 			.originKeywordPercents(percents)
+			.isOwner(!isNull(user))
 			.build();
 	}
 
