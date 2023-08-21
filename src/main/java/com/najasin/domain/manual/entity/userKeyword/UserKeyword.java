@@ -62,6 +62,6 @@ public class UserKeyword {
 	}
 
 	public KeywordPercentParam toOthersKeywordPercentParam() {
-		return new KeywordPercentParam(keyword.getId(), keyword.getName(), othersCount);
+		return new KeywordPercentParam(keyword.getId(), keyword.getName(), othersPercent);
 	}
 }

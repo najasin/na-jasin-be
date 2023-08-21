@@ -36,10 +36,6 @@ public class Answer {
 		this.content = content;
 	}
 
-	public Long getQuestionId() {
-		return question.getId();
-	}
-
 	public void updateAnswer(String content) {
 		this.content = content;
 	}

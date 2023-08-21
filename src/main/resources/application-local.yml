@@ -15,7 +15,7 @@ spring:
       host: 127.0.0.1
 
   jpa:
-    open-in-view: false
+    open-in-view: true
     hibernate:
       ddl-auto: update
     show-sql: true

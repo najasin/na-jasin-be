@@ -39,7 +39,7 @@ public class UserController {
 	@Value("${base-image}")
 	private String baseImage;
 
-	@GetMapping("/user/{userType}/mypage")
+	@GetMapping("/{userType}/mypage")
 	public ResponseEntity<ApiResponse<MyPageResponse>> getMyPage(
 		@AuthorizeUser User user,
 		@PathVariable String userType,
@@ -87,7 +87,7 @@ public class UserController {
 		@AuthorizeUser User user,
 		@PathVariable String userType,
 		@RequestBody AnswerUpdateRequest request) {
-		answerService.updateAnswer(request.answer(), user.getId(), userType);
+		answerService.updateAnswer(request.answers(), user.getId(), userType);
 
 		return ResponseEntity.ok(createSuccess(SUCCESS_UPDATE_ANSWER.getMessage()));
 	}

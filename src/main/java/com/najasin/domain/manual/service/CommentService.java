@@ -27,7 +27,6 @@ public class CommentService {
 
 	@Transactional
 	public void saveAll(List<JffCommentParam> comments, List<Question> questions, User user, String nickname) {
-		comments.sort(Comparator.comparing(JffCommentParam::id));
 		questions.sort(Comparator.comparing(Question::getId));
 
 		for (int i = 0; i < comments.size(); i++) {

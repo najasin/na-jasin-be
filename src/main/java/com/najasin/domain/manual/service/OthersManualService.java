@@ -66,12 +66,10 @@ public class OthersManualService {
 		List<Question> questions = questionService.findAll(userType);
 
 		questions.sort(Comparator.comparing(Question::getId));
-		request.answers().sort(Comparator.comparing(JffCommentParam::id));
 		commentService.saveAll(request.answers(), questions, user, request.nickname());
 
 		List<UserKeyword> userKeywords = userKeywordService.findByUserId(user.getId());
 		userKeywords.sort(Comparator.comparing(UserKeyword::getKeyWordId));
-		request.otherKeywordPercents().sort(Comparator.comparing(JffKeywordPercentParam::id));
 		userKeywordService.updateAllOthersPercent(request.otherKeywordPercents(), userKeywords);
 	}
 }

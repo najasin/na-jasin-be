@@ -37,8 +37,7 @@ public class AnswerService {
 	@Transactional
 	public void updateAnswer(List<AnswerUpdateParam> updateAnswers, String userId, String userType) {
 		List<Answer> answers = findByUserIdAndUserType(userId, userType);
-
-		answers.sort(Comparator.comparing(Answer::getQuestionId));
+		System.out.println(answers.size());
 		updateAnswers.sort(Comparator.comparing(AnswerUpdateParam::id));
 
 		for(int i=0 ; i<updateAnswers.size() ; i++) {
@@ -51,7 +50,7 @@ public class AnswerService {
 		List<Answer> answers = answerRepository.findByUserId(userId);
 
 		return answers.stream()
-			.filter((answer -> answer.getQuestion().getQuestion().equals(userType.toUpperCase())))
+			.filter((answer -> answer.getQuestion().getUserType().getName().equals(userType.toUpperCase())))
 			.toList();
 	}
 }
