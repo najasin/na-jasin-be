@@ -114,6 +114,7 @@ jobs:
           spring.data.redis.host: ${{ secrets.ELASTIC_CACHE_HOST }}
           jwt.secret: ${{ secrets.JWT_SECRET }}
           client.url: ${{ secrets.CLIENT_URL }}
+          base-image: ${{ secrets.BASE_IMAGE }}
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew

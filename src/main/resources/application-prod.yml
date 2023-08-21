@@ -15,7 +15,7 @@ spring:
       host: ${ELASTIC_CACHE_HOST}
 
   jpa:
-    open-in-view: false
+    open-in-view: true
     hibernate:
       ddl-auto: none
 
@@ -62,3 +62,5 @@ cloud:
 client:
   url: ${CLIENT_URL}
   endpoint: success
+
+base-image: ${BASE_IMAGE}
