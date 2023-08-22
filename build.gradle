@@ -108,6 +108,7 @@ jacocoTestCoverageVerification {
                     'com.najasin.domain.dto.**',
                     'com.najasin.domain.**.dto.**',
                     'com.najasin.domain.**.entity.**',
+                    'com.najasin.domain.**.service.**',
                     'com.najasin.domain.**.controller.**',
                     'com.najasin.global.**',
                     'com.najasin.security.**',
