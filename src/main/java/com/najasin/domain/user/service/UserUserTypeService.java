@@ -69,9 +69,9 @@ public class UserUserTypeService {
 			userUserType.updateCharacter(characterService.findCharacterSetById(items.set()));
 		} else {
 			userUserType.updateCharacter(
-				characterService.findFaceById(items.face()),
-				characterService.findBodyById(items.body()),
-				characterService.findExpressionById(items.expression()));
+				isNull(items.face()) ? null : characterService.findFaceById(items.face()),
+				isNull(items.body()) ? null : characterService.findBodyById(items.body()),
+				isNull(items.expression()) ? null : characterService.findExpressionById(items.expression()));
 		}
 	}
 
