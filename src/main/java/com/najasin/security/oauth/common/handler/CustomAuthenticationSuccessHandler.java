@@ -28,6 +28,7 @@ public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 	private final JwtGenerateService jwtGenerateService;
 	private final UserService userService;
 
+
 	@Value("${client.url}")
 	private String clientUrl;
 
@@ -36,29 +37,30 @@ public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-		Authentication authentication) throws IOException {
+										Authentication authentication) throws IOException {
 		PrincipalUser principalUser = (PrincipalUser)authentication.getPrincipal();
 		User user = principalUser.getUser();
 
 		JwtToken jwtToken = jwtGenerateService.createJwtToken(principalUser);
 		String userId = user.getId();
+		System.out.println(user.getUserUserTypes());
 		String userType = isNull(user.getLastUserType()) ? "" : user.getLastUserType().getName();
 
 		OAuth2Response oAuth2Response = OAuth2Response.builder()
-			.accessToken(jwtToken.accessToken())
-			.refreshToken(jwtToken.refreshToken())
-			.userId(userId)
-			.userType(userType)
-			.build();
+				.accessToken(jwtToken.accessToken())
+				.refreshToken(jwtToken.refreshToken())
+				.userId(userId)
+				.userType(userType)
+				.build();
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("http://localhost:3000")
-			// .append("/")
-			// .append(redirectEndPoint)
-			.append("?accessToken=").append(oAuth2Response.accessToken())
-			.append("&refreshToken=").append(oAuth2Response.refreshToken())
-			.append("&userId=").append(oAuth2Response.userId())
-			.append("&userType=").append(oAuth2Response.userType());
+				// .append("/")
+				// .append(redirectEndPoint)
+				.append("?accessToken=").append(oAuth2Response.accessToken())
+				.append("&refreshToken=").append(oAuth2Response.refreshToken())
+				.append("&userId=").append(oAuth2Response.userId())
+				.append("&userType=").append(oAuth2Response.userType());
 
 		System.out.println(sb);
 

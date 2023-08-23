@@ -38,7 +38,7 @@ public class User {
 	@OneToMany(mappedBy = "user")
 	private List<UserUserType> userUserTypes;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "last_user_type", referencedColumnName = "user_type_id")
 	private UserType lastUserType;
 
