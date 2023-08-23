@@ -69,41 +69,41 @@ public class UserUserTypeService {
 			userUserType.updateCharacter(characterService.findCharacterSetById(items.set()));
 		} else {
 			userUserType.updateCharacter(
-				isNull(items.face()) ? null : characterService.findFaceById(items.face()),
-				isNull(items.body()) ? null : characterService.findBodyById(items.body()),
-				isNull(items.expression()) ? null : characterService.findExpressionById(items.expression()));
+					isNull(items.face()) ? null : characterService.findFaceById(items.face()),
+					isNull(items.body()) ? null : characterService.findBodyById(items.body()),
+					isNull(items.expression()) ? null : characterService.findExpressionById(items.expression()));
 		}
 	}
 
 	@Transactional(readOnly = true)
 	public MyPageResponse getMyPage(User user, String userType, String userId) {
 		List<UserType> userTypes =
-			isNull(user) ? null : user.getUserUserTypes().stream().map(UserUserType::getUserType).toList();
+				isNull(user) ? null : user.getUserUserTypes().stream().map(UserUserType::getUserType).toList();
 		UserUserType userUserType = findByUserIdAndUserTypeName(userId, userType);
 		List<AnswerParam> answers = answerService.findByUserIdAndUserType(userId, userType)
-			.stream()
-			.map(Answer::toMyAnswerParam)
-			.toList();
+				.stream()
+				.map(Answer::toMyAnswerParam)
+				.toList();
 		List<UserKeyword> percents = userKeywordService.findByUserId(userId);
 		List<CommentParam> comments = commentService.mapToCommentParam(commentService.findAllByUserId(userId));
 
 		return MyPageResponse.builder()
-			.userTypes(isNull(userTypes) ? null : userTypes.stream().map(UserType::getName).toList())
-			.nickname(userUserType.getNickname())
-			.baseImage(baseImage)
-			.characterItems(userUserType.toMyCharacterItemsParam())
-			.myManualQAPair(answers)
-			.othersManualQAPairs(comments)
-			.originKeywordPercents(percents.stream().map(UserKeyword::toMyKeywordPercentParam).toList())
-			.otherKeywordPercents(percents.stream().map(UserKeyword::toOthersKeywordPercentParam).toList())
-			.isOwner(!isNull(user))
-			.build();
+				.userTypes(isNull(userTypes) ? null : userTypes.stream().map(UserType::getName).toList())
+				.nickname(userUserType.getNickname())
+				.baseImage(baseImage)
+				.characterItems(userUserType.toMyCharacterItemsParam())
+				.myManualQAPair(answers)
+				.othersManualQAPairs(comments)
+				.originKeywordPercents(percents.stream().map(UserKeyword::toMyKeywordPercentParam).toList())
+				.otherKeywordPercents(percents.stream().map(UserKeyword::toOthersKeywordPercentParam).toList())
+				.isOwner(nonNull(user)&&user.getId().equals(userId))
+				.build();
 	}
 
 	@Transactional(readOnly = true)
 	public UserUserType findByUserIdAndUserTypeName(String userId, String userTypeName) {
 		return userUserTypeRepository.findByUserIdAndUserTypeName(userId, userTypeName)
-			.orElseThrow(EntityNotFoundException::new);
+				.orElseThrow(EntityNotFoundException::new);
 	}
 
 	private boolean checkAlreadyExist(List<UserUserType> userUserTypes, UserType userType) {

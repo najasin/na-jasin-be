@@ -5,6 +5,7 @@ import static com.najasin.global.response.ApiResponse.*;
 
 import java.util.List;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -59,31 +60,39 @@ public class MyManualController {
 		List<JffKeywordParam> keywordList = keywordService.findAll();
 
 		return ResponseEntity.ok(createSuccessWithData(
-			FIND_MY_MANUAL_SUCCESS.getMsg(),
-			JffMyManualResponse.of(baseImage, characterItems, questionList, keywordList)));
+				FIND_MY_MANUAL_SUCCESS.getMsg(),
+				JffMyManualResponse.of(baseImage, characterItems, questionList, keywordList)));
 	}
 
 	@PostMapping
-	public ResponseEntity<ApiResponse<JffMyManualCreateResponse>> saveMyManual(
-		@AuthorizeUser User user,
-		@PathVariable String userType,
-		@RequestBody MyManualCreateRequest body) {
-		UserUserType saveUserType = userUserTypeService.save(user, userType, body.nickname());
-		userUserTypeService.updateCharacter(saveUserType, body.characterItems());
-		userUserTypeService.updateUserType(user, userType);
+	public ResponseEntity<ApiResponse<?>> saveMyManual(
+			@AuthorizeUser User user,
+			@PathVariable String userType,
+			@RequestBody MyManualCreateRequest body) {
+		try {
+			userUserTypeService.findByUserIdAndUserTypeName(user.getId(), userType);
+			return new ResponseEntity<>(
+					createFail(CREATE_MY_MANUAL_FAIL.getMsg()),
+					HttpStatus.CONFLICT);
+		} catch (EntityNotFoundException e) {
+			UserUserType saveUserType = userUserTypeService.save(user, userType, body.nickname());
+			userUserTypeService.updateCharacter(saveUserType, body.characterItems());
+			userUserTypeService.updateUserType(user, userType);
 
 
-		List<Question> questions = questionService.findAllByIdList(body.getQuestionIdList());
-		answerService.saveAll(body.answers(), questions, user);
+			List<Question> questions = questionService.findAllByIdList(body.getQuestionIdList());
+			answerService.saveAll(body.answers(), questions, user);
 
-		List<Keyword> keywords = keywordService.findAllByIdList(body.getKeywordIdList());
-		userKeywordService.saveAll(body.keywordPercents(), keywords, user);
+			List<Keyword> keywords = keywordService.findAllByIdList(body.getKeywordIdList());
+			userKeywordService.saveAll(body.keywordPercents(), keywords, user);
 
-		return new ResponseEntity<>(
-			createSuccessWithData(
-				CREATE_MY_MANUAL_SUCCESS.getMsg(),
-				JffMyManualCreateResponse.of(user.getId(), userType)),
-			HttpStatus.CREATED
-		);
+
+			return new ResponseEntity<>(
+					createSuccessWithData(
+							CREATE_MY_MANUAL_SUCCESS.getMsg(),
+							JffMyManualCreateResponse.of(user.getId(), userType)),
+					HttpStatus.CREATED
+			);
+		}
 	}
 }
