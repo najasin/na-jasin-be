@@ -43,7 +43,6 @@ public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
 		JwtToken jwtToken = jwtGenerateService.createJwtToken(principalUser);
 		String userId = user.getId();
-		System.out.println(user.getUserUserTypes());
 		String userType = isNull(user.getLastUserType()) ? "" : user.getLastUserType().getName();
 
 		OAuth2Response oAuth2Response = OAuth2Response.builder()
