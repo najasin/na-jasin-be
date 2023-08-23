@@ -96,7 +96,7 @@ public class UserUserTypeService {
 				.othersManualQAPairs(comments)
 				.originKeywordPercents(percents.stream().map(UserKeyword::toMyKeywordPercentParam).toList())
 				.otherKeywordPercents(percents.stream().map(UserKeyword::toOthersKeywordPercentParam).toList())
-				.isOwner(user.getId().equals(userId))
+				.isOwner((user == null) ? user.getId().equals(userId) : false)
 				.build();
 	}
 
