@@ -70,13 +70,14 @@ public class MyManualController {
 		@RequestBody MyManualCreateRequest body) {
 		UserUserType saveUserType = userUserTypeService.save(user, userType, body.nickname());
 		userUserTypeService.updateCharacter(saveUserType, body.characterItems());
+		userUserTypeService.updateUserType(user, userType);
+
 
 		List<Question> questions = questionService.findAllByIdList(body.getQuestionIdList());
 		answerService.saveAll(body.answers(), questions, user);
 
 		List<Keyword> keywords = keywordService.findAllByIdList(body.getKeywordIdList());
 		userKeywordService.saveAll(body.keywordPercents(), keywords, user);
-
 
 		return new ResponseEntity<>(
 			createSuccessWithData(
