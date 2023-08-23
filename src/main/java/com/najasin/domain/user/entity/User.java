@@ -9,6 +9,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.najasin.domain.user.entity.enums.Role;
 import com.najasin.global.audit.AuditEntity;
@@ -58,6 +59,11 @@ public class User {
 
 	public void updateLastUserType(UserType lastUserType) {
 		this.lastUserType = lastUserType;
+	}
+
+	@Transactional
+	public UserType getLastUserType() {
+		return lastUserType;
 	}
 
 	public List<SimpleGrantedAuthority> getRole() {
