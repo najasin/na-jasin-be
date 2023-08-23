@@ -61,7 +61,10 @@ public class User {
 		this.lastUserType = lastUserType;
 	}
 
-
+	@Transactional
+	public UserType getLastUserType() {
+		return lastUserType;
+	}
 
 	public List<SimpleGrantedAuthority> getRole() {
 		return role.stream()
