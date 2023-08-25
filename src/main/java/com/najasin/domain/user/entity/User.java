@@ -35,7 +35,7 @@ public class User {
 	@Column(name = "role")
 	private List<Role> role;
 
-	@OneToMany(mappedBy = "user")
+	@OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
 	private List<UserUserType> userUserTypes;
 
 	@ManyToOne(fetch = FetchType.EAGER)
