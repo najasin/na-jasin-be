@@ -35,7 +35,7 @@ public class User {
 	@Column(name = "role")
 	private List<Role> role;
 
-	@OneToMany(mappedBy = "user")
+	@OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
 	private List<UserUserType> userUserTypes;
 
 	@ManyToOne(fetch = FetchType.EAGER)
@@ -57,8 +57,14 @@ public class User {
 		userUserTypes = new ArrayList<>();
 	}
 
+	@Transactional
 	public void updateLastUserType(UserType lastUserType) {
 		this.lastUserType = lastUserType;
+	}
+
+	@Transactional(readOnly = true)
+	public List<UserUserType> getUserUserTypes() {
+		return userUserTypes;
 	}
 
 	@Transactional
