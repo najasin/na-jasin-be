@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -50,6 +51,11 @@ public class SecurityConfig {
 			.oauth2Login(setOAuth2Config())
 			.sessionManagement(config -> config.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 			.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+				.exceptionHandling(config->config
+						.authenticationEntryPoint(((request, response, authException) -> {
+							response.setContentType("application/json");
+							response.setStatus(HttpStatus.UNAUTHORIZED.value());
+						})))
 			.build();
 	}
 
