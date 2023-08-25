@@ -1,16 +1,15 @@
 package com.najasin.domain.user.service;
 
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.UUID;
 
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.najasin.domain.user.entity.Oauth2Entity;
 import com.najasin.domain.user.entity.User;
 import com.najasin.domain.user.repository.UserRepository;
-import com.najasin.security.oauth.dto.request.OAuth2Request;
+import com.najasin.global.util.RedisBlackListUtil;
+import com.najasin.security.model.OAuth2Request;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserService {
 	private final UserRepository userRepository;
+	private final RedisBlackListUtil redisBlackListUtil;
 
 	@Transactional
 	public User saveIfNewUser(OAuth2Request request) {
@@ -34,6 +34,11 @@ public class UserService {
 	@Transactional(readOnly = true)
 	public User findById(String id) {
 		return userRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+	}
+
+	public void logout(String accessToken, String refreshToken) {
+		redisBlackListUtil.setBlackList(accessToken, "accessToken", 7);
+		redisBlackListUtil.setBlackList(refreshToken, "refreshToken", 7);
 	}
 
 	public String generateUUID() {

@@ -12,6 +12,37 @@ spring:
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate.ddl-auto: create-drop
 
+  data:
+    redis:
+      port: 6379
+      host: 127.0.0.1
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: test
+            client-secret: test
+            scope: openid,profile,email
+
+          kakao:
+            client-id: test
+            client-secret: test
+            redirect-uri: "{baseUrl}/{action}/oauth2/code/{registrationId}"
+            authorization-grant-type: authorization_code
+            client-authentication-method: client_secret_post
+            client-name: Kakao
+            scope: openid,profile_nickname,account_email
+
+        provider:
+          kakao:
+            issuer-uri: https://kauth.kakao.com
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user-name-attribute: id
+
 cloud:
   aws:
     region:
@@ -23,3 +54,10 @@ jwt:
   access-header: Authorization
   refresh-header: Refresh
   secret: testestestestestestestestestestestestestestestestestestestestestestestestestestestestestestestestestest
+
+client:
+  host: localhost
+  url: http://localhost:3000
+  endpoint: success
+
+base-image: test

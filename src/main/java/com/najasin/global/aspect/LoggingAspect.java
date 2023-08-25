@@ -20,7 +20,7 @@ public class LoggingAspect {
 
 	private final Logger log = LoggerFactory.getLogger("API CALL LOGGER");
 
-	@Pointcut("execution(* com.najasin.domain..*Controller.*(..)) || execution(* com.najasin.security.oauth2.handler.*.*(..))")
+	@Pointcut("execution(* com.najasin.domain..*Controller.*(..)) || execution(* com.najasin.security.oauth.common.handler.*.*(..))")
 	public void cut() {
 	}
 
@@ -32,8 +32,10 @@ public class LoggingAspect {
 		Object[] args = joinPoint.getArgs();
 		if (!isNull(args)) {
 			for (Object arg : args) {
-				log.info("parameter type = {}", arg.getClass().getSimpleName());
-				log.info("parameter value = {}", arg);
+				if(!isNull(arg)) {
+					log.info("parameter type = {}", arg.getClass().getSimpleName());
+					log.info("parameter value = {}", arg);
+				}
 			}
 		}
 	}
