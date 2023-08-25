@@ -41,7 +41,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         authentication = jwtValidator.getAuthentication(t);
                     } catch (JwtWrongSignatureException | JwtExpirationException | JwtNotSupportException |
                              JwtWrongException | JwtBlackListException e) {
-                        throw new RuntimeException(e);
+                        handleJwtException(e, response);
+                        return;
                     }
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 });
@@ -50,5 +51,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private String getTokensFromHeader(HttpServletRequest request) {
         return request.getHeader(AUTHORIZATION_TAG);
+    }
+    private void handleJwtException(Exception exception, HttpServletResponse response){
+        try {
+            response.setCharacterEncoding("UTF-8");
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json");
+            response.getWriter().write("{\"error\": \"" + exception.getMessage() + "\"}");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }
