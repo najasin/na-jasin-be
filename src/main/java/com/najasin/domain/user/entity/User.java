@@ -62,6 +62,11 @@ public class User {
 		this.lastUserType = lastUserType;
 	}
 
+	@Transactional(readOnly = true)
+	public List<UserUserType> getUserUserTypes() {
+		return userUserTypes;
+	}
+
 	@Transactional
 	public UserType getLastUserType() {
 		return lastUserType;
