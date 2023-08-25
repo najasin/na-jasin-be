@@ -106,7 +106,8 @@ public class UserUserTypeService {
 				.orElseThrow(EntityNotFoundException::new);
 	}
 
-	private boolean checkAlreadyExist(List<UserUserType> userUserTypes, UserType userType) {
+	@Transactional(readOnly = true)
+	public boolean checkAlreadyExist(List<UserUserType> userUserTypes, UserType userType) {
 		return userUserTypes.stream().map(UserUserType::getUserType).toList().contains(userType);
 	}
 }
