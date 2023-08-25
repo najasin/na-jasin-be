@@ -57,6 +57,7 @@ public class User {
 		userUserTypes = new ArrayList<>();
 	}
 
+	@Transactional
 	public void updateLastUserType(UserType lastUserType) {
 		this.lastUserType = lastUserType;
 	}
