@@ -2,6 +2,8 @@ package com.najasin.domain.user.service;
 
 import java.util.UUID;
 
+import com.najasin.domain.user.entity.userType.UserType;
+import com.najasin.domain.user.repository.UserTypeRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,12 +20,20 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserService {
 	private final UserRepository userRepository;
+	private final UserTypeRepository userTypeRepository;
 	private final RedisBlackListUtil redisBlackListUtil;
 
 	@Transactional
 	public User saveIfNewUser(OAuth2Request request) {
 		return userRepository.findUserByOauth2EntityProviderId(request.providerId()).orElseGet(
-			() -> save(request.toOauth2Entity()));
+				() -> save(request.toOauth2Entity()));
+	}
+
+	@Transactional
+	public void updateLastUserType(User user, String lastUserType) {
+		UserType userType = userTypeRepository.findByName(lastUserType).orElseThrow(EntityNotFoundException::new);
+		user.updateLastUserType(userType);
+		userRepository.save(user);
 	}
 
 	@Transactional
