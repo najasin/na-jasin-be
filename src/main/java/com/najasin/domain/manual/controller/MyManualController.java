@@ -5,6 +5,7 @@ import static com.najasin.global.response.ApiResponse.*;
 
 import java.util.List;
 
+import com.najasin.domain.manual.entity.question.QuestionType;
 import com.najasin.domain.user.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Value;
@@ -57,7 +58,7 @@ public class MyManualController {
 		CharacterItemsParam characterItems = characterService.findAllItems();
 
 		// 추후에 다른 분기에 대한 처리 필요
-		List<JffQuestionParam> questionList = questionService.mapToJffQuestions(questionService.findAll(userType));
+		List<JffQuestionParam> questionList = questionService.mapToJffQuestions(questionService.findAll(userType, QuestionType.FOR_USER));
 		List<JffKeywordParam> keywordList = keywordService.findAll();
 
 		return ResponseEntity.ok(createSuccessWithData(
