@@ -5,6 +5,7 @@ import static com.najasin.global.response.ApiResponse.*;
 
 import java.util.List;
 
+import com.najasin.domain.user.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -47,7 +48,7 @@ public class MyManualController {
 	private final AnswerService answerService;
 	private final UserKeywordService userKeywordService;
 	private final UserUserTypeService userUserTypeService;
-
+	private final UserService userService;
 	@Value("${base-image}")
 	private String baseImage;
 
@@ -78,8 +79,7 @@ public class MyManualController {
 			UserUserType saveUserType = userUserTypeService.save(user, userType, body.nickname());
 			userUserTypeService.updateCharacter(saveUserType, body.characterItems());
 			userUserTypeService.updateUserType(user, userType);
-
-
+			userService.updateLastUserType(user, userType);
 			List<Question> questions = questionService.findAllByIdList(body.getQuestionIdList());
 			answerService.saveAll(body.answers(), questions, user);
 
