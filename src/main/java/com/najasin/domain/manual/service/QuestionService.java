@@ -4,6 +4,7 @@ import static com.najasin.domain.manual.entity.question.QuestionType.*;
 
 import java.util.List;
 
+import com.najasin.domain.manual.entity.question.QuestionType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,8 +22,8 @@ public class QuestionService {
 	private final QuestionRepository questionRepository;
 
 	@Transactional(readOnly = true)
-	public List<Question> findAll(String userTypeName) {
-		return questionRepository.findAllByQuestionTypeAndUserTypeName(FOR_USER, userTypeName);
+	public List<Question> findAll(String userTypeName, QuestionType questionType) {
+		return questionRepository.findAllByQuestionTypeAndUserTypeName(questionType, userTypeName);
 	}
 
 	public List<JffQuestionParam> mapToJffQuestions(List<Question> questionList) {
