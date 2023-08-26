@@ -5,6 +5,7 @@ import static java.util.Objects.*;
 import java.util.Comparator;
 import java.util.List;
 
+import com.najasin.domain.manual.entity.question.QuestionType;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,7 +48,7 @@ public class OthersManualService {
 			.toList();
 		List<UserKeyword> percents = userKeywordService.findByUserId(userId);
 		List<CommentParam> comments = commentService.mapToCommentParam(commentService.findAllByUserId(userId));
-		List<JffQuestionParam> questions = questionService.mapToJffQuestions(questionService.findAll(userType));
+		List<JffQuestionParam> questions = questionService.mapToJffQuestions(questionService.findAll(userType, QuestionType.FOR_OTHERS));
 
 		return JffOtherManualResponse.builder()
 			.nickname(userUserType.getNickname())
@@ -63,7 +64,7 @@ public class OthersManualService {
 
 	@Transactional
 	public void saveOthersManual(OthersManualCreateRequest request, String userType, User user) {
-		List<Question> questions = questionService.findAll(userType);
+		List<Question> questions = questionService.findAll(userType, QuestionType.FOR_OTHERS);
 
 		questions.sort(Comparator.comparing(Question::getId));
 		commentService.saveAll(request.answers(), questions, user, request.nickname());
