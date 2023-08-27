@@ -1,5 +1,6 @@
 package com.najasin.domain.user.service;
 
+import com.najasin.global.advice.NotFoundErrorMessages;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +17,6 @@ public class UserTypeService {
 
 	@Transactional(readOnly = true)
 	public UserType findByName(String name) {
-		return userTypeRepository.findByName(name).orElseThrow(EntityNotFoundException::new);
+		return userTypeRepository.findByName(name).orElseThrow(()->new EntityNotFoundException(NotFoundErrorMessages.USER_TYPE_NOT_FOUND));
 	}
 }

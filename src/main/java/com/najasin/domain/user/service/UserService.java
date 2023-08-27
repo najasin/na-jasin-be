@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import com.najasin.domain.user.entity.userType.UserType;
 import com.najasin.domain.user.repository.UserTypeRepository;
+import com.najasin.global.advice.NotFoundErrorMessages;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,7 +44,7 @@ public class UserService {
 
 	@Transactional(readOnly = true)
 	public User findById(String id) {
-		return userRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+		return userRepository.findById(id).orElseThrow(()->new EntityNotFoundException(NotFoundErrorMessages.USER_NOT_FOUND));
 	}
 
 	public void logout(String accessToken, String refreshToken) {
