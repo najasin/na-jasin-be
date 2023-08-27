@@ -28,6 +28,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private static final String AUTHORIZATION_TAG = "Authorization";
 
     private final JwtValidator jwtValidator;
+    private boolean filtered = false;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
@@ -46,13 +47,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     }
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 });
-        filterChain.doFilter(request, response);
+        //에러 발생시 doFilter이 실행 안되어야 하는 것 같은데 자꾸 실행되어서 임시 조치하였습니다.
+        if (!filtered) {
+            filterChain.doFilter(request, response);
+        }
+        filtered = false;
     }
 
     private String getTokensFromHeader(HttpServletRequest request) {
         return request.getHeader(AUTHORIZATION_TAG);
     }
     private void handleJwtException(Exception exception, HttpServletResponse response){
+        filtered=true;
         try {
             response.setCharacterEncoding("UTF-8");
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -61,6 +67,5 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 }
