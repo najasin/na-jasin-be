@@ -13,6 +13,6 @@ public class ManualControllerAdvice {
     public ResponseEntity<ApiResponse<?>> entityNotFoundExHandler(EntityNotFoundException exception) {
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
-                .body(ApiResponse.createFail("해당 정보를 찾을 수 없습니다."));
+                .body(ApiResponse.createFail(exception.getMessage()));
     }
 }

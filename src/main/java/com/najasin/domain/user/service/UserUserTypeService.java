@@ -36,6 +36,7 @@ public class UserUserTypeService {
 	private final AnswerService answerService;
 	private final UserKeywordService userKeywordService;
 	private final CommentService commentService;
+	private final UserService userService;
 	@Value("${base-image}")
 	private String baseImage;
 
@@ -102,6 +103,10 @@ public class UserUserTypeService {
 
 	@Transactional(readOnly = true)
 	public UserUserType findByUserIdAndUserTypeName(String userId, String userTypeName) {
+		//userId, userTypeName 검증
+		userService.findById(userId);
+		userTypeService.findByName(userTypeName);
+
 		return userUserTypeRepository.findByUserIdAndUserTypeName(userId, userTypeName)
 				.orElseThrow(EntityNotFoundException::new);
 	}

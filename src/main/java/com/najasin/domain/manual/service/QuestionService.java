@@ -5,6 +5,7 @@ import static com.najasin.domain.manual.entity.question.QuestionType.*;
 import java.util.List;
 
 import com.najasin.domain.manual.entity.question.QuestionType;
+import com.najasin.domain.user.service.UserTypeService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,9 +21,11 @@ import lombok.RequiredArgsConstructor;
 
 public class QuestionService {
 	private final QuestionRepository questionRepository;
+	private final UserTypeService userTypeService;
 
 	@Transactional(readOnly = true)
 	public List<Question> findAll(String userTypeName, QuestionType questionType) {
+		userTypeService.findByName(userTypeName);
 		return questionRepository.findAllByQuestionTypeAndUserTypeName(questionType, userTypeName);
 	}
 
