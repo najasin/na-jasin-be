@@ -15,4 +15,11 @@ public class ManualControllerAdvice {
                 .status(HttpStatus.NOT_FOUND)
                 .body(ApiResponse.createFail(exception.getMessage()));
     }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ApiResponse<?>> exHandler(EntityNotFoundException exception) {
+        return ResponseEntity
+            .status(HttpStatus.NOT_FOUND)
+            .body(ApiResponse.createFail(exception.getMessage()));
+    }
 }
