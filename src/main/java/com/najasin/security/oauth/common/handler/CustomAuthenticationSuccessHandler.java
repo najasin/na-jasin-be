@@ -53,7 +53,7 @@ public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 				.build();
 
 		StringBuilder sb = new StringBuilder();
-		sb.append("http://localhost:3000")
+		sb.append(clientUrl)
 				// .append("/")
 				// .append(redirectEndPoint)
 				.append("?accessToken=").append(oAuth2Response.accessToken())
