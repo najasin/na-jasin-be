@@ -17,7 +17,7 @@ public class ManualControllerAdvice {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiResponse<?>> exHandler(EntityNotFoundException exception) {
+    public ResponseEntity<ApiResponse<?>> exHandler(Exception exception) {
         return ResponseEntity
             .status(HttpStatus.NOT_FOUND)
             .body(ApiResponse.createFail(exception.getMessage()));
