@@ -32,15 +32,15 @@ public class UserUserType {
 	@JoinColumn(name = "user_type_id", referencedColumnName = "user_type_id", insertable = false, updatable = false)
 	private UserType userType;
 
-	@OneToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "face_id", referencedColumnName = "face_id")
 	private Face face;
 
-	@OneToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "expression_id", referencedColumnName = "expression_id")
 	private Expression expression;
 
-	@OneToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "body_id", referencedColumnName = "body_id")
 	private Body body;
 
