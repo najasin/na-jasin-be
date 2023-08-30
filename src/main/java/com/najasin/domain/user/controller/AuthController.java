@@ -1,14 +1,22 @@
 package com.najasin.domain.user.controller;
 
+import static com.najasin.domain.user.dto.message.UserResponse.*;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.najasin.domain.user.dto.message.UserResponse;
+import com.najasin.domain.user.dto.response.AccessTokenGenerateResponse;
 import com.najasin.domain.user.service.UserService;
 import com.najasin.global.annotation.AccessToken;
 import com.najasin.global.annotation.RefreshToken;
 import com.najasin.global.response.ApiResponse;
+import com.najasin.security.jwt.exception.JwtBlackListException;
+import com.najasin.security.jwt.exception.JwtExpirationException;
+import com.najasin.security.jwt.exception.JwtNotSupportException;
+import com.najasin.security.jwt.exception.JwtWrongException;
+import com.najasin.security.jwt.exception.JwtWrongSignatureException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -26,6 +34,20 @@ public class AuthController {
 		return new ResponseEntity<>(
 			ApiResponse.createSuccess(UserResponse.SUCCESS_LOGOUT.getMessage()),
 			HttpStatus.OK
+		);
+	}
+
+	@PostMapping("/accessToken")
+	public ResponseEntity<ApiResponse<AccessTokenGenerateResponse>> regenerateAccessToken(
+		@RefreshToken String refreshToken) throws JwtNotSupportException, JwtWrongSignatureException,
+		JwtExpirationException, JwtWrongException, JwtBlackListException {
+
+		String accessToken = userService.recreateAccessToken(refreshToken);
+		return new ResponseEntity<>(
+			ApiResponse.createSuccessWithData(
+				SUCCESS_RECREATE_ACCESS_TOKEN.getMessage(),
+				new AccessTokenGenerateResponse(accessToken)),
+			HttpStatus.CREATED
 		);
 	}
 }

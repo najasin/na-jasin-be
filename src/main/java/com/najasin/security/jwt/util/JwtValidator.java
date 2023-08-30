@@ -45,6 +45,17 @@ public class JwtValidator {
 		return new UsernamePasswordAuthenticationToken(principalUser, "", principalUser.getAuthorities());
 	}
 
+	public PrincipalUser getPrincipalUser(String token) throws
+		JwtNotSupportException,
+		JwtWrongSignatureException,
+		JwtExpirationException,
+		JwtWrongException,
+		JwtBlackListException {
+		Claims claims = getTokenClaims(token);
+		User user = userService.findById(claims.get("id", String.class));
+		return principalUserMapper.toPrincipalUser(user);
+	}
+
 	private Claims getTokenClaims(String token) throws
 		JwtWrongSignatureException,
 		JwtExpirationException,
