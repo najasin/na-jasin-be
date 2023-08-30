@@ -13,15 +13,7 @@ import com.najasin.domain.user.entity.Oauth2Entity;
 import com.najasin.domain.user.entity.User;
 import com.najasin.domain.user.repository.UserRepository;
 import com.najasin.global.util.RedisBlackListUtil;
-import com.najasin.security.jwt.exception.JwtBlackListException;
-import com.najasin.security.jwt.exception.JwtExpirationException;
-import com.najasin.security.jwt.exception.JwtNotSupportException;
-import com.najasin.security.jwt.exception.JwtWrongException;
-import com.najasin.security.jwt.exception.JwtWrongSignatureException;
-import com.najasin.security.jwt.util.JwtProvider;
-import com.najasin.security.jwt.util.JwtValidator;
 import com.najasin.security.model.OAuth2Request;
-import com.najasin.security.model.PrincipalUser;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -32,9 +24,6 @@ public class UserService {
 	private final UserRepository userRepository;
 	private final UserTypeRepository userTypeRepository;
 	private final RedisBlackListUtil redisBlackListUtil;
-
-	private final JwtValidator jwtValidator;
-	private final JwtProvider jwtProvider;
 
 	@Transactional
 	public User saveIfNewUser(OAuth2Request request) {
@@ -63,13 +52,6 @@ public class UserService {
 	public void logout(String accessToken, String refreshToken) {
 		redisBlackListUtil.setBlackList(accessToken, "accessToken", 7);
 		redisBlackListUtil.setBlackList(refreshToken, "refreshToken", 7);
-	}
-
-	public String recreateAccessToken(String refreshToken) throws JwtNotSupportException, JwtWrongSignatureException,
-		JwtExpirationException, JwtWrongException, JwtBlackListException {
-		PrincipalUser principalUser = jwtValidator.getPrincipalUser(refreshToken);
-
-		return jwtProvider.recreateAccessToken(principalUser);
 	}
 
 	public String generateUUID() {

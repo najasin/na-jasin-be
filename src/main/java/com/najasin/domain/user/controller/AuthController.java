@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.najasin.domain.user.dto.message.UserResponse;
 import com.najasin.domain.user.dto.response.AccessTokenGenerateResponse;
+import com.najasin.domain.user.service.AuthService;
 import com.najasin.domain.user.service.UserService;
 import com.najasin.global.annotation.AccessToken;
 import com.najasin.global.annotation.RefreshToken;
@@ -26,6 +27,7 @@ import lombok.RequiredArgsConstructor;
 
 public class AuthController {
 	private final UserService userService;
+	private final AuthService authService;
 
 	@PostMapping("/logout")
 	public ResponseEntity<ApiResponse<?>> logout(@AccessToken String accessToken, @RefreshToken String refreshToken) {
@@ -42,7 +44,7 @@ public class AuthController {
 		@RefreshToken String refreshToken) throws JwtNotSupportException, JwtWrongSignatureException,
 		JwtExpirationException, JwtWrongException, JwtBlackListException {
 
-		String accessToken = userService.recreateAccessToken(refreshToken);
+		String accessToken = authService.recreateAccessToken(refreshToken);
 		return new ResponseEntity<>(
 			ApiResponse.createSuccessWithData(
 				SUCCESS_RECREATE_ACCESS_TOKEN.getMessage(),
