@@ -12,7 +12,7 @@ import com.najasin.security.jwt.exception.JwtNotSupportException;
 import com.najasin.security.jwt.exception.JwtWrongException;
 import com.najasin.security.jwt.exception.JwtWrongSignatureException;
 
-@RestControllerAdvice(basePackages = {"com.najasin.security.jwt.util"})
+@RestControllerAdvice(basePackages = {"com.najasin.security.jwt.util", "com.najasin.domain.user.AuthController"})
 public class JwtControllerAdvice {
 	@ExceptionHandler(JwtWrongSignatureException.class)
 	public ResponseEntity<ApiResponse<?>> wrongSignatureExHandler(JwtWrongSignatureException exception) {

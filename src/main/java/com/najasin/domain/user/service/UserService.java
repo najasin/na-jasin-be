@@ -5,6 +5,7 @@ import java.util.UUID;
 import com.najasin.domain.user.entity.userType.UserType;
 import com.najasin.domain.user.repository.UserTypeRepository;
 import com.najasin.global.advice.NotFoundErrorMessages;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,7 +28,7 @@ public class UserService {
 	@Transactional
 	public User saveIfNewUser(OAuth2Request request) {
 		return userRepository.findUserByOauth2EntityProviderId(request.providerId()).orElseGet(
-				() -> save(request.toOauth2Entity()));
+			() -> save(request.toOauth2Entity()));
 	}
 
 	@Transactional
@@ -44,7 +45,8 @@ public class UserService {
 
 	@Transactional(readOnly = true)
 	public User findById(String id) {
-		return userRepository.findById(id).orElseThrow(()->new EntityNotFoundException(NotFoundErrorMessages.USER_NOT_FOUND));
+		return userRepository.findById(id)
+			.orElseThrow(() -> new EntityNotFoundException(NotFoundErrorMessages.USER_NOT_FOUND));
 	}
 
 	public void logout(String accessToken, String refreshToken) {
